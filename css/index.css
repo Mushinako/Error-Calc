@@ -1,0 +1,25 @@
+html {
+    height: 100%;
+    background: linear-gradient(75deg, #f04040, #2f87eb);
+    background-size: 400% 400%;
+    animation: BackgroundGradient 30s ease infinite;
+}
+
+.box {
+    background-color: rgba(255, 255, 255, 0.8);
+    border-radius: 30px;
+}
+
+@keyframes BackgroundGradient {
+    0% {
+        background-position: 0% 50%;
+    }
+
+    50% {
+        background-position: 100% 50%;
+    }
+
+    100% {
+        background-position: 0% 50%;
+    }
+}
