@@ -5,8 +5,22 @@ html {
     animation: BackgroundGradient 30s ease infinite;
 }
 
-input {
+textarea {
     text-align: center;
+}
+
+.outer {
+    display: table;
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 100%;
+}
+
+.inner {
+    display: table-cell;
+    vertical-align: middle;
 }
 
 .box {

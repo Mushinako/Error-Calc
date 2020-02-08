@@ -1,28 +1,44 @@
 "use strict";
 var formInp;
+var retDiv;
 const opers = {
-    '+': '',
-    '-': '',
-    '×': '',
-    '÷': '',
-    'ln': '',
-    'log': '',
-    'e^': '',
-    '10^': '',
-    'a^b': ''
+    '+': '+',
+    '-': '-',
+    '×': '\\times',
+    '÷': '\\frac{}{}',
+    'ln': '\\ln',
+    'log': '\\log',
+    'e^': 'e^{}',
+    '10^': '10^{}',
+    'a^b': '^{}'
 };
 function createOpBtn(name, op) {
     const btn = document.createElement('a');
     btn.textContent = name;
     btn.classList.add('waves-effect', 'waves-red', 'btn-flat');
-    btn.addEventListener('click', () => { });
+    btn.addEventListener('click', () => {
+        const cursorPos = formInp.selectionStart;
+        formInp.value += op;
+    });
     return btn;
+}
+function parseInp() {
+    retDiv.innerText = `\\(${formInp.value}\\)`;
+    MathJax.typeset();
 }
 document.addEventListener('DOMContentLoaded', () => {
     // Set input
-    const formDiv = document.getElementById('formula');
-    formDiv.classList.add('col', 's12');
-    formInp = document.createElement('input');
+    retDiv = document.getElementById('form');
+    const formDiv = document.getElementById('inp');
+    formInp = document.createElement('textarea');
+    formInp.classList.add('materialize-textarea');
+    formInp.autocapitalize = formInp.autocomplete = 'off';
+    formInp.spellcheck = formInp['data-gramm'] = false;
+    formInp.addEventListener('input', () => {
+        retDiv.innerText = `\\(${formInp.value}\\)`;
+        MathJax.typeset();
+    });
+    MathJax.typeset();
     formDiv.appendChild(formInp);
     // Set buttons
     const btnsDiv = document.getElementById('btns');
