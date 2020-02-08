@@ -1,86 +1,36 @@
 "use strict";
-var form;
-const opers = ['+', '-', '×', '÷', '1÷'];
-/**
- * document.getElementById shorthand
- *
- * @param   {string}       e - ID of element
- * @returns {HTMLElement?}   - If exists, the element
- */
-const byId = (e) => document.getElementById(e);
-/**
- * Create HTMLDivElement containing the HTMLSelectELement used here
- *
- * @param   {string}         id - ID of select
- * @returns {HTMLDivElement}    - The element
- */
-function createSelectDiv(id) {
-    const div = document.createElement('div');
-    div.classList.add('input-field', 'col', 's2');
-    const sel = document.createElement('select');
-    return div;
-}
-/**
- * Create HTMLDivElement containing the HTMLInputELement used here
- *
- * @param   {string}         id - ID of input
- * @returns {HTMLDivElement}    - The element
- */
-function createInputDiv(id) {
-    const div = document.createElement('div');
-    div.classList.add('input-field', 'col', 's5');
-    const inp = document.createElement('input');
-    inp.id = inp.name = id;
-    inp.type = 'number';
-    div.appendChild(inp);
-    return div;
-}
-/**
- * Create HTMLLabelElement for first line
- *
- * @param   {string}           id  - ID of corresponding input
- * @param   {string}           txt - Text in label
- * @returns {HTMLLabelElement}     - The label
- */
-function createLabel(id, text) {
-    const lbl = document.createElement('label');
-    lbl.htmlFor = id;
-    const txt = document.createTextNode(text);
-    lbl.appendChild(txt);
-    return lbl;
+var formInp;
+const opers = {
+    '+': '',
+    '-': '',
+    '×': '',
+    '÷': '',
+    'ln': '',
+    'log': '',
+    'e^': '',
+    '10^': '',
+    'a^b': ''
+};
+function createOpBtn(name, op) {
+    const btn = document.createElement('a');
+    btn.textContent = name;
+    btn.classList.add('waves-effect', 'waves-red', 'btn-flat');
+    btn.addEventListener('click', () => { });
+    return btn;
 }
 document.addEventListener('DOMContentLoaded', () => {
-    form = byId('inp');
-    form.numInp = 0;
-    form.addRow = function () {
-        // Operation
-        const opDiv = createSelectDiv(`op${this.numInp}`);
-        if (!this.numInp) {
-            const opLbl = createLabel('op0', 'Operation');
-            opDiv.appendChild(opLbl);
-        }
-        // Average
-        const avDiv = createInputDiv(`av${this.numInp}`);
-        if (!this.numInp) {
-            const avLbl = createLabel('av0', 'Average');
-            avDiv.appendChild(avLbl);
-        }
-        // SD
-        const sdDiv = createInputDiv(`sd${this.numInp}`);
-        if (!this.numInp) {
-            const sdLbl = createLabel('sd0', 'SD');
-            sdDiv.appendChild(sdLbl);
-        }
-        // Appending
-        for (const e of [opDiv, avDiv, sdDiv])
-            this.appendChild(e);
-        this.numInp++;
-    };
-    form.remRow = function () {
-        if (this.numInp <= 1)
-            return;
-        this.removeChild(this.lastChild);
-        this.numInp--;
-    };
-    form.addRow();
+    // Set input
+    const formDiv = document.getElementById('formula');
+    formDiv.classList.add('col', 's12');
+    formInp = document.createElement('input');
+    formDiv.appendChild(formInp);
+    // Set buttons
+    const btnsDiv = document.getElementById('btns');
+    btnsDiv.classList.add('col', 's12');
+    btnsDiv.appendChild(document.createTextNode('|'));
+    for (const [name, op] of Object.entries(opers)) {
+        const btn = createOpBtn(name, op);
+        btnsDiv.appendChild(btn);
+        btnsDiv.appendChild(document.createTextNode('|'));
+    }
 });
