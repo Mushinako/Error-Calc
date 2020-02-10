@@ -1,28 +1,33 @@
 "use strict";
+var editDiv;
 var formDiv;
 var cbtns;
 var nbtns;
 const copers = {
-    '+': ['+', 1],
-    '-': ['-', 1],
-    '×': ['\\times', 6],
-    '÷': ['\\frac{}{}', 6]
+    '+/-': [cOperOnClick(['+', '-']), 0],
+    '×/÷': [cOperOnClick(['×', '÷']), 0],
 };
 const nopers = {
-    'ln': ['\\ln{}', 4],
-    'log': ['\\log{}', 5],
-    'e^': ['e^{}', 3],
-    '10^': ['10^{}', 4],
-    'a^b': ['{}^{}', 1]
+    'ln': [() => { }, 0],
+    'log': [() => { }, 0],
+    'e^': [() => { }, 0],
+    '10^': [() => { }, 0],
+    'a^b': [() => { }, 0]
 };
-function createBtnFunc() {
+// function createBtnFunc(): () => void {
+//     return () => { };
+// }
+function cOperInputDiv() { }
+function cOperOnClick(choices) {
+    const form = document.createElement('form');
     return () => { };
 }
 function createOpBtn(name, op) {
+    const [clkFunc, num] = op;
     const btn = document.createElement('a');
     btn.textContent = name;
-    btn.classList.add('button');
-    btn.addEventListener('click', () => { });
+    btn.classList.add('bttn');
+    btn.addEventListener('click', clkFunc);
     return btn;
 }
 function setBtns(opers) {

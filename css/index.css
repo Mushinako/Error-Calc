@@ -21,6 +21,10 @@ h1 {
     font-weight: normal;
 }
 
+hr {
+    width: 70%;
+}
+
 .outer {
     display: table;
     position: absolute;
@@ -48,17 +52,17 @@ h1 {
     margin-bottom: 16px;
 }
 
-.container {
+.cont {
     width: 90%;
     margin: 0 auto;
     max-width: 1280px;
 }
 
-.center {
+.cntr {
     text-align: center;
 }
 
-.button {
+.bttn {
     position: relative;
     cursor: pointer;
     display: inline-block;

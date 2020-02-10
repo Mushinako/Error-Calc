@@ -6,40 +6,49 @@ interface MathJax {
 
 declare const MathJax: MathJax;
 
+var editDiv: HTMLDivElement;
 var formDiv: HTMLDivElement;
 var cbtns: HTMLAnchorElement[];
 var nbtns: HTMLAnchorElement[];
 
-const copers: Record<string, [string, number]> = {
-    '+': ['+', 1],
-    '-': ['-', 1],
-    '×': ['\\times', 6],
-    '÷': ['\\frac{}{}', 6]
+const copers: Record<string, [() => void, number]> = {
+    '+/-': [cOperOnClick(['+', '-']), 0],
+    '×/÷': [cOperOnClick(['×', '÷']), 0],
 };
-const nopers: Record<string, [string, number]> = {
-    'ln': ['\\ln{}', 4],
-    'log': ['\\log{}', 5],
-    'e^': ['e^{}', 3],
-    '10^': ['10^{}', 4],
-    'a^b': ['{}^{}', 1]
+const nopers: Record<string, [() => void, number]> = {
+    'ln': [() => { }, 0],
+    'log': [() => { }, 0],
+    'e^': [() => { }, 0],
+    '10^': [() => { }, 0],
+    'a^b': [() => { }, 0]
 }
 
 
-function createBtnFunc(): () => void {
+// function createBtnFunc(): () => void {
+//     return () => { };
+// }
+
+
+function cOperInputDiv(): void { }
+
+
+function cOperOnClick(choices: string[]): () => void {
+    const form: HTMLFormElement = document.createElement('form');
     return () => { };
 }
 
 
-function createOpBtn(name: string, op: [string, number]): HTMLAnchorElement {
+function createOpBtn(name: string, op: [() => void, number]): HTMLAnchorElement {
+    const [clkFunc, num] = op;
     const btn: HTMLAnchorElement = document.createElement('a');
     btn.textContent = name;
-    btn.classList.add('button');
-    btn.addEventListener('click', (): void => { });
+    btn.classList.add('bttn');
+    btn.addEventListener('click', clkFunc);
     return btn;
 }
 
 
-function setBtns(opers: Record<string, [string, number]>): HTMLAnchorElement[] {
+function setBtns(opers: Record<string, [() => void, number]>): HTMLAnchorElement[] {
     const div: HTMLDivElement = <HTMLDivElement>document.getElementById('btns');
     div.appendChild(document.createTextNode('|'));
     let btns: HTMLAnchorElement[] = [];
