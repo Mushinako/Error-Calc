@@ -1,52 +1,54 @@
 "use strict";
-var formInp;
-var retDiv;
-const opers = {
-    '+': '+',
-    '-': '-',
-    '×': '\\times',
-    '÷': '\\frac{}{}',
-    'ln': '\\ln',
-    'log': '\\log',
-    'e^': 'e^{}',
-    '10^': '10^{}',
-    'a^b': '^{}'
+var formDiv;
+var cbtns;
+var nbtns;
+const copers = {
+    '+': ['+', 1],
+    '-': ['-', 1],
+    '×': ['\\times', 6],
+    '÷': ['\\frac{}{}', 6]
 };
+const nopers = {
+    'ln': ['\\ln{}', 4],
+    'log': ['\\log{}', 5],
+    'e^': ['e^{}', 3],
+    '10^': ['10^{}', 4],
+    'a^b': ['{}^{}', 1]
+};
+function createBtnFunc() {
+    return () => { };
+}
 function createOpBtn(name, op) {
     const btn = document.createElement('a');
     btn.textContent = name;
-    btn.classList.add('waves-effect', 'waves-red', 'btn-flat');
-    btn.addEventListener('click', () => {
-        const cursorPos = formInp.selectionStart;
-        formInp.value += op;
-    });
+    btn.classList.add('button');
+    btn.addEventListener('click', () => { });
     return btn;
 }
-function parseInp() {
-    retDiv.innerText = `\\(${formInp.value}\\)`;
-    MathJax.typeset();
-}
-document.addEventListener('DOMContentLoaded', () => {
-    // Set input
-    retDiv = document.getElementById('form');
-    const formDiv = document.getElementById('inp');
-    formInp = document.createElement('textarea');
-    formInp.classList.add('materialize-textarea');
-    formInp.autocapitalize = formInp.autocomplete = 'off';
-    formInp.spellcheck = formInp['data-gramm'] = false;
-    formInp.addEventListener('input', () => {
-        retDiv.innerText = `\\(${formInp.value}\\)`;
-        MathJax.typeset();
-    });
-    MathJax.typeset();
-    formDiv.appendChild(formInp);
-    // Set buttons
-    const btnsDiv = document.getElementById('btns');
-    btnsDiv.classList.add('col', 's12');
-    btnsDiv.appendChild(document.createTextNode('|'));
+function setBtns(opers) {
+    const div = document.getElementById('btns');
+    div.appendChild(document.createTextNode('|'));
+    let btns = [];
     for (const [name, op] of Object.entries(opers)) {
         const btn = createOpBtn(name, op);
-        btnsDiv.appendChild(btn);
-        btnsDiv.appendChild(document.createTextNode('|'));
+        div.appendChild(btn);
+        div.appendChild(document.createTextNode('|'));
+        btns.push(btn);
     }
+    return btns;
+}
+function parse() {
+    try {
+        MathJax.typeset();
+    }
+    catch (e) {
+        console.log(e);
+    }
+}
+document.addEventListener('DOMContentLoaded', () => {
+    // Set buttons
+    cbtns = setBtns(copers);
+    nbtns = setBtns(nopers);
+    // Set output
+    formDiv = document.getElementById('form');
 });
