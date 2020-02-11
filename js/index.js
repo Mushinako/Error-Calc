@@ -4,15 +4,14 @@ var formDiv;
 var cbtns;
 var nbtns;
 const copers = {
-    '+/-': cOperOnClick(['+', '-'], addMin),
-    '×/÷': cOperOnClick(['×', '÷'], mulDiv),
+    '+/-': cOperOnClick(['+', '-'], calcAddMin),
+    '×/÷': cOperOnClick(['×', '÷'], calcMulDiv),
 };
 const nopers = {
-    'ln': () => { },
-    'log': () => { },
-    'e^': () => { },
-    '10^': () => { },
-    'a^b': () => { }
+    'ln': nOperOnClick('ln', calcLn),
+    'log': nOperOnClick('log', calcLog),
+    'e^': nOperOnClick('e^', calcExp),
+    '10^': nOperOnClick('10^', calc10xp)
 };
 // function createBtnFunc(): () => void {
 //     return () => { };
@@ -71,21 +70,19 @@ function cOperInputDiv(choices, firstRow) {
     // Select
     const selDiv = document.createElement('div');
     selDiv.classList.add('input-field', 'col', 's1');
-    if (!firstRow) {
-        const sel = document.createElement('select');
-        let first = true;
-        for (const c of choices) {
-            const opt = document.createElement('option');
-            opt.value = c;
-            opt.textContent = c;
-            if (first) {
-                opt.selected = true;
-                first = false;
-            }
-            sel.appendChild(opt);
+    const sel = document.createElement('select');
+    let first = true;
+    for (const c of choices) {
+        const opt = document.createElement('option');
+        opt.value = c;
+        opt.textContent = c;
+        if (first) {
+            opt.selected = true;
+            first = false;
         }
-        selDiv.appendChild(sel);
+        sel.appendChild(opt);
     }
+    selDiv.appendChild(sel);
     outDiv.appendChild(selDiv);
     // 2 inputs
     outDiv.appendChild(inpsDiv());
@@ -105,6 +102,22 @@ function cOperInputDiv(choices, firstRow) {
     outDiv.appendChild(remDiv);
     return outDiv;
 }
+function nOperInputDiv(func) {
+    const outDiv = document.createElement('div');
+    outDiv.classList.add('row');
+    outDiv.id = 'inps';
+    // Func
+    const funcDiv = document.createElement('div');
+    funcDiv.classList.add('col', 's1');
+    const funcBtn = document.createElement('a');
+    funcBtn.classList.add('btn-flat', 'no-click');
+    funcBtn.textContent = func;
+    funcDiv.appendChild(funcBtn);
+    outDiv.appendChild(funcDiv);
+    // 2 inputs
+    outDiv.appendChild(inpsDiv());
+    return outDiv;
+}
 function calcBtn(calc) {
     const btn = document.createElement('a');
     btn.classList.add('waves-effect', 'waves-red', 'btn-flat');
@@ -114,12 +127,14 @@ function calcBtn(calc) {
 }
 function cOperOnClick(choices, calc) {
     return () => {
+        while (editDiv.hasChildNodes())
+            editDiv.removeChild(editDiv.lastChild);
         const formDiv = document.createElement('form');
         // Inputs
         formDiv.appendChild(cOperInputDiv(choices, true));
         // Btns
         const btnsDiv = document.createElement('div');
-        btnsDiv.classList.add('cont', 'row', 'center');
+        btnsDiv.classList.add('container', 'row', 'center');
         // Add row
         const addRowBtn = document.createElement('a');
         addRowBtn.classList.add('waves-effect', 'waves-red', 'btn-flat');
@@ -132,8 +147,23 @@ function cOperOnClick(choices, calc) {
         // Calculate
         btnsDiv.appendChild(calcBtn(calc));
         formDiv.appendChild(btnsDiv);
+        editDiv.appendChild(formDiv);
+        M.AutoInit();
+    };
+}
+function nOperOnClick(func, calc) {
+    return () => {
         while (editDiv.hasChildNodes())
             editDiv.removeChild(editDiv.lastChild);
+        const formDiv = document.createElement('form');
+        // Inputs
+        formDiv.appendChild(nOperInputDiv(func));
+        // Btns
+        const btnsDiv = document.createElement('div');
+        btnsDiv.classList.add('container', 'row', 'center');
+        // Calculate
+        btnsDiv.appendChild(calcBtn(calc));
+        formDiv.appendChild(btnsDiv);
         editDiv.appendChild(formDiv);
     };
 }

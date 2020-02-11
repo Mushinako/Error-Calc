@@ -1,7 +1,19 @@
 "use strict";
 
 
-function addMin(): void { }
+function calcAddMin(): void { }
 
 
-function mulDiv(): void { }
+function calcMulDiv(): void { }
+
+
+function calcLn(): void { }
+
+
+function calcLog(): void { }
+
+
+function calcExp(): void { }
+
+
+function calc10xp(): void { }

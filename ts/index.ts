@@ -20,15 +20,14 @@ var cbtns: HTMLAnchorElement[];
 var nbtns: HTMLAnchorElement[];
 
 const copers: Record<string, () => void> = {
-    '+/-': cOperOnClick(['+', '-'], addMin),
-    '×/÷': cOperOnClick(['×', '÷'], mulDiv),
+    '+/-': cOperOnClick(['+', '-'], calcAddMin),
+    '×/÷': cOperOnClick(['×', '÷'], calcMulDiv),
 };
 const nopers: Record<string, () => void> = {
-    'ln': () => { },
-    'log': () => { },
-    'e^': () => { },
-    '10^': () => { },
-    'a^b': () => { }
+    'ln': nOperOnClick('ln', calcLn),
+    'log': nOperOnClick('log', calcLog),
+    'e^': nOperOnClick('e^', calcExp),
+    '10^': nOperOnClick('10^', calc10xp)
 }
 
 
@@ -94,21 +93,19 @@ function cOperInputDiv(choices: string[], firstRow: boolean): HTMLDivElement {
     // Select
     const selDiv: HTMLDivElement = document.createElement('div');
     selDiv.classList.add('input-field', 'col', 's1');
-    if (!firstRow) {
-        const sel: HTMLSelectElement = document.createElement('select');
-        let first: boolean = true;
-        for (const c of choices) {
-            const opt: HTMLOptionElement = document.createElement('option');
-            opt.value = c;
-            opt.textContent = c;
-            if (first) {
-                opt.selected = true;
-                first = false;
-            }
-            sel.appendChild(opt);
+    const sel: HTMLSelectElement = document.createElement('select');
+    let first: boolean = true;
+    for (const c of choices) {
+        const opt: HTMLOptionElement = document.createElement('option');
+        opt.value = c;
+        opt.textContent = c;
+        if (first) {
+            opt.selected = true;
+            first = false;
         }
-        selDiv.appendChild(sel);
+        sel.appendChild(opt);
     }
+    selDiv.appendChild(sel);
     outDiv.appendChild(selDiv);
     // 2 inputs
     outDiv.appendChild(inpsDiv());
@@ -129,6 +126,24 @@ function cOperInputDiv(choices: string[], firstRow: boolean): HTMLDivElement {
 }
 
 
+function nOperInputDiv(func: string): HTMLDivElement {
+    const outDiv: HTMLDivElement = document.createElement('div');
+    outDiv.classList.add('row');
+    outDiv.id = 'inps';
+    // Func
+    const funcDiv: HTMLDivElement = document.createElement('div');
+    funcDiv.classList.add('col', 's1');
+    const funcBtn: HTMLAnchorElement = document.createElement('a');
+    funcBtn.classList.add('btn-flat', 'no-click');
+    funcBtn.textContent = func;
+    funcDiv.appendChild(funcBtn);
+    outDiv.appendChild(funcDiv);
+    // 2 inputs
+    outDiv.appendChild(inpsDiv());
+    return outDiv;
+}
+
+
 function calcBtn(calc: () => void): HTMLAnchorElement {
     const btn: HTMLAnchorElement = document.createElement('a');
     btn.classList.add('waves-effect', 'waves-red', 'btn-flat');
@@ -140,12 +155,13 @@ function calcBtn(calc: () => void): HTMLAnchorElement {
 
 function cOperOnClick(choices: string[], calc: () => void): () => void {
     return (): void => {
+        while (editDiv.hasChildNodes()) editDiv.removeChild(<Node>editDiv.lastChild);
         const formDiv: HTMLFormElement = document.createElement('form');
         // Inputs
         formDiv.appendChild(cOperInputDiv(choices, true));
         // Btns
         const btnsDiv: HTMLDivElement = document.createElement('div');
-        btnsDiv.classList.add('cont', 'row', 'center');
+        btnsDiv.classList.add('container', 'row', 'center');
         // Add row
         const addRowBtn: HTMLAnchorElement = document.createElement('a');
         addRowBtn.classList.add('waves-effect', 'waves-red', 'btn-flat');
@@ -158,7 +174,24 @@ function cOperOnClick(choices: string[], calc: () => void): () => void {
         // Calculate
         btnsDiv.appendChild(calcBtn(calc));
         formDiv.appendChild(btnsDiv);
+        editDiv.appendChild(formDiv);
+        M.AutoInit();
+    };
+}
+
+
+function nOperOnClick(func: string, calc: () => void): () => void {
+    return (): void => {
         while (editDiv.hasChildNodes()) editDiv.removeChild(<Node>editDiv.lastChild);
+        const formDiv: HTMLFormElement = document.createElement('form');
+        // Inputs
+        formDiv.appendChild(nOperInputDiv(func));
+        // Btns
+        const btnsDiv: HTMLDivElement = document.createElement('div');
+        btnsDiv.classList.add('container', 'row', 'center');
+        // Calculate
+        btnsDiv.appendChild(calcBtn(calc));
+        formDiv.appendChild(btnsDiv);
         editDiv.appendChild(formDiv);
     };
 }
