@@ -114,7 +114,7 @@ function cOperInputDiv(choices: string[], firstRow: boolean): HTMLDivElement {
     remDiv.classList.add('col', 's1');
     if (!firstRow) {
         const remBtn: HTMLAnchorElement = document.createElement('a');
-        remBtn.classList.add('waves-effect', 'waves-red', 'btn-flat');
+        remBtn.classList.add('waves-effect', 'waves-red', 'btn', 'red');
         remBtn.textContent = '×';
         remBtn.addEventListener('click', (): void => {
             outDiv.parentNode?.removeChild(outDiv);
@@ -146,7 +146,7 @@ function nOperInputDiv(func: string): HTMLDivElement {
 
 function calcBtn(calc: () => void): HTMLAnchorElement {
     const btn: HTMLAnchorElement = document.createElement('a');
-    btn.classList.add('waves-effect', 'waves-red', 'btn-flat');
+    btn.classList.add('waves-effect', 'waves-light-blue', 'btn', 'blue');
     btn.textContent = 'Calculate';
     btn.addEventListener('click', (): void => { calc() });
     return btn;
@@ -164,7 +164,7 @@ function cOperOnClick(choices: string[], calc: () => void): () => void {
         btnsDiv.classList.add('container', 'row', 'center');
         // Add row
         const addRowBtn: HTMLAnchorElement = document.createElement('a');
-        addRowBtn.classList.add('waves-effect', 'waves-red', 'btn-flat');
+        addRowBtn.classList.add('waves-effect', 'waves-teal', 'btn', 'green');
         addRowBtn.textContent = 'Add Row';
         addRowBtn.addEventListener('click', (): void => {
             formDiv.insertBefore(cOperInputDiv(choices, false), formDiv.lastChild);

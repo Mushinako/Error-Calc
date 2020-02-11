@@ -91,7 +91,7 @@ function cOperInputDiv(choices, firstRow) {
     remDiv.classList.add('col', 's1');
     if (!firstRow) {
         const remBtn = document.createElement('a');
-        remBtn.classList.add('waves-effect', 'waves-red', 'btn-flat');
+        remBtn.classList.add('waves-effect', 'waves-red', 'btn', 'red');
         remBtn.textContent = '×';
         remBtn.addEventListener('click', () => {
             var _a;
@@ -120,7 +120,7 @@ function nOperInputDiv(func) {
 }
 function calcBtn(calc) {
     const btn = document.createElement('a');
-    btn.classList.add('waves-effect', 'waves-red', 'btn-flat');
+    btn.classList.add('waves-effect', 'waves-light-blue', 'btn', 'blue');
     btn.textContent = 'Calculate';
     btn.addEventListener('click', () => { calc(); });
     return btn;
@@ -137,7 +137,7 @@ function cOperOnClick(choices, calc) {
         btnsDiv.classList.add('container', 'row', 'center');
         // Add row
         const addRowBtn = document.createElement('a');
-        addRowBtn.classList.add('waves-effect', 'waves-red', 'btn-flat');
+        addRowBtn.classList.add('waves-effect', 'waves-teal', 'btn', 'green');
         addRowBtn.textContent = 'Add Row';
         addRowBtn.addEventListener('click', () => {
             formDiv.insertBefore(cOperInputDiv(choices, false), formDiv.lastChild);

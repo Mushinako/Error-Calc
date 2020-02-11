@@ -14,13 +14,6 @@ html {
         sans-serif;
 }
 
-h1 {
-    font-size: 4.2rem;
-    line-height: 110%;
-    margin: 2rem 0 1rem 0;
-    font-weight: normal;
-}
-
 hr {
     width: 70%;
 }
@@ -48,6 +41,14 @@ hr {
     margin-top: 16px;
 } */
 
+.row {
+    margin-bottom: 8px;
+}
+
+.row .col {
+    padding: 0 0.25rem;
+}
+
 .margin-bot {
     margin-bottom: 16px;
 }
@@ -59,6 +60,11 @@ hr {
 .input-field {
     margin-top: auto;
     margin-bottom: auto;
+}
+
+.select-wrapper input.select-dropdown,
+.input-field>input[type=text]:not(.browser-default) {
+    height: 2rem;
 }
 
 /* .inp>input::placeholder {
