@@ -58,30 +58,37 @@ hr {
     max-width: 1280px;
 }
 
-.cntr {
-    text-align: center;
+.no-click {
+    cursor: default;
 }
 
-.bttn {
-    position: relative;
-    cursor: pointer;
-    display: inline-block;
-    overflow: hidden;
-    user-select: none;
-    vertical-align: middle;
-    z-index: 1;
-    transition: .3s ease-in-out;
-    box-shadow: none;
-    background-color: transparent;
-    color: rgba(50, 50, 50, 1);
-    font-size: 14px;
-    outline: 0;
-    border: none;
-    border-radius: 3px;
-    /* line-height: 36px; */
-    padding: 0 16px;
-    text-decoration: none;
+.input-field {
+    margin-top: auto;
+    margin-bottom: auto;
 }
+
+/* .inp>input::placeholder {
+    color: #757575;
+}
+
+.inp>input:disabled {
+    color: #000;
+}
+
+.inp>input.invalid,
+.inp>input.invalid:focus {
+    color: #d50000;
+}
+
+.inp>input.valid {
+    border-bottom: 1px solid #1b5e20;
+    box-shadow: 0 1px 0 0 #1b5e20;
+}
+
+.inp>input.invalid {
+    border-bottom: 1px solid #d50000;
+    box-shadow: 0 1px 0 0 #d50000;
+} */
 
 .solid {
     min-height: 3rem;
