@@ -27,7 +27,7 @@ function inpDiv(ph) {
     inp.classList.add('validate');
     inp.placeholder = ph;
     inp.type = 'text';
-    inp.pattern = '\\d*(\\.\\d*)?([Ee][\\+\\-]?\\d+)?';
+    inp.pattern = '[\\+\\-]?\\d*(\\.\\d*)?([Ee][\\+\\-]?\\d+)?';
     if (ph === 'Avg')
         inp.pattern += '|Ans\\d+';
     div.appendChild(inp);
@@ -200,10 +200,44 @@ function parse() {
 }
 function displayAns() {
     let ids = [];
+    while (formDiv.hasChildNodes())
+        formDiv.removeChild(formDiv.lastChild);
+    const tbl = document.createElement('table');
+    const thead = document.createElement('thead');
+    for (const title of ['Ans', 'Formula', 'Result', '']) {
+        const th = document.createElement('th');
+        th.textContent = title;
+        thead.appendChild(th);
+    }
+    tbl.appendChild(thead);
+    const tbody = document.createElement('tbody');
     for (const [ans, data] of Object.entries(window.localStorage).sort()) {
         ids.push(parseInt(ans.slice(3)));
         const [form, avg, sd] = JSON.parse(data);
+        const formStr = `\\(${form}\\)`;
+        const resStr = `\\({\\color{red} ${avg}}\\pm{\\color{blue} ${sd}}\\)`;
+        const tr = document.createElement('tr');
+        for (const item of [ans, formStr, resStr]) {
+            const td = document.createElement('td');
+            td.textContent = item;
+            tr.appendChild(td);
+        }
+        const td = document.createElement('td');
+        const btn = document.createElement('a');
+        btn.classList.add('waves-effect', 'waves-red', 'btn', 'red');
+        btn.textContent = '×';
+        btn.addEventListener('click', () => {
+            window.localStorage.removeItem(ans);
+            tbody.removeChild(tr);
+        });
+        td.appendChild(btn);
+        tr.appendChild(td);
+        tbody.appendChild(tr);
     }
+    ansCounter = Math.max(...ids) + 1;
+    tbl.appendChild(tbody);
+    formDiv.appendChild(tbl);
+    parse();
 }
 document.addEventListener('DOMContentLoaded', () => {
     // Set output

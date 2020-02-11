@@ -43,7 +43,9 @@ function calcAddMin() {
     }
     if (formStr.charAt(0) === '+')
         formStr = formStr.slice(1);
-    const sdSum = Math.sqrt(sdSqSum);
+    let sdSum = Math.sqrt(sdSqSum);
+    avgSum = Math.round((avgSum + Number.EPSILON) * 1e10) / 1e10;
+    sdSum = Math.round((sdSum + Number.EPSILON) * 1e10) / 1e10;
     window.localStorage.setItem(`Ans${ansCounter}`, JSON.stringify([formStr, avgSum, sdSum]));
     displayAns();
 }

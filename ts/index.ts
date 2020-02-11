@@ -1,7 +1,9 @@
 "use strict";
 
 interface MathJax {
-    typeset(): void
+    typeset?(): void,
+    loader: Record<string, string[]>,
+    tex: Record<string, Record<string, string[]>>
 }
 
 interface Materialize {
@@ -11,7 +13,7 @@ interface Materialize {
     }
 }
 
-declare const MathJax: MathJax;
+declare var MathJax: MathJax;
 declare const M: Materialize;
 
 let editDiv: HTMLDivElement;
@@ -45,7 +47,7 @@ function inpDiv(ph: string): [HTMLDivElement, HTMLInputElement] {
     inp.classList.add('validate');
     inp.placeholder = ph;
     inp.type = 'text';
-    inp.pattern = '\\d*(\\.\\d*)?([Ee][\\+\\-]?\\d+)?';
+    inp.pattern = '[\\+\\-]?\\d*(\\.\\d*)?([Ee][\\+\\-]?\\d+)?';
     if (ph === 'Avg') inp.pattern += '|Ans\\d+';
     div.appendChild(inp);
     return [div, inp];
@@ -223,7 +225,7 @@ function setBtns(opers: Record<string, () => void>): HTMLAnchorElement[] {
 
 function parse(): void {
     try {
-        MathJax.typeset();
+        MathJax.typeset!();
     } catch (e) {
         console.log(e);
     }
@@ -232,10 +234,43 @@ function parse(): void {
 
 function displayAns(): void {
     let ids: number[] = [];
+    while (formDiv.hasChildNodes()) formDiv.removeChild(<ChildNode>formDiv.lastChild);
+    const tbl: HTMLTableElement = document.createElement('table');
+    const thead: HTMLTableSectionElement = document.createElement('thead');
+    for (const title of ['Ans', 'Formula', 'Result', '']) {
+        const th: HTMLTableHeaderCellElement = document.createElement('th');
+        th.textContent = title;
+        thead.appendChild(th);
+    }
+    tbl.appendChild(thead);
+    const tbody: HTMLTableSectionElement = document.createElement('tbody');
     for (const [ans, data] of Object.entries(window.localStorage).sort()) {
         ids.push(parseInt(ans.slice(3)));
         const [form, avg, sd]: [string, string, string] = JSON.parse(data);
+        const formStr: string = `\\(${form}\\)`;
+        const resStr: string = `\\({\\color{red} ${avg}}\\pm{\\color{blue} ${sd}}\\)`;
+        const tr: HTMLTableRowElement = document.createElement('tr');
+        for (const item of [ans, formStr, resStr]) {
+            const td: HTMLTableCellElement = document.createElement('td');
+            td.textContent = item;
+            tr.appendChild(td);
+        }
+        const td: HTMLTableCellElement = document.createElement('td');
+        const btn: HTMLAnchorElement = document.createElement('a');
+        btn.classList.add('waves-effect', 'waves-red', 'btn', 'red');
+        btn.textContent = '×';
+        btn.addEventListener('click', (): void => {
+            window.localStorage.removeItem(ans);
+            tbody.removeChild(tr);
+        });
+        td.appendChild(btn);
+        tr.appendChild(td);
+        tbody.appendChild(tr);
     }
+    ansCounter = Math.max(...ids) + 1;
+    tbl.appendChild(tbody);
+    formDiv.appendChild(tbl);
+    parse();
 }
 
 
