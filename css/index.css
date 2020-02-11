@@ -14,10 +14,6 @@ html {
         sans-serif;
 }
 
-hr {
-    width: 70%;
-}
-
 .outer {
     display: table;
     position: absolute;

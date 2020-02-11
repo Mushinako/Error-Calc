@@ -14,10 +14,10 @@ interface Materialize {
 declare const MathJax: MathJax;
 declare const M: Materialize;
 
-var editDiv: HTMLDivElement;
-var formDiv: HTMLDivElement;
-var cbtns: HTMLAnchorElement[];
-var nbtns: HTMLAnchorElement[];
+let editDiv: HTMLDivElement;
+let formDiv: HTMLDivElement;
+let cbtns: HTMLAnchorElement[];
+let nbtns: HTMLAnchorElement[];
 
 const copers: Record<string, () => void> = {
     '+/-': cOperOnClick(['+', '-'], calcAddMin),
@@ -28,12 +28,14 @@ const nopers: Record<string, () => void> = {
     'log': nOperOnClick('log', calcLog),
     'e^': nOperOnClick('e^', calcExp),
     '10^': nOperOnClick('10^', calc10xp)
-}
-
-
-// function createBtnFunc(): () => void {
-//     return () => { };
-// }
+};
+const supportedBrowsers: string[] = [
+    'Google Chrome 54+',
+    'Mozilla Firefox 47+',
+    'Apple Safari 11+',
+    'Microsoft Edge 14+',
+    'Opera 41+'
+];
 
 
 function inpDiv(ph: string): [HTMLDivElement, HTMLInputElement] {
@@ -43,7 +45,8 @@ function inpDiv(ph: string): [HTMLDivElement, HTMLInputElement] {
     inp.classList.add('validate');
     inp.placeholder = ph;
     inp.type = 'text';
-    inp.pattern = ph === 'Avg' ? '\\d+(\\.\\d*)?|\\.\\d*|Ans\\d+' : '\\d*(\\.\\d*)?';
+    inp.pattern = '\\d*(\\.\\d*)?([Ee][\\+\\-]?\\d+)?';
+    if (ph === 'Avg') inp.pattern += '|Ans\\d+';
     div.appendChild(inp);
     return [div, inp];
 }
@@ -88,8 +91,7 @@ function inpsDiv(): HTMLDivElement {
 
 function cOperInputDiv(choices: string[], firstRow: boolean): HTMLDivElement {
     const outDiv: HTMLDivElement = document.createElement('div');
-    outDiv.classList.add('row');
-    outDiv.id = 'inps';
+    outDiv.classList.add('row', 'inps');
     // Select
     const selDiv: HTMLDivElement = document.createElement('div');
     selDiv.classList.add('input-field', 'col', 's1');
@@ -128,8 +130,7 @@ function cOperInputDiv(choices: string[], firstRow: boolean): HTMLDivElement {
 
 function nOperInputDiv(func: string): HTMLDivElement {
     const outDiv: HTMLDivElement = document.createElement('div');
-    outDiv.classList.add('row');
-    outDiv.id = 'inps';
+    outDiv.classList.add('row', 'inps');
     // Func
     const funcDiv: HTMLDivElement = document.createElement('div');
     funcDiv.classList.add('col', 's1');
@@ -148,7 +149,7 @@ function calcBtn(calc: () => void): HTMLAnchorElement {
     const btn: HTMLAnchorElement = document.createElement('a');
     btn.classList.add('waves-effect', 'waves-light-blue', 'btn', 'blue');
     btn.textContent = 'Calculate';
-    btn.addEventListener('click', (): void => { calc() });
+    btn.addEventListener('click', calc);
     return btn;
 }
 
@@ -229,12 +230,39 @@ function parse(): void {
 }
 
 
+function displayAns(): void {
+    let ids: number[] = [];
+    for (const [ans, data] of Object.entries(window.localStorage).sort()) {
+        ids.push(parseInt(ans.slice(3)));
+        const [form, avg, sd]: [string, string, string] = JSON.parse(data);
+    }
+}
+
+
 document.addEventListener('DOMContentLoaded', (): void => {
+    // Set output
+    formDiv = <HTMLDivElement>document.getElementById('form');
+    if (!Object.entries || !window.localStorage) {
+        const noSupportP: HTMLParagraphElement = document.createElement('p');
+        noSupportP.textContent = 'Your browser is not supported. Please use:'
+        formDiv.appendChild(noSupportP);
+        const supportedList: HTMLUListElement = document.createElement('ul');
+        for (const b of supportedBrowsers) {
+            const bLI: HTMLLIElement = document.createElement('li');
+            bLI.textContent = b;
+            supportedList.appendChild(bLI);
+        }
+        formDiv.appendChild(supportedList);
+        return;
+    }
+    if (Object.entries(window.localStorage).length) {
+        displayAns();
+    } else {
+        ansCounter = 1;
+    }
     // Set input
     editDiv = <HTMLDivElement>document.getElementById('edit');
     // Set buttons
     cbtns = setBtns(copers);
     nbtns = setBtns(nopers);
-    // Set output
-    formDiv = <HTMLDivElement>document.getElementById('form');
 });

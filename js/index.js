@@ -1,8 +1,8 @@
 "use strict";
-var editDiv;
-var formDiv;
-var cbtns;
-var nbtns;
+let editDiv;
+let formDiv;
+let cbtns;
+let nbtns;
 const copers = {
     '+/-': cOperOnClick(['+', '-'], calcAddMin),
     '×/÷': cOperOnClick(['×', '÷'], calcMulDiv),
@@ -13,9 +13,13 @@ const nopers = {
     'e^': nOperOnClick('e^', calcExp),
     '10^': nOperOnClick('10^', calc10xp)
 };
-// function createBtnFunc(): () => void {
-//     return () => { };
-// }
+const supportedBrowsers = [
+    'Google Chrome 54+',
+    'Mozilla Firefox 47+',
+    'Apple Safari 11+',
+    'Microsoft Edge 14+',
+    'Opera 41+'
+];
 function inpDiv(ph) {
     const div = document.createElement('div');
     div.classList.add('input-field', 'col', 's5');
@@ -23,7 +27,9 @@ function inpDiv(ph) {
     inp.classList.add('validate');
     inp.placeholder = ph;
     inp.type = 'text';
-    inp.pattern = ph === 'Avg' ? '\\d+(\\.\\d*)?|\\.\\d*|Ans\\d+' : '\\d*(\\.\\d*)?';
+    inp.pattern = '\\d*(\\.\\d*)?([Ee][\\+\\-]?\\d+)?';
+    if (ph === 'Avg')
+        inp.pattern += '|Ans\\d+';
     div.appendChild(inp);
     return [div, inp];
 }
@@ -65,8 +71,7 @@ function inpsDiv() {
 }
 function cOperInputDiv(choices, firstRow) {
     const outDiv = document.createElement('div');
-    outDiv.classList.add('row');
-    outDiv.id = 'inps';
+    outDiv.classList.add('row', 'inps');
     // Select
     const selDiv = document.createElement('div');
     selDiv.classList.add('input-field', 'col', 's1');
@@ -104,8 +109,7 @@ function cOperInputDiv(choices, firstRow) {
 }
 function nOperInputDiv(func) {
     const outDiv = document.createElement('div');
-    outDiv.classList.add('row');
-    outDiv.id = 'inps';
+    outDiv.classList.add('row', 'inps');
     // Func
     const funcDiv = document.createElement('div');
     funcDiv.classList.add('col', 's1');
@@ -122,7 +126,7 @@ function calcBtn(calc) {
     const btn = document.createElement('a');
     btn.classList.add('waves-effect', 'waves-light-blue', 'btn', 'blue');
     btn.textContent = 'Calculate';
-    btn.addEventListener('click', () => { calc(); });
+    btn.addEventListener('click', calc);
     return btn;
 }
 function cOperOnClick(choices, calc) {
@@ -194,12 +198,38 @@ function parse() {
         console.log(e);
     }
 }
+function displayAns() {
+    let ids = [];
+    for (const [ans, data] of Object.entries(window.localStorage).sort()) {
+        ids.push(parseInt(ans.slice(3)));
+        const [form, avg, sd] = JSON.parse(data);
+    }
+}
 document.addEventListener('DOMContentLoaded', () => {
+    // Set output
+    formDiv = document.getElementById('form');
+    if (!Object.entries || !window.localStorage) {
+        const noSupportP = document.createElement('p');
+        noSupportP.textContent = 'Your browser is not supported. Please use:';
+        formDiv.appendChild(noSupportP);
+        const supportedList = document.createElement('ul');
+        for (const b of supportedBrowsers) {
+            const bLI = document.createElement('li');
+            bLI.textContent = b;
+            supportedList.appendChild(bLI);
+        }
+        formDiv.appendChild(supportedList);
+        return;
+    }
+    if (Object.entries(window.localStorage).length) {
+        displayAns();
+    }
+    else {
+        ansCounter = 1;
+    }
     // Set input
     editDiv = document.getElementById('edit');
     // Set buttons
     cbtns = setBtns(copers);
     nbtns = setBtns(nopers);
-    // Set output
-    formDiv = document.getElementById('form');
 });
