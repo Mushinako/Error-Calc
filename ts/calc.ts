@@ -8,7 +8,7 @@ let ansCounter: number;
  * 
  * @param {number} n - Number to be rounded
  */
-const rndTo = (n: number): number => +n.toPrecision(8);
+const rndTo = (n: number): number => +n.toPrecision(10);
 
 /**
  * Formula representation for Ans
@@ -70,6 +70,13 @@ function cGetInps(): [HTMLInputElement, string, string, string][] {
 function nGetInp(): [HTMLInputElement, string, string] {
     const outDiv: Element = document.getElementsByClassName('inps')[0];
     return inpsFromDiv(outDiv);
+}
+
+function tGetInps(): [[HTMLInputElement, string, string], number] {
+    const inpDivs: HTMLCollectionOf<Element> = document.getElementsByClassName('inps');
+    const base: [HTMLInputElement, string, string] = inpsFromDiv(inpDivs[0]);
+    const expInp: HTMLInputElement = <HTMLInputElement>inpDivs[1].childNodes[1].childNodes[0].childNodes[0];
+    return [base, +expInp.value];
 }
 
 /**
@@ -238,5 +245,18 @@ function calc10xp(): void {
     const sdRes: number = rndTo(sd * avgRes * Math.log(10));
     avgRes = rndTo(avgRes);
     const formStr: string = `10^{${isAns ? ansForm(avgStr) : numForm(avg, sd)}}`;
+    postProc(formStr, avgRes, sdRes);
+}
+
+
+function calcPwr(): void {
+    const [base, exp]: [[HTMLInputElement, string, string], number] = tGetInps();
+    const [inp, avgStr, sdStr]: [HTMLInputElement, string, string] = base;
+    const [success, avg, sd, isAns]: [number, number, number, number] = getNums(inp, avgStr, sdStr);
+    if (!success) return;
+    let avgRes: number = Math.pow(avg, exp);
+    const sdRes: number = rndTo(sd / avg * exp * avgRes);
+    avgRes = rndTo(avgRes);
+    const formStr: string = `{${isAns ? ansForm(avgStr) : numForm(avg, sd)}}^{${exp}}`;
     postProc(formStr, avgRes, sdRes);
 }

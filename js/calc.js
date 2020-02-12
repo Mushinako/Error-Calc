@@ -1,6 +1,6 @@
 "use strict";
 let ansCounter;
-const rndTo = (n) => +n.toPrecision(8);
+const rndTo = (n) => +n.toPrecision(10);
 const ansForm = (ans) => `\\text{Ans}${ans.slice(3)}`;
 const numForm = (avg, sd) => `(${avg}\\pm${sd})`;
 function inpsFromDiv(div) {
@@ -21,6 +21,12 @@ function cGetInps() {
 function nGetInp() {
     const outDiv = document.getElementsByClassName('inps')[0];
     return inpsFromDiv(outDiv);
+}
+function tGetInps() {
+    const inpDivs = document.getElementsByClassName('inps');
+    const base = inpsFromDiv(inpDivs[0]);
+    const expInp = inpDivs[1].childNodes[1].childNodes[0].childNodes[0];
+    return [base, +expInp.value];
 }
 function parAns(avgInp, avgStr) {
     const result = window.localStorage.getItem(avgStr);
@@ -146,5 +152,17 @@ function calc10xp() {
     const sdRes = rndTo(sd * avgRes * Math.log(10));
     avgRes = rndTo(avgRes);
     const formStr = `10^{${isAns ? ansForm(avgStr) : numForm(avg, sd)}}`;
+    postProc(formStr, avgRes, sdRes);
+}
+function calcPwr() {
+    const [base, exp] = tGetInps();
+    const [inp, avgStr, sdStr] = base;
+    const [success, avg, sd, isAns] = getNums(inp, avgStr, sdStr);
+    if (!success)
+        return;
+    let avgRes = Math.pow(avg, exp);
+    const sdRes = rndTo(sd / avg * exp * avgRes);
+    avgRes = rndTo(avgRes);
+    const formStr = `{${isAns ? ansForm(avgStr) : numForm(avg, sd)}}^{${exp}}`;
     postProc(formStr, avgRes, sdRes);
 }

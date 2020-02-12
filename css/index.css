@@ -3,6 +3,24 @@ label {
     color: #666666;
 }
 
+.select-dropdown.dropdown-content {
+    background-color: rgba(223, 223, 223, 0.95);
+    min-width: 0;
+}
+
+.select-dropdown.dropdown-content li>span {
+    color: #000000;
+}
+
+.collapsible {
+    border: none;
+    box-shadow: none;
+}
+
+.collapsible-header {
+    background-color: inherit;
+}
+
 .no-pad {
     padding: 0;
 }
@@ -10,6 +28,10 @@ label {
 .box {
     background-color: rgba(255, 255, 255, 0.8);
     border-radius: 30px;
+}
+
+.cont {
+    padding-bottom: 6px;
 }
 
 .row {

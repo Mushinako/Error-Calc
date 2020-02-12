@@ -28,25 +28,60 @@
     <main>
         <div class="container">
             <div class="box">
-                <h1 class="center">Error Calculation</h1>
-                <div class="center margin-bot" id="btns"></div>
-                <hr class="container">
-                <div class="center" id="hint"></div>
-                <div class="center cont solid container" id="edit"></div>
-                <hr class="container">
-                <div class="container center">
-                    <p><strong>Note:</strong> The calculated values do <strong>not</strong> round the results according
-                        to sigfig rules. This feature may be implemented later to comply with global laziness.</p>
+                <div class="cont">
+                    <h1 class="center">Error Calculation</h1>
+                    <div class="center margin-bot" id="btns"></div>
+                    <hr class="container">
+                    <div class="center solid container" id="edit"></div>
+                    <div class="center container" id="prev"></div>
+                    <hr class="container">
+                    <!-- <div class="switch center">
+                        <label>
+                            Show extra SigFigs
+                            <input type="checkbox" id="sigfig">
+                            <span class="lever"></span>
+                            Show required SigFigs
+                        </label>
+                    </div> -->
+                    <div class="solid container col s12" id="form"></div>
+                    <div class="container">
+                        <ul class="collapsible">
+                            <li>
+                                <div class="collapsible-header"><strong>Notes</strong></div>
+                                <div class="collapsible-body">
+                                    <ul>
+                                        <li>The calculated values do <strong>not</strong> round the results according to
+                                            sigfig rules. This feature may be implemented later.</li>
+                                        <li>Use respective Ans (e.g., "Ans1", "Ans2", etc.) as the average to use
+                                            previously calculated values for better
+                                            precision</li>
+                                    </ul>
+                                </div>
+                            </li>
+                            <li>
+                                <div class="collapsible-header"><strong>Keyboard shortcuts</strong></div>
+                                <div class="collapsible-body">
+                                    <ul>
+                                        <li><em>Enter:</em> Run calculation</li>
+                                        <li><em>Shift+Enter:</em> Add row
+                                            (when
+                                            applicable)</li>
+                                    </ul>
+                                </div>
+                            </li>
+                            <li>
+                                <div class="collapsible-header"><strong>Data formats accepted</strong></div>
+                                <div class="collapsible-body">
+                                    <ul>
+                                        <li><em>Numbers:</em> 3.1415926; -2020; .57721</li>
+                                        <li><em>Scientific notations:</em> 8e8; .897e-12; 599e+3 </li>
+                                        <li><em>Previous answers:</em> Ans1; Ans22</li>
+                                    </ul>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
                 </div>
-                <!-- <div class="switch center">
-                    <label>
-                        Show extra SigFigs
-                        <input type="checkbox" id="sigfig">
-                        <span class="lever"></span>
-                        Show required SigFigs
-                    </label>
-                </div> -->
-                <div class="cont solid container" id="form"></div>
             </div>
         </div>
     </main>

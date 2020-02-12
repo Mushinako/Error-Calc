@@ -20,7 +20,6 @@ declare const M: Materialize;
 // Global variables
 let editDiv: HTMLDivElement;
 let formDiv: HTMLDivElement;
-let hintDiv: HTMLDivElement;
 
 // Operations
 const copers: Record<string, () => void> = {
@@ -33,6 +32,9 @@ const nopers: Record<string, () => void> = {
     'e^': nOperOnClick('e^', calcExp),
     '10^': nOperOnClick('10^', calc10xp)
 };
+const topers: Record<string, () => void> = {
+    'a^x': tOperOnClick(['a', 'x'], calcPwr)
+}
 
 // Supported browsers
 const supportedBrowsers: string[] = [
@@ -150,7 +152,7 @@ function cOperInputDiv(choices: string[], firstRow: boolean): HTMLDivElement {
         remBtn.classList.add('waves-effect', 'waves-red', 'btn', 'red');
         remBtn.textContent = '×';
         remBtn.addEventListener('click', (): void => {
-            outDiv.parentNode?.removeChild(outDiv);
+            outDiv.parentNode!.removeChild(outDiv);
         });
         remDiv.appendChild(remBtn);
     }
@@ -183,6 +185,47 @@ function nOperInputDiv(func: string): HTMLDivElement {
     outDiv.appendChild(inpsDiv());
     // Return, skipping the delete button
     return outDiv;
+}
+
+function tOperInputDiv(rows: string[]): HTMLDivElement[] {
+    // First row
+    const baseRow: HTMLDivElement = nOperInputDiv(rows[0]);
+    // Second row
+    const outDiv: HTMLDivElement = document.createElement('div');
+    outDiv.classList.add('row', 'inps');
+    // Func
+    const funcDiv: HTMLDivElement = document.createElement('div');
+    funcDiv.classList.add('col', 's1');
+    const funcBtn: HTMLAnchorElement = document.createElement('a');
+    funcBtn.classList.add('btn-flat', 'no-click', 'no-pad');
+    funcBtn.textContent = rows[1];
+    funcDiv.appendChild(funcBtn);
+    outDiv.appendChild(funcDiv);
+    // Create outer input div
+    const div: HTMLDivElement = document.createElement('div');
+    div.classList.add('col', 's10');
+    // Exponent input div
+    // Create outer div
+    const expDiv: HTMLDivElement = document.createElement('div');
+    expDiv.classList.add('input-field', 'col', 's5');
+    // Create inner input
+    const expInp: HTMLInputElement = document.createElement('input');
+    expInp.classList.add('validate');
+    expInp.placeholder = 'Exp';
+    expInp.type = 'text';
+    expInp.pattern = '[\\+\\-]?\\d*(\\.\\d*)?([Ee][\\+\\-]?\\d+)?';
+    // Append
+    expDiv.appendChild(expInp);
+    div.appendChild(expDiv);
+    outDiv.appendChild(div);
+    // Check inputs
+    expInp.addEventListener('input', (): void => {
+        if (expInp.value.charAt(0).toLowerCase() === 'a') {
+            alert('Exponent cannot be a previous answer!');
+            expInp.value = '';
+        }
+    });
+    return [baseRow, outDiv];
 }
 
 /**
@@ -268,6 +311,25 @@ function nOperOnClick(func: string, calc: () => void): () => void {
     };
 }
 
+
+function tOperOnClick(rows: string[], calc: () => void): () => void {
+    return (): void => {
+        // Clear and re-init form
+        while (editDiv.hasChildNodes()) editDiv.removeChild(editDiv.lastChild!);
+        const formDiv: HTMLFormElement = document.createElement('form');
+        // Inputs
+        for (const div of tOperInputDiv(rows)) formDiv.appendChild(div);
+        // Button row wrapper
+        const btnsDiv: HTMLDivElement = document.createElement('div');
+        btnsDiv.classList.add('container', 'row', 'center');
+        // Calculate button
+        btnsDiv.appendChild(calcBtn(calc));
+        // Append
+        formDiv.appendChild(btnsDiv);
+        editDiv.appendChild(formDiv);
+    };
+}
+
 /**
  * Create a method button
  * 
@@ -317,29 +379,30 @@ function parse(): void {
  * Display Ans from localStorage, also set counter
  */
 function displayAns(): void {
-    // Clear hint
-    while (hintDiv.hasChildNodes()) hintDiv.removeChild(hintDiv.lastChild!);
     // Check if localStorage is empty
     if (!Object.keys(window.localStorage).length) {
         ansCounter = 1;
         return;
     }
-    // Create hint
-    const p: HTMLParagraphElement = document.createElement('p');
-    p.textContent = 'Use respective Ans (e.g., \"Ans1\", \"Ans2\", etc.) as the average to use previously calculated values for better precision';
-    hintDiv.appendChild(p);
     // List of Ans IDs present
     let ids: number[] = [];
     // Clear and reassemble table
     while (formDiv.hasChildNodes()) formDiv.removeChild(formDiv.lastChild!);
+    // const tbl: HTMLDivElement = document.createElement('div');
+    // // Table header
+    // const thead: HTMLDivElement = document.createElement('div');
+    // const titles: string[] = ['Ans', 'Formula', 'Result'];
     const tbl: HTMLTableElement = document.createElement('table');
+    tbl.classList.add('highlight', 'responsive-table', 'centered');
     // Table header
     const thead: HTMLTableSectionElement = document.createElement('thead');
+    const trHead: HTMLTableRowElement = document.createElement('tr');
     for (const title of ['Ans', 'Formula', 'Result', '']) {
         const th: HTMLTableHeaderCellElement = document.createElement('th');
         th.textContent = title;
-        thead.appendChild(th);
+        trHead.appendChild(th);
     }
+    thead.appendChild(trHead);
     tbl.appendChild(thead);
     // Table body
     const tbody: HTMLTableSectionElement = document.createElement('tbody');
@@ -363,8 +426,8 @@ function displayAns(): void {
         btn.textContent = '×';
         btn.addEventListener('click', (): void => {
             window.localStorage.removeItem(ans);
-            tbody.removeChild(tr);
-            ansCounter = Math.min(ansCounter, +ans.slice(3));
+            if (Object.keys(window.localStorage).length) tbody.removeChild(tr);
+            else formDiv.removeChild(tbl);
         });
         td.appendChild(btn);
         tr.appendChild(td);
@@ -396,13 +459,13 @@ document.addEventListener('DOMContentLoaded', (): void => {
         formDiv.appendChild(supportedList);
         return;
     }
-    hintDiv = <HTMLDivElement>document.getElementById('hint');
     displayAns();
     // Set input
     editDiv = <HTMLDivElement>document.getElementById('edit');
     // Set buttons
     setBtns(copers);
     setBtns(nopers);
+    setBtns(topers);
     // Keyboard events
     document.addEventListener('keypress', (ev: KeyboardEvent): void => {
         if (ev.key === 'Enter' || ev.key === '\n') {
