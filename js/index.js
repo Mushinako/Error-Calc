@@ -1,8 +1,7 @@
 "use strict";
 let editDiv;
 let formDiv;
-let cbtns;
-let nbtns;
+let hintDiv;
 const copers = {
     '+/-': cOperOnClick(['+', '-'], calcAddMin),
     '×/÷': cOperOnClick(['×', '÷'], calcMulDiv),
@@ -36,10 +35,8 @@ function inpDiv(ph) {
 function inpsDiv() {
     const div = document.createElement('div');
     div.classList.add('col', 's10');
-    // Average
     const [avgDiv, avgInp] = inpDiv('Avg');
     div.appendChild(avgDiv);
-    // pm
     const pmDiv = document.createElement('div');
     pmDiv.classList.add('center', 'col', 's2');
     const pmBtn = document.createElement('a');
@@ -47,10 +44,8 @@ function inpsDiv() {
     pmBtn.textContent = '±';
     pmDiv.appendChild(pmBtn);
     div.appendChild(pmDiv);
-    // SD
     const [sdDiv, sdInp] = inpDiv('SD');
     div.appendChild(sdDiv);
-    // Check inputs
     avgInp.addEventListener('input', () => {
         if (avgInp.value.toLowerCase() === 'a') {
             avgInp.value = 'Ans';
@@ -72,7 +67,6 @@ function inpsDiv() {
 function cOperInputDiv(choices, firstRow) {
     const outDiv = document.createElement('div');
     outDiv.classList.add('row', 'inps');
-    // Select
     const selDiv = document.createElement('div');
     selDiv.classList.add('input-field', 'col', 's1');
     const sel = document.createElement('select');
@@ -89,9 +83,7 @@ function cOperInputDiv(choices, firstRow) {
     }
     selDiv.appendChild(sel);
     outDiv.appendChild(selDiv);
-    // 2 inputs
     outDiv.appendChild(inpsDiv());
-    // Remove btn
     const remDiv = document.createElement('div');
     remDiv.classList.add('col', 's1');
     if (!firstRow) {
@@ -110,7 +102,6 @@ function cOperInputDiv(choices, firstRow) {
 function nOperInputDiv(func) {
     const outDiv = document.createElement('div');
     outDiv.classList.add('row', 'inps');
-    // Func
     const funcDiv = document.createElement('div');
     funcDiv.classList.add('col', 's1');
     const funcBtn = document.createElement('a');
@@ -118,7 +109,6 @@ function nOperInputDiv(func) {
     funcBtn.textContent = func;
     funcDiv.appendChild(funcBtn);
     outDiv.appendChild(funcDiv);
-    // 2 inputs
     outDiv.appendChild(inpsDiv());
     return outDiv;
 }
@@ -135,12 +125,9 @@ function cOperOnClick(choices, calc) {
         while (editDiv.hasChildNodes())
             editDiv.removeChild(editDiv.lastChild);
         const formDiv = document.createElement('form');
-        // Inputs
         formDiv.appendChild(cOperInputDiv(choices, true));
-        // Btns
         const btnsDiv = document.createElement('div');
         btnsDiv.classList.add('container', 'row', 'center');
-        // Add row
         const addRowBtn = document.createElement('a');
         addRowBtn.classList.add('waves-effect', 'waves-teal', 'btn', 'green');
         addRowBtn.id = 'add-row';
@@ -150,7 +137,6 @@ function cOperOnClick(choices, calc) {
             M.AutoInit();
         });
         btnsDiv.appendChild(addRowBtn);
-        // Calculate
         btnsDiv.appendChild(calcBtn(calc));
         formDiv.appendChild(btnsDiv);
         editDiv.appendChild(formDiv);
@@ -162,12 +148,9 @@ function nOperOnClick(func, calc) {
         while (editDiv.hasChildNodes())
             editDiv.removeChild(editDiv.lastChild);
         const formDiv = document.createElement('form');
-        // Inputs
         formDiv.appendChild(nOperInputDiv(func));
-        // Btns
         const btnsDiv = document.createElement('div');
         btnsDiv.classList.add('container', 'row', 'center');
-        // Calculate
         btnsDiv.appendChild(calcBtn(calc));
         formDiv.appendChild(btnsDiv);
         editDiv.appendChild(formDiv);
@@ -183,14 +166,11 @@ function createOpBtn(name, op) {
 function setBtns(opers) {
     const div = document.getElementById('btns');
     div.appendChild(document.createTextNode('|'));
-    let btns = [];
     for (const [name, op] of Object.entries(opers)) {
         const btn = createOpBtn(name, op);
         div.appendChild(btn);
         div.appendChild(document.createTextNode('|'));
-        btns.push(btn);
     }
-    return btns;
 }
 function parse() {
     try {
@@ -201,6 +181,15 @@ function parse() {
     }
 }
 function displayAns() {
+    while (hintDiv.hasChildNodes())
+        hintDiv.removeChild(hintDiv.lastChild);
+    if (!Object.keys(window.localStorage).length) {
+        ansCounter = 1;
+        return;
+    }
+    const p = document.createElement('p');
+    p.textContent = 'Use respective Ans (e.g., \"Ans1\", \"Ans2\", etc.) as the average to use previously calculated values for better precision';
+    hintDiv.appendChild(p);
     let ids = [];
     while (formDiv.hasChildNodes())
         formDiv.removeChild(formDiv.lastChild);
@@ -213,7 +202,7 @@ function displayAns() {
     }
     tbl.appendChild(thead);
     const tbody = document.createElement('tbody');
-    for (const [ans, data] of Object.entries(window.localStorage).sort()) {
+    for (const [ans, data] of Object.entries(window.localStorage).sort((a, b) => +a[0].slice(3) - +b[0].slice(3))) {
         ids.push(parseInt(ans.slice(3)));
         const [form, avg, sd] = JSON.parse(data);
         const formStr = `\\(${form}\\)`;
@@ -230,7 +219,8 @@ function displayAns() {
         btn.textContent = '×';
         btn.addEventListener('click', () => {
             window.localStorage.removeItem(ans);
-            displayAns();
+            tbody.removeChild(tr);
+            ansCounter = Math.min(ansCounter, +ans.slice(3));
         });
         td.appendChild(btn);
         tr.appendChild(td);
@@ -242,7 +232,6 @@ function displayAns() {
     parse();
 }
 document.addEventListener('DOMContentLoaded', () => {
-    // Set output
     formDiv = document.getElementById('form');
     if (!Object.entries || !window.localStorage) {
         const noSupportP = document.createElement('p');
@@ -257,21 +246,14 @@ document.addEventListener('DOMContentLoaded', () => {
         formDiv.appendChild(supportedList);
         return;
     }
-    if (Object.entries(window.localStorage).length) {
-        displayAns();
-    }
-    else {
-        ansCounter = 1;
-    }
-    // Set input
+    hintDiv = document.getElementById('hint');
+    displayAns();
     editDiv = document.getElementById('edit');
-    // Set buttons
-    cbtns = setBtns(copers);
-    nbtns = setBtns(nopers);
-    // Keyboard events
+    setBtns(copers);
+    setBtns(nopers);
     document.addEventListener('keypress', (ev) => {
         if (ev.key === 'Enter' || ev.key === '\n') {
-            if (ev.ctrlKey) {
+            if (ev.shiftKey) {
                 const addRowBtn = document.getElementById('add-row');
                 if (addRowBtn !== null)
                     addRowBtn.click();
@@ -280,4 +262,5 @@ document.addEventListener('DOMContentLoaded', () => {
                 document.getElementById('calc').click();
         }
     });
+    document.getElementById('btns').childNodes[1].click();
 });

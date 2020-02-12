@@ -1,7 +1,6 @@
 "use strict";
 let ansCounter;
-const rndTo10 = (n) => +(n + Number.EPSILON).toPrecision(5);
-// const rndTo10 = (n: number): number => Math.round((n + Number.EPSILON) * 1e10) / 1e10;
+const rndTo = (n) => +n.toPrecision(8);
 const ansForm = (ans) => `\\text{Ans}${ans.slice(3)}`;
 const numForm = (avg, sd) => `(${avg}\\pm${sd})`;
 function inpsFromDiv(div) {
@@ -10,7 +9,7 @@ function inpsFromDiv(div) {
     const sdInp = inpDiv.childNodes[2].childNodes[0];
     return [avgInp, avgInp.value, sdInp.value];
 }
-function getInps() {
+function cGetInps() {
     const inpDivs = document.getElementsByClassName('inps');
     return Array.from(inpDivs).map((val) => {
         const actDiv = val.childNodes[0].childNodes[0];
@@ -19,7 +18,7 @@ function getInps() {
         return [avgInp, actInp.value, avgVal, sdVal];
     });
 }
-function getInp() {
+function nGetInp() {
     const outDiv = document.getElementsByClassName('inps')[0];
     return inpsFromDiv(outDiv);
 }
@@ -38,10 +37,10 @@ function getNums(avgInp, avgStr, sdStr) {
     let sd;
     const isAns = /^Ans\d$/.test(avgStr);
     if (isAns) {
-        let result = parAns(avgInp, avgStr);
-        if (!result.shift())
+        let success;
+        [success, avg, sd] = parAns(avgInp, avgStr);
+        if (!success)
             return [0, 0, 0, 0];
-        [avg, sd] = result;
     }
     else {
         avg = +avgStr;
@@ -57,11 +56,10 @@ function calcAddMin() {
     let avgSum = 0;
     let sdSqSum = 0;
     let formStr = '';
-    for (const [avgInp, action, avgStr, sdStr] of getInps()) {
-        let result = getNums(avgInp, avgStr, sdStr);
-        if (!result.shift())
+    for (const [avgInp, action, avgStr, sdStr] of cGetInps()) {
+        const [success, avg, sd, isAns] = getNums(avgInp, avgStr, sdStr);
+        if (!success)
             return;
-        const [avg, sd, isAns] = result;
         if (action === '-') {
             avgSum -= avg;
             formStr += '-';
@@ -75,19 +73,18 @@ function calcAddMin() {
     }
     if (formStr.charAt(0) === '+')
         formStr = formStr.slice(1);
-    const sdSum = rndTo10(Math.sqrt(sdSqSum));
-    avgSum = rndTo10(avgSum);
+    const sdSum = rndTo(Math.sqrt(sdSqSum));
+    avgSum = rndTo(avgSum);
     postProc(formStr, avgSum, sdSum);
 }
 function calcMulDiv() {
     let avgProd = 1;
     let sdSqSum = 0;
     let formStr = '';
-    for (const [avgInp, action, avgStr, sdStr] of getInps()) {
-        let result = getNums(avgInp, avgStr, sdStr);
-        if (!result.shift())
+    for (const [avgInp, action, avgStr, sdStr] of cGetInps()) {
+        const [success, avg, sd, isAns] = getNums(avgInp, avgStr, sdStr);
+        if (!success)
             return;
-        const [avg, sd, isAns] = result;
         if (action === '÷') {
             avgProd /= avg;
             formStr += '÷';
@@ -103,55 +100,51 @@ function calcMulDiv() {
         formStr = formStr.slice(1);
     else
         formStr = '1' + formStr;
-    const sdSum = rndTo10(avgProd * Math.sqrt(sdSqSum));
-    avgProd = rndTo10(avgProd);
+    const sdSum = rndTo(avgProd * Math.sqrt(sdSqSum));
+    avgProd = rndTo(avgProd);
     postProc(formStr, avgProd, sdSum);
 }
 function calcLn() {
-    const [avgInp, avgStr, sdStr] = getInp();
-    let result = getNums(avgInp, avgStr, sdStr);
-    if (!result.shift())
+    const [avgInp, avgStr, sdStr] = nGetInp();
+    const [success, avg, sd, isAns] = getNums(avgInp, avgStr, sdStr);
+    if (!success)
         return;
-    const [avg, sd, isAns] = result;
     let avgRes = Math.log(avg);
-    const sdRes = rndTo10(sd / avg);
-    avgRes = rndTo10(avgRes);
+    const sdRes = rndTo(sd / avg);
+    avgRes = rndTo(avgRes);
     const formStr = `\\ln{${isAns ? ansForm(avgStr) : numForm(avg, sd)}}`;
     postProc(formStr, avgRes, sdRes);
 }
 function calcLog() {
-    const [avgInp, avgStr, sdStr] = getInp();
-    let result = getNums(avgInp, avgStr, sdStr);
-    if (!result.shift())
+    const [avgInp, avgStr, sdStr] = nGetInp();
+    const [success, avg, sd, isAns] = getNums(avgInp, avgStr, sdStr);
+    if (!success)
         return;
-    const [avg, sd, isAns] = result;
     let avgRes = Math.log10(avg);
-    const sdRes = rndTo10(sd / avg * Math.log10(Math.E));
-    avgRes = rndTo10(avgRes);
+    const sdRes = rndTo(sd / avg * Math.log10(Math.E));
+    avgRes = rndTo(avgRes);
     const formStr = `\\log{${isAns ? ansForm(avgStr) : numForm(avg, sd)}}`;
     postProc(formStr, avgRes, sdRes);
 }
 function calcExp() {
-    const [avgInp, avgStr, sdStr] = getInp();
-    let result = getNums(avgInp, avgStr, sdStr);
-    if (!result.shift())
+    const [avgInp, avgStr, sdStr] = nGetInp();
+    const [success, avg, sd, isAns] = getNums(avgInp, avgStr, sdStr);
+    if (!success)
         return;
-    const [avg, sd, isAns] = result;
     let avgRes = Math.exp(avg);
-    const sdRes = rndTo10(sd * avgRes);
-    avgRes = rndTo10(avgRes);
+    const sdRes = rndTo(sd * avgRes);
+    avgRes = rndTo(avgRes);
     const formStr = `e^{${isAns ? ansForm(avgStr) : numForm(avg, sd)}}`;
     postProc(formStr, avgRes, sdRes);
 }
 function calc10xp() {
-    const [avgInp, avgStr, sdStr] = getInp();
-    let result = getNums(avgInp, avgStr, sdStr);
-    if (!result.shift())
+    const [avgInp, avgStr, sdStr] = nGetInp();
+    const [success, avg, sd, isAns] = getNums(avgInp, avgStr, sdStr);
+    if (!success)
         return;
-    const [avg, sd, isAns] = result;
     let avgRes = Math.pow(10, avg);
-    const sdRes = rndTo10(sd * avgRes * Math.log(10));
-    avgRes = rndTo10(avgRes);
+    const sdRes = rndTo(sd * avgRes * Math.log(10));
+    avgRes = rndTo(avgRes);
     const formStr = `10^{${isAns ? ansForm(avgStr) : numForm(avg, sd)}}`;
     postProc(formStr, avgRes, sdRes);
 }

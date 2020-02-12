@@ -1,5 +1,6 @@
 "use strict";
 
+// Ignore. Typescript nuiances
 interface MathJax {
     typeset?(): void,
     loader: Record<string, string[]>,
@@ -16,11 +17,12 @@ interface Materialize {
 declare var MathJax: MathJax;
 declare const M: Materialize;
 
+// Global variables
 let editDiv: HTMLDivElement;
 let formDiv: HTMLDivElement;
-let cbtns: HTMLAnchorElement[];
-let nbtns: HTMLAnchorElement[];
+let hintDiv: HTMLDivElement;
 
+// Operations
 const copers: Record<string, () => void> = {
     '+/-': cOperOnClick(['+', '-'], calcAddMin),
     '×/÷': cOperOnClick(['×', '÷'], calcMulDiv),
@@ -31,6 +33,8 @@ const nopers: Record<string, () => void> = {
     'e^': nOperOnClick('e^', calcExp),
     '10^': nOperOnClick('10^', calc10xp)
 };
+
+// Supported browsers
 const supportedBrowsers: string[] = [
     'Google Chrome 54+',
     'Mozilla Firefox 47+',
@@ -39,25 +43,39 @@ const supportedBrowsers: string[] = [
     'Opera 41+'
 ];
 
-
+/**
+ * Create input element and its div wrapper
+ * 
+ * @param   {string} ph           - Name of input, either 'Avg' or 'SD'
+ * @returns {HTMLDivElement}      - The outer wrapper
+ * @returns {HTMLInputElement}    - The inner input
+ */
 function inpDiv(ph: string): [HTMLDivElement, HTMLInputElement] {
+    // Create outer div
     const div: HTMLDivElement = document.createElement('div');
     div.classList.add('input-field', 'col', 's5');
+    // Create inner input
     const inp: HTMLInputElement = document.createElement('input');
     inp.classList.add('validate');
     inp.placeholder = ph;
     inp.type = 'text';
     inp.pattern = '[\\+\\-]?\\d*(\\.\\d*)?([Ee][\\+\\-]?\\d+)?';
     if (ph === 'Avg') inp.pattern += '|Ans\\d+';
+    // Append and return
     div.appendChild(inp);
     return [div, inp];
 }
 
-
+/**
+ * Create div that holds both inputs
+ * 
+ * @returns {HTMLDivElement} - As described
+ */
 function inpsDiv(): HTMLDivElement {
+    // Create outer div
     const div: HTMLDivElement = document.createElement('div');
     div.classList.add('col', 's10');
-    // Average
+    // Average input div
     const [avgDiv, avgInp]: [HTMLDivElement, HTMLInputElement] = inpDiv('Avg');
     div.appendChild(avgDiv);
     // pm
@@ -68,7 +86,7 @@ function inpsDiv(): HTMLDivElement {
     pmBtn.textContent = '±';
     pmDiv.appendChild(pmBtn);
     div.appendChild(pmDiv);
-    // SD
+    // SD input div
     const [sdDiv, sdInp]: [HTMLDivElement, HTMLInputElement] = inpDiv('SD');
     div.appendChild(sdDiv);
     // Check inputs
@@ -87,11 +105,22 @@ function inpsDiv(): HTMLDivElement {
             avgInp.value = '';
         }
     });
+    // Return
     return div;
 }
 
-
+/**
+ * Create a row div for c-operations (+/-/×/÷), featuring a selection box,
+ *   a pair of inputs, and a button to delete the row for the 2nd row and
+ *   above
+ * 
+ * @param   {string[]} choices  - The choices for the <select>
+ * @param   {boolean}  firstRow - Whether this is the first row; if so,
+ *                                no delete button
+ * @returns {HTMLDivElement}    - The row div
+ */
 function cOperInputDiv(choices: string[], firstRow: boolean): HTMLDivElement {
+    // Row div
     const outDiv: HTMLDivElement = document.createElement('div');
     outDiv.classList.add('row', 'inps');
     // Select
@@ -126,11 +155,20 @@ function cOperInputDiv(choices: string[], firstRow: boolean): HTMLDivElement {
         remDiv.appendChild(remBtn);
     }
     outDiv.appendChild(remDiv);
+    // Return
     return outDiv;
 }
 
-
+/**
+ * Create a row div for n-operations (ln/log/e^/10^), featuring a function
+ *   name instead of selection, a pair of inputs, and **NO** button to
+ *   delete the row
+ * 
+ * @param   {string} func    - Function name
+ * @returns {HTMLDivElement} - The row div
+ */
 function nOperInputDiv(func: string): HTMLDivElement {
+    // Row div
     const outDiv: HTMLDivElement = document.createElement('div');
     outDiv.classList.add('row', 'inps');
     // Func
@@ -143,10 +181,17 @@ function nOperInputDiv(func: string): HTMLDivElement {
     outDiv.appendChild(funcDiv);
     // 2 inputs
     outDiv.appendChild(inpsDiv());
+    // Return, skipping the delete button
     return outDiv;
 }
 
-
+/**
+ * The big blue 'Calculate' button
+ * 
+ * @param   {(): void} calc     - Function to be run when clicked. Dependent
+ *                                on the action selected
+ * @returns {HTMLAnchorElement} - The said button
+ */
 function calcBtn(calc: () => void): HTMLAnchorElement {
     const btn: HTMLAnchorElement = document.createElement('a');
     btn.classList.add('waves-effect', 'waves-light-blue', 'btn', 'blue');
@@ -156,17 +201,27 @@ function calcBtn(calc: () => void): HTMLAnchorElement {
     return btn;
 }
 
-
+/**
+ * Create the function for the c-operations (+/-/×/÷) to be run when the
+ *   its corresponding method button is hit
+ * 
+ * @param   {string[]} choices - The choices in the <select> 
+ * @param   {(): void} calc    - The function to be run when 'Calculate'
+ *                               is clicked
+ * @returns {(): void}         - The function to be run when the method
+ *                               button is clicked
+ */
 function cOperOnClick(choices: string[], calc: () => void): () => void {
     return (): void => {
-        while (editDiv.hasChildNodes()) editDiv.removeChild(<Node>editDiv.lastChild);
+        // Clear and re-init form
+        while (editDiv.hasChildNodes()) editDiv.removeChild(editDiv.lastChild!);
         const formDiv: HTMLFormElement = document.createElement('form');
         // Inputs
         formDiv.appendChild(cOperInputDiv(choices, true));
-        // Btns
+        // Button row wrapper
         const btnsDiv: HTMLDivElement = document.createElement('div');
         btnsDiv.classList.add('container', 'row', 'center');
-        // Add row
+        // Add row button
         const addRowBtn: HTMLAnchorElement = document.createElement('a');
         addRowBtn.classList.add('waves-effect', 'waves-teal', 'btn', 'green');
         addRowBtn.id = 'add-row';
@@ -176,32 +231,50 @@ function cOperOnClick(choices: string[], calc: () => void): () => void {
             M.AutoInit();
         });
         btnsDiv.appendChild(addRowBtn);
-        // Calculate
+        // Calculate button
         btnsDiv.appendChild(calcBtn(calc));
+        // Append and init
         formDiv.appendChild(btnsDiv);
         editDiv.appendChild(formDiv);
         M.AutoInit();
     };
 }
 
-
+/**
+ * Create the function for the n-operations (ln/log/e^/10^) to be run when
+ *   the its corresponding method button is hit
+ *
+ * @param   {string}   func - Function name 
+ * @param   {(): void} calc - The function to be run when 'Calculate' is
+ *                            clicked
+ * @returns {(): void}      - The function to be run when the method button
+ *                            is clicked
+ */
 function nOperOnClick(func: string, calc: () => void): () => void {
     return (): void => {
-        while (editDiv.hasChildNodes()) editDiv.removeChild(<Node>editDiv.lastChild);
+        // Clear and re-init form
+        while (editDiv.hasChildNodes()) editDiv.removeChild(editDiv.lastChild!);
         const formDiv: HTMLFormElement = document.createElement('form');
         // Inputs
         formDiv.appendChild(nOperInputDiv(func));
-        // Btns
+        // Button row wrapper
         const btnsDiv: HTMLDivElement = document.createElement('div');
         btnsDiv.classList.add('container', 'row', 'center');
-        // Calculate
+        // Calculate button
         btnsDiv.appendChild(calcBtn(calc));
+        // Append
         formDiv.appendChild(btnsDiv);
         editDiv.appendChild(formDiv);
     };
 }
 
-
+/**
+ * Create a method button
+ * 
+ * @param   {string}   name     - Name of operation
+ * @param   {(): void} op       - Function of operation
+ * @returns {HTMLAnchorElement} - The button as described
+ */
 function createOpBtn(name: string, op: () => void): HTMLAnchorElement {
     const btn: HTMLAnchorElement = document.createElement('a');
     btn.classList.add('waves-effect', 'waves-red', 'btn-flat');
@@ -210,21 +283,28 @@ function createOpBtn(name: string, op: () => void): HTMLAnchorElement {
     return btn;
 }
 
-
-function setBtns(opers: Record<string, () => void>): HTMLAnchorElement[] {
+/**
+ * Create a block of method buttons
+ * 
+ * @param   {Record<string, (): void>} opers - Operations and their function
+ *                                             to be run when their method
+ *                                             button is clicked
+ */
+function setBtns(opers: Record<string, () => void>): void {
+    // Add a "|"
     const div: HTMLDivElement = <HTMLDivElement>document.getElementById('btns');
     div.appendChild(document.createTextNode('|'));
-    let btns: HTMLAnchorElement[] = [];
+    // For each operation, add a button and a "|"
     for (const [name, op] of Object.entries(opers)) {
         const btn: HTMLAnchorElement = createOpBtn(name, op);
         div.appendChild(btn);
         div.appendChild(document.createTextNode('|'));
-        btns.push(btn);
     }
-    return btns;
 }
 
-
+/**
+ * Parse MathJax, ignoring errors
+ */
 function parse(): void {
     try {
         MathJax.typeset!();
@@ -233,11 +313,27 @@ function parse(): void {
     }
 }
 
-
+/**
+ * Display Ans from localStorage, also set counter
+ */
 function displayAns(): void {
+    // Clear hint
+    while (hintDiv.hasChildNodes()) hintDiv.removeChild(hintDiv.lastChild!);
+    // Check if localStorage is empty
+    if (!Object.keys(window.localStorage).length) {
+        ansCounter = 1;
+        return;
+    }
+    // Create hint
+    const p: HTMLParagraphElement = document.createElement('p');
+    p.textContent = 'Use respective Ans (e.g., \"Ans1\", \"Ans2\", etc.) as the average to use previously calculated values for better precision';
+    hintDiv.appendChild(p);
+    // List of Ans IDs present
     let ids: number[] = [];
-    while (formDiv.hasChildNodes()) formDiv.removeChild(<ChildNode>formDiv.lastChild);
+    // Clear and reassemble table
+    while (formDiv.hasChildNodes()) formDiv.removeChild(formDiv.lastChild!);
     const tbl: HTMLTableElement = document.createElement('table');
+    // Table header
     const thead: HTMLTableSectionElement = document.createElement('thead');
     for (const title of ['Ans', 'Formula', 'Result', '']) {
         const th: HTMLTableHeaderCellElement = document.createElement('th');
@@ -245,9 +341,12 @@ function displayAns(): void {
         thead.appendChild(th);
     }
     tbl.appendChild(thead);
+    // Table body
     const tbody: HTMLTableSectionElement = document.createElement('tbody');
-    for (const [ans, data] of Object.entries(window.localStorage).sort()) {
+    for (const [ans, data] of Object.entries(window.localStorage).sort((a: [string, any], b: [string, any]): number => +a[0].slice(3) - +b[0].slice(3))) {
+        // Register ID
         ids.push(parseInt(ans.slice(3)));
+        // Parse from localStorage
         const [form, avg, sd]: [string, string, string] = JSON.parse(data);
         const formStr: string = `\\(${form}\\)`;
         const resStr: string = `\\({\\color{red} ${avg}}\\pm{\\color{blue} ${sd}}\\)`;
@@ -257,19 +356,24 @@ function displayAns(): void {
             td.textContent = item;
             tr.appendChild(td);
         }
+        // Remove button
         const td: HTMLTableCellElement = document.createElement('td');
         const btn: HTMLAnchorElement = document.createElement('a');
         btn.classList.add('waves-effect', 'waves-red', 'btn', 'red');
         btn.textContent = '×';
         btn.addEventListener('click', (): void => {
             window.localStorage.removeItem(ans);
-            displayAns();
+            tbody.removeChild(tr);
+            ansCounter = Math.min(ansCounter, +ans.slice(3));
         });
         td.appendChild(btn);
         tr.appendChild(td);
+        // Append row to body
         tbody.appendChild(tr);
     }
+    // Ensure no overlapping ID
     ansCounter = Math.max(...ids) + 1;
+    // Append and parse MathJax
     tbl.appendChild(tbody);
     formDiv.appendChild(tbl);
     parse();
@@ -292,23 +396,22 @@ document.addEventListener('DOMContentLoaded', (): void => {
         formDiv.appendChild(supportedList);
         return;
     }
-    if (Object.entries(window.localStorage).length) {
-        displayAns();
-    } else {
-        ansCounter = 1;
-    }
+    hintDiv = <HTMLDivElement>document.getElementById('hint');
+    displayAns();
     // Set input
     editDiv = <HTMLDivElement>document.getElementById('edit');
     // Set buttons
-    cbtns = setBtns(copers);
-    nbtns = setBtns(nopers);
+    setBtns(copers);
+    setBtns(nopers);
     // Keyboard events
     document.addEventListener('keypress', (ev: KeyboardEvent): void => {
         if (ev.key === 'Enter' || ev.key === '\n') {
-            if (ev.ctrlKey) {
+            if (ev.shiftKey) {
                 const addRowBtn: HTMLElement | null = document.getElementById('add-row');
                 if (addRowBtn !== null) (<HTMLAnchorElement>addRowBtn).click();
             } else (<HTMLAnchorElement>document.getElementById('calc')).click();
         }
     });
+    // Init +/-
+    (<HTMLAnchorElement>document.getElementById('btns')!.childNodes[1]).click();
 });
