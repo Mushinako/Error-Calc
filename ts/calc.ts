@@ -72,6 +72,14 @@ function nGetInp(): [HTMLInputElement, string, string] {
     return inpsFromDiv(outDiv);
 }
 
+/**
+ * Get the 2 inputs, for t-operations
+
+ * @returns {HTMLInputElement} - Avg input element
+ * @returns {string}           - Avg value
+ * @returns {string}           - SD value
+ * @returns {number}           - Exponent or equivalent
+ */
 function tGetInps(): [[HTMLInputElement, string, string], number] {
     const inpDivs: HTMLCollectionOf<Element> = document.getElementsByClassName('inps');
     const base: [HTMLInputElement, string, string] = inpsFromDiv(inpDivs[0]);
@@ -221,7 +229,7 @@ function calcLog(): void {
 }
 
 /**
- * e^x calculations
+ * e^a calculations
  */
 function calcExp(): void {
     const [avgInp, avgStr, sdStr]: [HTMLInputElement, string, string] = nGetInp();
@@ -235,7 +243,7 @@ function calcExp(): void {
 }
 
 /**
- * 10^x calculations
+ * 10^a calculations
  */
 function calc10xp(): void {
     const [avgInp, avgStr, sdStr]: [HTMLInputElement, string, string] = nGetInp();
@@ -248,7 +256,9 @@ function calc10xp(): void {
     postProc(formStr, avgRes, sdRes);
 }
 
-
+/**
+ * a^x calculations
+ */
 function calcPwr(): void {
     const [base, exp]: [[HTMLInputElement, string, string], number] = tGetInps();
     const [inp, avgStr, sdStr]: [HTMLInputElement, string, string] = base;

@@ -163,8 +163,7 @@ function cOperInputDiv(choices: string[], firstRow: boolean): HTMLDivElement {
 
 /**
  * Create a row div for n-operations (ln/log/e^/10^), featuring a function
- *   name instead of selection, a pair of inputs, and **NO** button to
- *   delete the row
+ *   name, a pair of inputs, and **NO** button to delete the row
  * 
  * @param   {string} func    - Function name
  * @returns {HTMLDivElement} - The row div
@@ -187,6 +186,13 @@ function nOperInputDiv(func: string): HTMLDivElement {
     return outDiv;
 }
 
+/**
+ * Create a row div for t-operations (a^x), featuring 2 rows, each with a
+ *   variable name, a pair of inputs, and **NO** button to delete the row
+
+ * @param   {string[]} rows    - The variable names
+ * @returns {HTMLDivElement[]} - The 2 rows
+ */
 function tOperInputDiv(rows: string[]): HTMLDivElement[] {
     // First row
     const baseRow: HTMLDivElement = nOperInputDiv(rows[0]);
@@ -245,8 +251,8 @@ function calcBtn(calc: () => void): HTMLAnchorElement {
 }
 
 /**
- * Create the function for the c-operations (+/-/×/÷) to be run when the
- *   its corresponding method button is hit
+ * Create the function for the c-operations (+/-/×/÷) to be run when its
+ *   corresponding method button is hit
  * 
  * @param   {string[]} choices - The choices in the <select> 
  * @param   {(): void} calc    - The function to be run when 'Calculate'
@@ -285,7 +291,7 @@ function cOperOnClick(choices: string[], calc: () => void): () => void {
 
 /**
  * Create the function for the n-operations (ln/log/e^/10^) to be run when
- *   the its corresponding method button is hit
+ *   its corresponding method button is hit
  *
  * @param   {string}   func - Function name 
  * @param   {(): void} calc - The function to be run when 'Calculate' is
@@ -311,7 +317,16 @@ function nOperOnClick(func: string, calc: () => void): () => void {
     };
 }
 
-
+/**
+ * Create the function for the t-operations (a^x) to be run when the its
+ *   corresponding method button is hit
+ *
+ * @param   {string[]} rows - The variable names
+ * @param   {(): void} calc - The function to be run when 'Calculate' is
+ *                              clicked
+ * @returns {(): void}      - The function to be run when the method button
+ *                            is clicked
+ */
 function tOperOnClick(rows: string[], calc: () => void): () => void {
     return (): void => {
         // Clear and re-init form
