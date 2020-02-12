@@ -175,7 +175,7 @@ function nOperInputDiv(func: string): HTMLDivElement {
     const funcDiv: HTMLDivElement = document.createElement('div');
     funcDiv.classList.add('col', 's1');
     const funcBtn: HTMLAnchorElement = document.createElement('a');
-    funcBtn.classList.add('btn-flat', 'no-click');
+    funcBtn.classList.add('btn-flat', 'no-click', 'no-pad');
     funcBtn.textContent = func;
     funcDiv.appendChild(funcBtn);
     outDiv.appendChild(funcDiv);

@@ -2,6 +2,10 @@ input::placeholder {
     color: #666666;
 }
 
+.no-pad {
+    padding: 0;
+}
+
 .box {
     background-color: rgba(255, 255, 255, 0.8);
     border-radius: 30px;

@@ -105,7 +105,7 @@ function nOperInputDiv(func) {
     const funcDiv = document.createElement('div');
     funcDiv.classList.add('col', 's1');
     const funcBtn = document.createElement('a');
-    funcBtn.classList.add('btn-flat', 'no-click');
+    funcBtn.classList.add('btn-flat', 'no-click', 'no-pad');
     funcBtn.textContent = func;
     funcDiv.appendChild(funcBtn);
     outDiv.appendChild(funcDiv);
