@@ -125,6 +125,7 @@ function nOperInputDiv(func) {
 function calcBtn(calc) {
     const btn = document.createElement('a');
     btn.classList.add('waves-effect', 'waves-light-blue', 'btn', 'blue');
+    btn.id = 'calc';
     btn.textContent = 'Calculate';
     btn.addEventListener('click', calc);
     return btn;
@@ -142,6 +143,7 @@ function cOperOnClick(choices, calc) {
         // Add row
         const addRowBtn = document.createElement('a');
         addRowBtn.classList.add('waves-effect', 'waves-teal', 'btn', 'green');
+        addRowBtn.id = 'add-row';
         addRowBtn.textContent = 'Add Row';
         addRowBtn.addEventListener('click', () => {
             formDiv.insertBefore(cOperInputDiv(choices, false), formDiv.lastChild);
@@ -228,7 +230,7 @@ function displayAns() {
         btn.textContent = '×';
         btn.addEventListener('click', () => {
             window.localStorage.removeItem(ans);
-            tbody.removeChild(tr);
+            displayAns();
         });
         td.appendChild(btn);
         tr.appendChild(td);
@@ -266,4 +268,16 @@ document.addEventListener('DOMContentLoaded', () => {
     // Set buttons
     cbtns = setBtns(copers);
     nbtns = setBtns(nopers);
+    // Keyboard events
+    document.addEventListener('keypress', (ev) => {
+        if (ev.key === 'Enter' || ev.key === '\n') {
+            if (ev.ctrlKey) {
+                const addRowBtn = document.getElementById('add-row');
+                if (addRowBtn !== null)
+                    addRowBtn.click();
+            }
+            else
+                document.getElementById('calc').click();
+        }
+    });
 });

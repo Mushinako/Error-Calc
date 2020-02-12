@@ -14,22 +14,12 @@ html {
         sans-serif;
 }
 
-.outer {
-    display: table;
-    position: absolute;
-    top: 0;
-    left: 0;
-    height: 100%;
-    width: 100%;
-}
-
-.inner {
-    display: table-cell;
-    vertical-align: middle;
+.black-trans {
+    background-color: rgba(0, 0, 0, 0.4);
 }
 
 .box {
-    background-color: rgba(255, 255, 255, 0.8);
+    background-color: rgba(255, 255, 255, 0.5);
     border-radius: 30px;
 }
 

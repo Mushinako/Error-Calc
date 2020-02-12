@@ -150,6 +150,7 @@ function nOperInputDiv(func: string): HTMLDivElement {
 function calcBtn(calc: () => void): HTMLAnchorElement {
     const btn: HTMLAnchorElement = document.createElement('a');
     btn.classList.add('waves-effect', 'waves-light-blue', 'btn', 'blue');
+    btn.id = 'calc';
     btn.textContent = 'Calculate';
     btn.addEventListener('click', calc);
     return btn;
@@ -168,6 +169,7 @@ function cOperOnClick(choices: string[], calc: () => void): () => void {
         // Add row
         const addRowBtn: HTMLAnchorElement = document.createElement('a');
         addRowBtn.classList.add('waves-effect', 'waves-teal', 'btn', 'green');
+        addRowBtn.id = 'add-row';
         addRowBtn.textContent = 'Add Row';
         addRowBtn.addEventListener('click', (): void => {
             formDiv.insertBefore(cOperInputDiv(choices, false), formDiv.lastChild);
@@ -261,7 +263,7 @@ function displayAns(): void {
         btn.textContent = '×';
         btn.addEventListener('click', (): void => {
             window.localStorage.removeItem(ans);
-            tbody.removeChild(tr);
+            displayAns();
         });
         td.appendChild(btn);
         tr.appendChild(td);
@@ -300,4 +302,13 @@ document.addEventListener('DOMContentLoaded', (): void => {
     // Set buttons
     cbtns = setBtns(copers);
     nbtns = setBtns(nopers);
+    // Keyboard events
+    document.addEventListener('keypress', (ev: KeyboardEvent): void => {
+        if (ev.key === 'Enter' || ev.key === '\n') {
+            if (ev.ctrlKey) {
+                const addRowBtn: HTMLElement | null = document.getElementById('add-row');
+                if (addRowBtn !== null) (<HTMLAnchorElement>addRowBtn).click();
+            } else (<HTMLAnchorElement>document.getElementById('calc')).click();
+        }
+    });
 });
