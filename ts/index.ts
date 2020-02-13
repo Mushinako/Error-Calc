@@ -46,6 +46,15 @@ const supportedBrowsers: string[] = [
     'Opera 41+'
 ];
 
+
+function sciNot(n: number): string {
+    const absN: number = Math.abs(n);
+    if (absN < 1e6 && absN > 1e-3) {
+        return n.toString();
+    }
+    return n.toExponential();
+}
+
 /**
  * Create input element and its div wrapper
  * 
@@ -435,9 +444,9 @@ function displayAns(): void {
         // Register ID
         ids.push(parseInt(ans.slice(3)));
         // Parse from localStorage
-        const [form, avg, sd]: [string, string, string] = JSON.parse(data);
+        const [form, avg, sd]: [string, number, number] = JSON.parse(data);
         const formStr: string = `\\(${form}\\)`;
-        const resStr: string = `\\({\\color{red} ${avg}}\\pm{\\color{blue} ${sd}}\\)`;
+        const resStr: string = `\\({\\color{red} ${sciNot(avg)}}\\pm{\\color{blue} ${sciNot(sd)}}\\)`;
         const tr: HTMLTableRowElement = document.createElement('tr');
         for (const item of [ans, formStr, resStr]) {
             const td: HTMLTableCellElement = document.createElement('td');
