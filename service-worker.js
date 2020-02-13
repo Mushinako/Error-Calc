@@ -12,21 +12,21 @@ const filesToCache = [
     'js/index.js',
     'js/MathJax-loader.js',
     'js/pwa.js',
-    'https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css',
-    // 'https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js',
-    // 'https://polyfill.io/v3/polyfill.min.js?features=es6',
-    // 'https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js',
+    'lib/materialize.min.css',
+    'lib/materialize.min.js',
+    'lib/tex-chtml.js',
 ];
 
 self.addEventListener('install', (e) => {
     e.waitUntil(
         caches.open(cacheName).then((cache) => {
             console.log('[ServiceWorker] Pre-caching offline page');
-            return cache.addAll(filesToCache.map((url) => new Request(url, {
-                mode: 'no-cors'
-            }))).then(() => {
-                console.log('[ServiceWorker] Request finished!');
-            });
+            return cache.addAll(filesToCache);
+            // return cache.addAll(filesToCache.map((url) => new Request(url, {
+            //     mode: 'no-cors'
+            // }))).then(() => {
+            //     console.log('[ServiceWorker] Request finished!');
+            // });
         })
     );
 });
@@ -52,9 +52,7 @@ self.addEventListener('fetch', (e) => {
     e.respondWith(
         caches.match(e.request).then((r) => {
             console.log(`[Service Worker] Fetching resource: ${e.request.url}`);
-            return r || fetch(e.request, {
-                mode: 'no-cors'
-            }).then((res) => {
+            return r || fetch(e.request).then((res) => {
                 return caches.open(cacheName).then((cache) => {
                     console.log(`[Service Worker] Caching new resource: ${e.request.url}`);
                     cache.put(e.request, res.clone());
