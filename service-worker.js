@@ -1,5 +1,5 @@
 "use strict";
-const cacheName = 'mushinako-err-prop-v1.1.3';
+const cacheName = 'mushinako-err-prop-v1.1.4';
 const filesToCache = [
     'index.html',
     'css/common.css',
@@ -15,6 +15,12 @@ const filesToCache = [
     'lib/materialize.min.css',
     'lib/materialize.min.js',
     'lib/tex-chtml.js',
+    'lib/input/tex/extensions/color.js',
+    'lib/output/chtml/fonts/woff-v2/MathJax_AMS-Regular.woff',
+    'lib/output/chtml/fonts/woff-v2/MathJax_Main-Italic.woff',
+    'lib/output/chtml/fonts/woff-v2/MathJax_Main-Regular.woff',
+    'lib/output/chtml/fonts/woff-v2/MathJax_Size1-Regular.woff',
+    'lib/output/chtml/fonts/woff-v2/MathJax_Zero.woff',
 ];
 
 self.addEventListener('install', (e) => {

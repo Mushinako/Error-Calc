@@ -59,12 +59,14 @@
                     <div class="solid container col s12" id="form"></div>
                     <div class="container">
                         <ul class="collapsible">
-                            <li>
+                            <li class="active">
                                 <div class="collapsible-header"><strong>Notes</strong></div>
                                 <div class="collapsible-body">
-                                    <ul>
+                                    <ul class="browser-default">
                                         <li>The calculated values do <strong>not</strong> round the results according to
                                             sigfig rules. This feature may be implemented later.</li>
+                                        <li>All the results are stored locally, meaning that all data will be lost if
+                                            the site data for this webpage is cleared.</li>
                                         <li>Use respective Ans (e.g., "Ans1", "Ans2", etc.) as the average to use
                                             previously calculated values for better
                                             precision</li>
@@ -74,7 +76,7 @@
                             <li>
                                 <div class="collapsible-header"><strong>Keyboard shortcuts</strong></div>
                                 <div class="collapsible-body">
-                                    <ul>
+                                    <ul class="browser-default">
                                         <li><em>Enter:</em> Run calculation</li>
                                         <li><em>Shift+Enter:</em> Add row
                                             (when
@@ -85,10 +87,11 @@
                             <li>
                                 <div class="collapsible-header"><strong>Data formats accepted</strong></div>
                                 <div class="collapsible-body">
-                                    <ul>
+                                    <ul class="browser-default">
                                         <li><em>Numbers:</em> 3.1415926; -2020; .57721</li>
                                         <li><em>Scientific notations:</em> 8e8; .897e-12; 599e+3 </li>
                                         <li><em>Previous answers:</em> Ans1; Ans22</li>
+                                        <li><em>All empty inputs are treated as 0.</em></li>
                                     </ul>
                                 </div>
                             </li>
