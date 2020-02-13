@@ -8,7 +8,7 @@ I'm too lazy to calculate all the errors in CHEM 373 by hand
 
 ## How to use this thing
 
-Good luck
+~~Good luck~~ TODO: help section
 
 ## Disclaimer
 
