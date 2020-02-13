@@ -1,7 +1,7 @@
 "use strict";
 const cacheName = 'mushinako-err-prop-v1.1.0';
 const filesToCache = [
-    // 'index.html',
+    'index.html',
     // 'css/common.css',
     // 'css/index.css',
     // 'images/icons/icon-96x96.png',
