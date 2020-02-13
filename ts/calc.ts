@@ -4,13 +4,6 @@
 let ansCounter: number;
 
 /**
- * Round to 10 significant figures
- * 
- * @param {number} n - Number to be rounded
- */
-const rndTo = (n: number): number => +n.toPrecision(10);
-
-/**
  * Formula representation for Ans
  * 
  * @param   {string} ans - Ans name
@@ -168,8 +161,7 @@ function calcAddMin(): void {
         formStr += isAns ? ansForm(avgStr) : numForm(avg, sd);
     }
     if (formStr.charAt(0) === '+') formStr = formStr.slice(1);
-    const sdSum: number = rndTo(Math.sqrt(sdSqSum));
-    avgSum = rndTo(avgSum);
+    const sdSum: number = Math.sqrt(sdSqSum);
     postProc(formStr, avgSum, sdSum);
 }
 
@@ -195,8 +187,7 @@ function calcMulDiv(): void {
     }
     if (formStr.charAt(0) === '×') formStr = formStr.slice(1);
     else formStr = '1' + formStr;
-    const sdSum = rndTo(avgProd * Math.sqrt(sdSqSum));
-    avgProd = rndTo(avgProd);
+    const sdSum = avgProd * Math.sqrt(sdSqSum);
     postProc(formStr, avgProd, sdSum);
 }
 
@@ -207,9 +198,8 @@ function calcLn(): void {
     const [avgInp, avgStr, sdStr]: [HTMLInputElement, string, string] = nGetInp();
     const [success, avg, sd, isAns]: [number, number, number, number] = getNums(avgInp, avgStr, sdStr);
     if (!success) return;
-    let avgRes: number = Math.log(avg);
-    const sdRes: number = rndTo(sd / avg);
-    avgRes = rndTo(avgRes);
+    const avgRes: number = Math.log(avg);
+    const sdRes: number = sd / avg;
     const formStr: string = `\\ln{${isAns ? ansForm(avgStr) : numForm(avg, sd)}}`;
     postProc(formStr, avgRes, sdRes);
 }
@@ -221,9 +211,8 @@ function calcLog(): void {
     const [avgInp, avgStr, sdStr]: [HTMLInputElement, string, string] = nGetInp();
     const [success, avg, sd, isAns]: [number, number, number, number] = getNums(avgInp, avgStr, sdStr);
     if (!success) return;
-    let avgRes: number = Math.log10(avg);
-    const sdRes: number = rndTo(sd / avg * Math.log10(Math.E));
-    avgRes = rndTo(avgRes);
+    const avgRes: number = Math.log10(avg);
+    const sdRes: number = sd / avg * Math.log10(Math.E);
     const formStr: string = `\\log{${isAns ? ansForm(avgStr) : numForm(avg, sd)}}`;
     postProc(formStr, avgRes, sdRes);
 }
@@ -235,9 +224,8 @@ function calcExp(): void {
     const [avgInp, avgStr, sdStr]: [HTMLInputElement, string, string] = nGetInp();
     const [success, avg, sd, isAns]: [number, number, number, number] = getNums(avgInp, avgStr, sdStr);
     if (!success) return;
-    let avgRes: number = Math.exp(avg);
-    const sdRes: number = rndTo(sd * avgRes);
-    avgRes = rndTo(avgRes);
+    const avgRes: number = Math.exp(avg);
+    const sdRes: number = sd * avgRes;
     const formStr: string = `e^{${isAns ? ansForm(avgStr) : numForm(avg, sd)}}`;
     postProc(formStr, avgRes, sdRes);
 }
@@ -249,9 +237,8 @@ function calc10xp(): void {
     const [avgInp, avgStr, sdStr]: [HTMLInputElement, string, string] = nGetInp();
     const [success, avg, sd, isAns]: [number, number, number, number] = getNums(avgInp, avgStr, sdStr);
     if (!success) return;
-    let avgRes: number = Math.pow(10, avg);
-    const sdRes: number = rndTo(sd * avgRes * Math.log(10));
-    avgRes = rndTo(avgRes);
+    const avgRes: number = Math.pow(10, avg);
+    const sdRes: number = sd * avgRes * Math.log(10);
     const formStr: string = `10^{${isAns ? ansForm(avgStr) : numForm(avg, sd)}}`;
     postProc(formStr, avgRes, sdRes);
 }
@@ -264,9 +251,8 @@ function calcPwr(): void {
     const [inp, avgStr, sdStr]: [HTMLInputElement, string, string] = base;
     const [success, avg, sd, isAns]: [number, number, number, number] = getNums(inp, avgStr, sdStr);
     if (!success) return;
-    let avgRes: number = Math.pow(avg, exp);
-    const sdRes: number = rndTo(sd / avg * exp * avgRes);
-    avgRes = rndTo(avgRes);
+    const avgRes: number = Math.pow(avg, exp);
+    const sdRes: number = sd / avg * exp * avgRes;
     const formStr: string = `{${isAns ? ansForm(avgStr) : numForm(avg, sd)}}^{${exp}}`;
     postProc(formStr, avgRes, sdRes);
 }

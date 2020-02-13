@@ -46,13 +46,38 @@ const supportedBrowsers: string[] = [
     'Opera 41+'
 ];
 
+/**
+ * Round to (10) sigfigs
+ * 
+ * @param   {number} n - The number to be rounded
+ * @returns {number}   - Rounded number
+ */
+const rnd = (n: number): number => +n.toPrecision(10);
 
+/**
+ * Scientific notations
+ * 
+ * @param   {number} n - Input number
+ * @returns {string}   - Output string
+ */
 function sciNot(n: number): string {
     const absN: number = Math.abs(n);
-    if (absN < 1e6 && absN > 1e-3) {
-        return n.toString();
+    if (absN < 1e6 && absN > 1e-1) {
+        return rnd(n).toString();
     }
-    return n.toExponential();
+    return rnd(n).toExponential();
+}
+
+/**
+ * Format result
+ * 
+ * @param   {number} avg - Avg
+ * @param   {number} sd  - SD
+ * @returns {string}     - Result string
+ */
+function resVal(avg: number, sd: number): string {
+    const resStr: string = `\\({\\color{red} ${sciNot(avg)}}\\pm{\\color{blue} ${sciNot(sd)}}\\)`;
+    return resStr;
 }
 
 /**
@@ -447,7 +472,7 @@ function displayAns(): void {
         // Parse from localStorage
         const [form, avg, sd]: [string, number, number] = JSON.parse(data);
         const formStr: string = `\\(${form}\\)`;
-        const resStr: string = `\\({\\color{red} ${sciNot(avg)}}\\pm{\\color{blue} ${sciNot(sd)}}\\)`;
+        const resStr: string = resVal(avg, sd);
         const tr: HTMLTableRowElement = document.createElement('tr');
         for (const item of [ans, formStr, resStr]) {
             const td: HTMLTableCellElement = document.createElement('td');

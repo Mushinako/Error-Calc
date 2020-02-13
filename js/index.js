@@ -22,12 +22,17 @@ const supportedBrowsers = [
     'Microsoft Edge 14+',
     'Opera 41+'
 ];
+const rnd = (n) => +n.toPrecision(10);
 function sciNot(n) {
     const absN = Math.abs(n);
-    if (absN < 1e6 && absN > 1e-3) {
-        return n.toString();
+    if (absN < 1e6 && absN > 1e-1) {
+        return rnd(n).toString();
     }
-    return n.toExponential();
+    return rnd(n).toExponential();
+}
+function resVal(avg, sd) {
+    const resStr = `\\({\\color{red} ${sciNot(avg)}}\\pm{\\color{blue} ${sciNot(sd)}}\\)`;
+    return resStr;
 }
 function inpDiv(ph) {
     const div = document.createElement('div');
@@ -262,7 +267,7 @@ function displayAns() {
         ids.push(parseInt(ans.slice(3)));
         const [form, avg, sd] = JSON.parse(data);
         const formStr = `\\(${form}\\)`;
-        const resStr = `\\({\\color{red} ${sciNot(avg)}}\\pm{\\color{blue} ${sciNot(sd)}}\\)`;
+        const resStr = resVal(avg, sd);
         const tr = document.createElement('tr');
         for (const item of [ans, formStr, resStr]) {
             const td = document.createElement('td');
