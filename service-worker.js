@@ -24,9 +24,9 @@ self.addEventListener('install', (e) => {
             console.log('[ServiceWorker] Pre-caching offline page');
             return cache.addAll(filesToCache.map((url) => new Request(url, {
                 mode: 'no-cors'
-            })).then(() => {
+            }))).then(() => {
                 console.log('[ServiceWorker] Request finished!');
-            }));
+            });
         })
     );
 });
