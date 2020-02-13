@@ -20,20 +20,21 @@ declare const M: Materialize;
 // Global variables
 let editDiv: HTMLDivElement;
 let formDiv: HTMLDivElement;
+let mode: string;
 
 // Operations
 const copers: Record<string, () => void> = {
-    '+/-': cOperOnClick(['+', '-'], calcAddMin),
-    '×/÷': cOperOnClick(['×', '÷'], calcMulDiv),
+    '+/-': cOperOnClick(['+', '-'], calcAddMin, 'as'),
+    '×/÷': cOperOnClick(['×', '÷'], calcMulDiv, 'md'),
 };
 const nopers: Record<string, () => void> = {
-    'ln': nOperOnClick('ln', calcLn),
-    'log': nOperOnClick('log', calcLog),
-    'e^': nOperOnClick('e^', calcExp),
-    '10^': nOperOnClick('10^', calc10xp)
+    'ln': nOperOnClick('ln', calcLn, 'ln'),
+    'log': nOperOnClick('log', calcLog, 'lg'),
+    'e^': nOperOnClick('e^', calcExp, 'ex'),
+    '10^': nOperOnClick('10^', calc10xp, '10')
 };
 const topers: Record<string, () => void> = {
-    'a^x': tOperOnClick(['a', 'x'], calcPwr)
+    'a^x': tOperOnClick(['a', 'x'], calcPwr, 'pw')
 }
 
 // Supported browsers
@@ -257,11 +258,14 @@ function calcBtn(calc: () => void): HTMLAnchorElement {
  * @param   {string[]} choices - The choices in the <select> 
  * @param   {(): void} calc    - The function to be run when 'Calculate'
  *                               is clicked
+ * @param   {string}   md      - The mode to be set
  * @returns {(): void}         - The function to be run when the method
  *                               button is clicked
  */
-function cOperOnClick(choices: string[], calc: () => void): () => void {
+function cOperOnClick(choices: string[], calc: () => void, md: string): () => void {
     return (): void => {
+        // Set mode
+        mode = md;
         // Clear and re-init form
         while (editDiv.hasChildNodes()) editDiv.removeChild(editDiv.lastChild!);
         const formDiv: HTMLFormElement = document.createElement('form');
@@ -296,11 +300,14 @@ function cOperOnClick(choices: string[], calc: () => void): () => void {
  * @param   {string}   func - Function name 
  * @param   {(): void} calc - The function to be run when 'Calculate' is
  *                            clicked
+ * @param   {string}   md   - The mode to be set
  * @returns {(): void}      - The function to be run when the method button
  *                            is clicked
  */
-function nOperOnClick(func: string, calc: () => void): () => void {
+function nOperOnClick(func: string, calc: () => void, md: string): () => void {
     return (): void => {
+        // Set mode
+        mode = md;
         // Clear and re-init form
         while (editDiv.hasChildNodes()) editDiv.removeChild(editDiv.lastChild!);
         const formDiv: HTMLFormElement = document.createElement('form');
@@ -324,11 +331,14 @@ function nOperOnClick(func: string, calc: () => void): () => void {
  * @param   {string[]} rows - The variable names
  * @param   {(): void} calc - The function to be run when 'Calculate' is
  *                              clicked
+ * @param   {string}   md   - The mode to be set
  * @returns {(): void}      - The function to be run when the method button
  *                            is clicked
  */
-function tOperOnClick(rows: string[], calc: () => void): () => void {
+function tOperOnClick(rows: string[], calc: () => void, md: string): () => void {
     return (): void => {
+        // Set mode
+        mode = md;
         // Clear and re-init form
         while (editDiv.hasChildNodes()) editDiv.removeChild(editDiv.lastChild!);
         const formDiv: HTMLFormElement = document.createElement('form');

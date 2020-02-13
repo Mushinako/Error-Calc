@@ -1,18 +1,19 @@
 "use strict";
 let editDiv;
 let formDiv;
+let mode;
 const copers = {
-    '+/-': cOperOnClick(['+', '-'], calcAddMin),
-    '×/÷': cOperOnClick(['×', '÷'], calcMulDiv),
+    '+/-': cOperOnClick(['+', '-'], calcAddMin, 'as'),
+    '×/÷': cOperOnClick(['×', '÷'], calcMulDiv, 'md'),
 };
 const nopers = {
-    'ln': nOperOnClick('ln', calcLn),
-    'log': nOperOnClick('log', calcLog),
-    'e^': nOperOnClick('e^', calcExp),
-    '10^': nOperOnClick('10^', calc10xp)
+    'ln': nOperOnClick('ln', calcLn, 'ln'),
+    'log': nOperOnClick('log', calcLog, 'lg'),
+    'e^': nOperOnClick('e^', calcExp, 'ex'),
+    '10^': nOperOnClick('10^', calc10xp, '10')
 };
 const topers = {
-    'a^x': tOperOnClick(['a', 'x'], calcPwr)
+    'a^x': tOperOnClick(['a', 'x'], calcPwr, 'pw')
 };
 const supportedBrowsers = [
     'Google Chrome 54+',
@@ -152,8 +153,9 @@ function calcBtn(calc) {
     btn.addEventListener('click', calc);
     return btn;
 }
-function cOperOnClick(choices, calc) {
+function cOperOnClick(choices, calc, md) {
     return () => {
+        mode = md;
         while (editDiv.hasChildNodes())
             editDiv.removeChild(editDiv.lastChild);
         const formDiv = document.createElement('form');
@@ -175,8 +177,9 @@ function cOperOnClick(choices, calc) {
         M.AutoInit();
     };
 }
-function nOperOnClick(func, calc) {
+function nOperOnClick(func, calc, md) {
     return () => {
+        mode = md;
         while (editDiv.hasChildNodes())
             editDiv.removeChild(editDiv.lastChild);
         const formDiv = document.createElement('form');
@@ -188,8 +191,9 @@ function nOperOnClick(func, calc) {
         editDiv.appendChild(formDiv);
     };
 }
-function tOperOnClick(rows, calc) {
+function tOperOnClick(rows, calc, md) {
     return () => {
+        mode = md;
         while (editDiv.hasChildNodes())
             editDiv.removeChild(editDiv.lastChild);
         const formDiv = document.createElement('form');
