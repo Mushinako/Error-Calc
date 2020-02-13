@@ -54,6 +54,9 @@ self.addEventListener('fetch', (e) => {
             console.log(`[Service Worker] Fetching resource: ${e.request.url}`);
             return r || fetch(e.request).then((res) => {
                 return caches.open(cacheName).then((cache) => {
+                    // return caches.open(cacheName, {
+                    // mode: 'no-cors'
+                    // }).then((cache) => {
                     console.log(`[Service Worker] Caching new resource: ${e.request.url}`);
                     cache.put(e.request, res.clone());
                     return res;
