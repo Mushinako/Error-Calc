@@ -280,6 +280,7 @@ function cOperOnClick(choices: string[], calc: () => void, md: string): () => vo
         const formDiv: HTMLFormElement = document.createElement('form');
         // Inputs
         formDiv.appendChild(cOperInputDiv(choices, true));
+        formDiv.appendChild(cOperInputDiv(choices, false));
         // Button row wrapper
         const btnsDiv: HTMLDivElement = document.createElement('div');
         btnsDiv.classList.add('container', 'row', 'center');

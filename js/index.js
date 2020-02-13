@@ -167,6 +167,7 @@ function cOperOnClick(choices, calc, md) {
             editDiv.removeChild(editDiv.lastChild);
         const formDiv = document.createElement('form');
         formDiv.appendChild(cOperInputDiv(choices, true));
+        formDiv.appendChild(cOperInputDiv(choices, false));
         const btnsDiv = document.createElement('div');
         btnsDiv.classList.add('container', 'row', 'center');
         const addRowBtn = document.createElement('a');
