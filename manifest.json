@@ -33,10 +33,6 @@
         "src": "images/icons/icon-2000x2000.png",
         "sizes": "2000x2000",
         "type": "image/png"
-    }, {
-        "src": "images/icons/icon-4000x4000.png",
-        "sizes": "4000x4000",
-        "type": "image/png"
     }],
     "start_url": "index.html",
     "display": "standalone",

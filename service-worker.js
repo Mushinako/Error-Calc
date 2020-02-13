@@ -12,7 +12,6 @@ const filesToCache = [
     'images/icons/icon-768x768.png',
     'images/icons/icon-1000x1000.png',
     'images/icons/icon-2000x2000.png',
-    'images/icons/icon-4000x4000.png',
     'js/calc.js',
     'js/index.js',
     'js/MathJax-loader.js',
