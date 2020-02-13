@@ -1,5 +1,5 @@
 "use strict";
-const cacheName = 'mushinako-err-prop-v1.1.0';
+const cacheName = 'mushinako-err-prop-v1.1.1';
 const filesToCache = [
     'index.html',
     'css/common.css',
@@ -7,7 +7,12 @@ const filesToCache = [
     'images/icons/icon-96x96.png',
     'images/icons/icon-144x144.png',
     'images/icons/icon-192x192.png',
+    'images/icons/icon-256x256.png',
     'images/icons/icon-512x512.png',
+    'images/icons/icon-768x768.png',
+    'images/icons/icon-1000x1000.png',
+    'images/icons/icon-2000x2000.png',
+    'images/icons/icon-4000x4000.png',
     'js/calc.js',
     'js/index.js',
     'js/MathJax-loader.js',
