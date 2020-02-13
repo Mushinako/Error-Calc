@@ -226,8 +226,8 @@ function createOpBtn(name, op) {
     btn.addEventListener('click', op);
     return btn;
 }
-function setBtns(opers) {
-    const div = document.getElementById('btns');
+function setBtns(opers, divId) {
+    const div = document.getElementById(divId);
     div.appendChild(document.createTextNode('|'));
     for (const [name, op] of Object.entries(opers)) {
         const btn = createOpBtn(name, op);
@@ -311,9 +311,9 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     displayAns();
     editDiv = document.getElementById('edit');
-    setBtns(copers);
-    setBtns(nopers);
-    setBtns(topers);
+    setBtns(copers, 'ctbtns');
+    setBtns(topers, 'ctbtns');
+    setBtns(nopers, 'nbtns');
     document.addEventListener('keypress', (ev) => {
         if (ev.key === 'Enter' || ev.key === '\n') {
             if (ev.shiftKey) {
@@ -325,5 +325,5 @@ document.addEventListener('DOMContentLoaded', () => {
                 document.getElementById('calc').click();
         }
     });
-    document.getElementById('btns').childNodes[1].click();
+    document.getElementById('ctbtns').childNodes[1].click();
 });

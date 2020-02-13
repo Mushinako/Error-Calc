@@ -408,13 +408,14 @@ function createOpBtn(name: string, op: () => void): HTMLAnchorElement {
 /**
  * Create a block of method buttons
  * 
- * @param   {Record<string, (): void>} opers - Operations and their function
- *                                             to be run when their method
- *                                             button is clicked
+ * @param {Record<string, (): void>} opers - Operations and their function
+ *                                           to be run when their method
+ *                                           button is clicked
+ * @param {string}                   divId - ID of div to append to
  */
-function setBtns(opers: Record<string, () => void>): void {
+function setBtns(opers: Record<string, () => void>, divId: string): void {
     // Add a "|"
-    const div: HTMLDivElement = <HTMLDivElement>document.getElementById('btns');
+    const div: HTMLDivElement = <HTMLDivElement>document.getElementById(divId);
     div.appendChild(document.createTextNode('|'));
     // For each operation, add a button and a "|"
     for (const [name, op] of Object.entries(opers)) {
@@ -523,9 +524,9 @@ document.addEventListener('DOMContentLoaded', (): void => {
     // Set input
     editDiv = <HTMLDivElement>document.getElementById('edit');
     // Set buttons
-    setBtns(copers);
-    setBtns(nopers);
-    setBtns(topers);
+    setBtns(copers, 'ctbtns');
+    setBtns(topers, 'ctbtns');
+    setBtns(nopers, 'nbtns');
     // Keyboard events
     document.addEventListener('keypress', (ev: KeyboardEvent): void => {
         if (ev.key === 'Enter' || ev.key === '\n') {
@@ -536,5 +537,5 @@ document.addEventListener('DOMContentLoaded', (): void => {
         }
     });
     // Init +/-
-    (<HTMLAnchorElement>document.getElementById('btns')!.childNodes[1]).click();
+    (<HTMLAnchorElement>document.getElementById('ctbtns')!.childNodes[1]).click();
 });
