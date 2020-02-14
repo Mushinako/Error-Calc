@@ -20,6 +20,8 @@ declare const M: Materialize;
 // Global variables
 let editDiv: HTMLDivElement;
 let formDiv: HTMLDivElement;
+let sigFigInp: HTMLInputElement;
+let sigFig: boolean;
 let mode: string;
 
 // Operations
@@ -47,25 +49,31 @@ const supportedBrowsers: string[] = [
 ];
 
 /**
- * Round to (10) sigfigs
+ * Round to 10 or specified accuracy
  * 
- * @param   {number} n - The number to be rounded
- * @returns {number}   - Rounded number
+ * @param   {number} n  - The number to be rounded
+ * @param   {number} sf - Decimal places
+ * @returns {number}    - Rounded number
  */
-const rnd = (n: number): number => +n.toPrecision(10);
+function rnd(n: number, sf: number): number {
+    if (!sigFig) return +n.toPrecision(10);
+    const exp: number = Math.pow(10, -sf);
+    return Math.round(n * exp) / exp;
+}
 
 /**
  * Scientific notations
  * 
- * @param   {number} n - Input number
- * @returns {string}   - Output string
+ * @param   {number} n  - Input number
+ * @param   {number} sf - Decimal places
+ * @returns {string}    - Output string
  */
-function sciNot(n: number): string {
+function sciNot(n: number, sf: number): string {
     const absN: number = Math.abs(n);
     if (absN < 1e6 && absN > 1e-1) {
-        return rnd(n).toString();
+        return rnd(n, sf).toString();
     }
-    return rnd(n).toExponential();
+    return rnd(n, sf).toExponential();
 }
 
 /**
@@ -73,10 +81,11 @@ function sciNot(n: number): string {
  * 
  * @param   {number} avg - Avg
  * @param   {number} sd  - SD
+ * @param   {number} sf  - Decimal accuracy
  * @returns {string}     - Result string
  */
-function resVal(avg: number, sd: number): string {
-    const resStr: string = `\\({\\color{red} ${sciNot(avg)}}\\pm{\\color{blue} ${sciNot(sd)}}\\)`;
+function resVal(avg: number, sd: number, sf: number): string {
+    const resStr: string = `\\({\\color{red} ${sciNot(avg, sf)}}\\pm{\\color{blue} ${sciNot(sd, sf)}}\\)`;
     return resStr;
 }
 
@@ -444,6 +453,8 @@ function displayAns(): void {
         ansCounter = 1;
         return;
     }
+    // Whether to display sigfig
+    sigFig = sigFigInp.checked;
     // List of Ans IDs present
     let ids: number[] = [];
     // Clear and reassemble table
@@ -470,9 +481,9 @@ function displayAns(): void {
         // Register ID
         ids.push(parseInt(ans.slice(3)));
         // Parse from localStorage
-        const [form, avg, sd]: [string, number, number] = JSON.parse(data);
+        const [form, avg, sd, sf]: [string, number, number, number] = JSON.parse(data);
         const formStr: string = `\\(${form}\\)`;
-        const resStr: string = resVal(avg, sd);
+        const resStr: string = resVal(avg, sd, sf);
         const tr: HTMLTableRowElement = document.createElement('tr');
         for (const item of [ans, formStr, resStr]) {
             const td: HTMLTableCellElement = document.createElement('td');
@@ -519,6 +530,8 @@ document.addEventListener('DOMContentLoaded', (): void => {
         formDiv.appendChild(supportedList);
         return;
     }
+    sigFigInp = <HTMLInputElement>document.getElementById('sigfig');
+    sigFigInp.addEventListener('click', (): void => displayAns());
     displayAns();
     // Set input
     editDiv = <HTMLDivElement>document.getElementById('edit');

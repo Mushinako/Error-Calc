@@ -1,6 +1,8 @@
 "use strict";
 let editDiv;
 let formDiv;
+let sigFigInp;
+let sigFig;
 let mode;
 const copers = {
     '+/-': cOperOnClick(['+', '-'], calcAddMin, 'as'),
@@ -22,16 +24,21 @@ const supportedBrowsers = [
     'Microsoft Edge 14+',
     'Opera 41+'
 ];
-const rnd = (n) => +n.toPrecision(10);
-function sciNot(n) {
+function rnd(n, sf) {
+    if (!sigFig)
+        return +n.toPrecision(10);
+    const exp = Math.pow(10, -sf);
+    return Math.round(n * exp) / exp;
+}
+function sciNot(n, sf) {
     const absN = Math.abs(n);
     if (absN < 1e6 && absN > 1e-1) {
-        return rnd(n).toString();
+        return rnd(n, sf).toString();
     }
-    return rnd(n).toExponential();
+    return rnd(n, sf).toExponential();
 }
-function resVal(avg, sd) {
-    const resStr = `\\({\\color{red} ${sciNot(avg)}}\\pm{\\color{blue} ${sciNot(sd)}}\\)`;
+function resVal(avg, sd, sf) {
+    const resStr = `\\({\\color{red} ${sciNot(avg, sf)}}\\pm{\\color{blue} ${sciNot(sd, sf)}}\\)`;
     return resStr;
 }
 function inpDiv(ph) {
@@ -248,6 +255,7 @@ function displayAns() {
         ansCounter = 1;
         return;
     }
+    sigFig = sigFigInp.checked;
     let ids = [];
     while (formDiv.hasChildNodes())
         formDiv.removeChild(formDiv.lastChild);
@@ -265,9 +273,9 @@ function displayAns() {
     const tbody = document.createElement('tbody');
     for (const [ans, data] of Object.entries(window.localStorage).sort((a, b) => +a[0].slice(3) - +b[0].slice(3))) {
         ids.push(parseInt(ans.slice(3)));
-        const [form, avg, sd] = JSON.parse(data);
+        const [form, avg, sd, sf] = JSON.parse(data);
         const formStr = `\\(${form}\\)`;
-        const resStr = resVal(avg, sd);
+        const resStr = resVal(avg, sd, sf);
         const tr = document.createElement('tr');
         for (const item of [ans, formStr, resStr]) {
             const td = document.createElement('td');
@@ -309,6 +317,8 @@ document.addEventListener('DOMContentLoaded', () => {
         formDiv.appendChild(supportedList);
         return;
     }
+    sigFigInp = document.getElementById('sigfig');
+    sigFigInp.addEventListener('click', () => displayAns());
     displayAns();
     editDiv = document.getElementById('edit');
     setBtns(copers);
