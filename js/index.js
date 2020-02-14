@@ -19,6 +19,7 @@ const nopers = {
 const topers = {
     'a^x': tOperOnClick(['a', 'x'], calcPwr, 'pw')
 };
+const funcKeys = ['r', 't', 'y', 'u', 'i', 'o', 'p'];
 const supportedBrowsers = [
     'Google Chrome 54+',
     'Mozilla Firefox 47+',
@@ -396,6 +397,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const lastRes = tbody.lastChild;
             const btn = lastRes.lastChild.childNodes[0];
             btn.click();
+            return;
         }
         if (ev.key.toLowerCase() === 's') {
             ev.preventDefault();
@@ -411,6 +413,18 @@ document.addEventListener('DOMContentLoaded', () => {
             sigFig2Inp.checked = !sigFig2Inp.checked;
             displayAns();
             return;
+        }
+        const func = funcKeys.indexOf(ev.key.toLowerCase());
+        if (func > -1) {
+            ev.preventDefault();
+            const btnNodes = document.getElementById('btns').childNodes;
+            const btns = Array.from(btnNodes).filter((val) => {
+                const tn = val.tagName;
+                if (tn === undefined)
+                    return false;
+                return tn.toLowerCase() === 'a';
+            });
+            btns[func].click();
         }
     });
     document.getElementById('btns').childNodes[1].click();

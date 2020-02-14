@@ -40,6 +40,7 @@ const nopers: Record<string, () => void> = {
 const topers: Record<string, () => void> = {
     'a^x': tOperOnClick(['a', 'x'], calcPwr, 'pw')
 }
+const funcKeys: string[] = ['r', 't', 'y', 'u', 'i', 'o', 'p'];
 
 // Supported browsers
 const supportedBrowsers: string[] = [
@@ -593,6 +594,7 @@ document.addEventListener('DOMContentLoaded', (): void => {
             const lastRes: ChildNode = tbody.lastChild!;
             const btn: HTMLAnchorElement = <HTMLAnchorElement>lastRes.lastChild!.childNodes[0];
             btn.click();
+            return;
         }
         if (ev.key.toLowerCase() === 's') {
             ev.preventDefault();
@@ -607,6 +609,17 @@ document.addEventListener('DOMContentLoaded', (): void => {
             sigFig2Inp.checked = !sigFig2Inp.checked;
             displayAns();
             return;
+        }
+        const func: number = funcKeys.indexOf(ev.key.toLowerCase());
+        if (func > -1) {
+            ev.preventDefault();
+            const btnNodes: NodeListOf<ChildNode> = document.getElementById('btns')!.childNodes;
+            const btns: ChildNode[] = Array.from(btnNodes).filter((val: ChildNode): boolean => {
+                const tn: string = (<Element>val).tagName;
+                if (tn === undefined) return false;
+                return tn.toLowerCase() === 'a';
+            });
+            (<HTMLAnchorElement>btns[func]).click();
         }
     });
     // Init +/-
