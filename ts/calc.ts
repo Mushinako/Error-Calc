@@ -14,11 +14,11 @@ const ansForm = (ans: string): string => `\\text{Ans}${ans.slice(3)}`;
 /**
  * Formula representation for avg±sd
  * 
- * @param   {number} avg - Average
- * @param   {number} sd  - SD
+ * @param   {string} avg - Average
+ * @param   {string} sd  - SD
  * @returns {string}     - TeX representation
  */
-const numForm = (avg: number, sd: number): string => `(${avg}\\pm${sd})`;
+const numForm = (avg: string, sd: string): string => `(${beauInp(avg)}\\pm${beauInp(sd)})`;
 
 /**
  * Return the exponent log10 for the highest digit
@@ -44,8 +44,23 @@ const sigFigDecCov = (n: number, sf: number): number => +n.toExponential().split
  * @param   {string} exp - Exponent
  * @returns {number}     - The accuracy exponent
  */
-function expAcc(co: string, exp: string): number {
-    return nExpAcc(co) + +exp;
+const expAcc = (co: string, exp: string): number => nExpAcc(co) + +exp;
+
+/**
+ * Beautify input
+ * 
+ * @param {string} n - The number to be beautified
+ */
+function beauInp(n: string): string {
+    if (n === '') return '0';
+    let sign: string = '';
+    if (n.charAt(0) === '-') {
+        sign = '-';
+        n = n.slice(1);
+    }
+    if (n.charAt(0) === '.') n = '0' + n;
+    if (n.includes('e')) n = n.toLowerCase().replace('e', '\\times 10^{') + '}';
+    return sign + n;
 }
 
 /**
@@ -223,7 +238,7 @@ function calcAddMin(): void {
             formStr += '+';
         }
         sdSqSum += sd * sd;
-        formStr += isAns ? ansForm(avgStr) : numForm(avg, sd);
+        formStr += isAns ? ansForm(avgStr) : numForm(avgStr, sdStr);
         sfAll = Math.max(sfAll, sf);
     }
     if (formStr.charAt(0) === '+') formStr = formStr.slice(1);
@@ -250,7 +265,7 @@ function calcMulDiv(): void {
             formStr += '×';
         }
         sdSqSum += Math.pow(sd / avg, 2);
-        formStr += isAns ? ansForm(avgStr) : numForm(avg, sd);
+        formStr += isAns ? ansForm(avgStr) : numForm(avgStr, sdStr);
         sfSAll = Math.min(sfSAll, sigFigDecCov(avg, sf));
     }
     if (formStr.charAt(0) === '×') formStr = formStr.slice(1);
@@ -268,7 +283,7 @@ function calcLn(): void {
     if (!success) return;
     const avgRes: number = Math.log(avg);
     const sdRes: number = Math.abs(sd / avg);
-    const formStr: string = `\\ln{${isAns ? ansForm(avgStr) : numForm(avg, sd)}}`;
+    const formStr: string = `\\ln{${isAns ? ansForm(avgStr) : numForm(avgStr, sdStr)}}`;
     postProc(formStr, avgRes, sdRes, -sigFigDecCov(avg, sf));
 }
 
@@ -281,7 +296,7 @@ function calcLog(): void {
     if (!success) return;
     const avgRes: number = Math.log10(avg);
     const sdRes: number = Math.abs(sd / avg * Math.log10(Math.E));
-    const formStr: string = `\\log{${isAns ? ansForm(avgStr) : numForm(avg, sd)}}`;
+    const formStr: string = `\\log{${isAns ? ansForm(avgStr) : numForm(avgStr, sdStr)}}`;
     postProc(formStr, avgRes, sdRes, -sigFigDecCov(avg, sf));
 }
 
@@ -294,7 +309,7 @@ function calcExp(): void {
     if (!success) return;
     const avgRes: number = Math.exp(avg);
     const sdRes: number = Math.abs(sd * avgRes);
-    const formStr: string = `e^{${isAns ? ansForm(avgStr) : numForm(avg, sd)}}`;
+    const formStr: string = `e^{${isAns ? ansForm(avgStr) : numForm(avgStr, sdStr)}}`;
     postProc(formStr, avgRes, sdRes, -sigFigDecCov(avgRes, sf));
 }
 
@@ -307,7 +322,7 @@ function calc10xp(): void {
     if (!success) return;
     const avgRes: number = Math.pow(10, avg);
     const sdRes: number = Math.abs(sd * avgRes * Math.log(10));
-    const formStr: string = `10^{${isAns ? ansForm(avgStr) : numForm(avg, sd)}}`;
+    const formStr: string = `10^{${isAns ? ansForm(avgStr) : numForm(avgStr, sdStr)}}`;
     postProc(formStr, avgRes, sdRes, -sigFigDecCov(avgRes, sf));
 }
 
@@ -321,6 +336,6 @@ function calcPwr(): void {
     if (!success) return;
     const avgRes: number = Math.pow(avg, exp);
     const sdRes: number = Math.abs(sd / avg * exp * avgRes);
-    const formStr: string = `{${isAns ? ansForm(avgStr) : numForm(avg, sd)}}^{${exp}}`;
+    const formStr: string = `{${isAns ? ansForm(avgStr) : numForm(avgStr, sdStr)}}^{${exp}}`;
     postProc(formStr, avgRes, sdRes, sigFigDecCov(avgRes, sigFigDecCov(avg, sf)));
 }

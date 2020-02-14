@@ -1,11 +1,23 @@
 "use strict";
 let ansCounter;
 const ansForm = (ans) => `\\text{Ans}${ans.slice(3)}`;
-const numForm = (avg, sd) => `(${avg}\\pm${sd})`;
+const numForm = (avg, sd) => `(${beauInp(avg)}\\pm${beauInp(sd)})`;
 const highestExp = (n) => +n.toExponential().split('e')[1];
 const sigFigDecCov = (n, sf) => +n.toExponential().split('e')[1] - sf + 1;
-function expAcc(co, exp) {
-    return nExpAcc(co) + +exp;
+const expAcc = (co, exp) => nExpAcc(co) + +exp;
+function beauInp(n) {
+    if (n === '')
+        return '0';
+    let sign = '';
+    if (n.charAt(0) === '-') {
+        sign = '-';
+        n = n.slice(1);
+    }
+    if (n.charAt(0) === '.')
+        n = '0' + n;
+    if (n.includes('e'))
+        n = n.toLowerCase().replace('e', '\\times 10^{') + '}';
+    return sign + n;
 }
 function nExpAcc(n) {
     if (n.includes('.')) {
@@ -100,7 +112,7 @@ function calcAddMin() {
             formStr += '+';
         }
         sdSqSum += sd * sd;
-        formStr += isAns ? ansForm(avgStr) : numForm(avg, sd);
+        formStr += isAns ? ansForm(avgStr) : numForm(avgStr, sdStr);
         sfAll = Math.max(sfAll, sf);
     }
     if (formStr.charAt(0) === '+')
@@ -126,7 +138,7 @@ function calcMulDiv() {
             formStr += '×';
         }
         sdSqSum += Math.pow(sd / avg, 2);
-        formStr += isAns ? ansForm(avgStr) : numForm(avg, sd);
+        formStr += isAns ? ansForm(avgStr) : numForm(avgStr, sdStr);
         sfSAll = Math.min(sfSAll, sigFigDecCov(avg, sf));
     }
     if (formStr.charAt(0) === '×')
@@ -143,7 +155,7 @@ function calcLn() {
         return;
     const avgRes = Math.log(avg);
     const sdRes = Math.abs(sd / avg);
-    const formStr = `\\ln{${isAns ? ansForm(avgStr) : numForm(avg, sd)}}`;
+    const formStr = `\\ln{${isAns ? ansForm(avgStr) : numForm(avgStr, sdStr)}}`;
     postProc(formStr, avgRes, sdRes, -sigFigDecCov(avg, sf));
 }
 function calcLog() {
@@ -153,7 +165,7 @@ function calcLog() {
         return;
     const avgRes = Math.log10(avg);
     const sdRes = Math.abs(sd / avg * Math.log10(Math.E));
-    const formStr = `\\log{${isAns ? ansForm(avgStr) : numForm(avg, sd)}}`;
+    const formStr = `\\log{${isAns ? ansForm(avgStr) : numForm(avgStr, sdStr)}}`;
     postProc(formStr, avgRes, sdRes, -sigFigDecCov(avg, sf));
 }
 function calcExp() {
@@ -163,7 +175,7 @@ function calcExp() {
         return;
     const avgRes = Math.exp(avg);
     const sdRes = Math.abs(sd * avgRes);
-    const formStr = `e^{${isAns ? ansForm(avgStr) : numForm(avg, sd)}}`;
+    const formStr = `e^{${isAns ? ansForm(avgStr) : numForm(avgStr, sdStr)}}`;
     postProc(formStr, avgRes, sdRes, -sigFigDecCov(avgRes, sf));
 }
 function calc10xp() {
@@ -173,7 +185,7 @@ function calc10xp() {
         return;
     const avgRes = Math.pow(10, avg);
     const sdRes = Math.abs(sd * avgRes * Math.log(10));
-    const formStr = `10^{${isAns ? ansForm(avgStr) : numForm(avg, sd)}}`;
+    const formStr = `10^{${isAns ? ansForm(avgStr) : numForm(avgStr, sdStr)}}`;
     postProc(formStr, avgRes, sdRes, -sigFigDecCov(avgRes, sf));
 }
 function calcPwr() {
@@ -184,6 +196,6 @@ function calcPwr() {
         return;
     const avgRes = Math.pow(avg, exp);
     const sdRes = Math.abs(sd / avg * exp * avgRes);
-    const formStr = `{${isAns ? ansForm(avgStr) : numForm(avg, sd)}}^{${exp}}`;
+    const formStr = `{${isAns ? ansForm(avgStr) : numForm(avgStr, sdStr)}}^{${exp}}`;
     postProc(formStr, avgRes, sdRes, sigFigDecCov(avgRes, sigFigDecCov(avg, sf)));
 }

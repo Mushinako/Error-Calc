@@ -1,5 +1,5 @@
 "use strict";
-const cacheName = 'commit-57';
+const cacheName = 'commit-58';
 const filesToCache = [
     'index.html',
     'css/common.css',
