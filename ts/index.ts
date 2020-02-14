@@ -21,7 +21,9 @@ declare const M: Materialize;
 let editDiv: HTMLDivElement;
 let formDiv: HTMLDivElement;
 let sigFigInp: HTMLInputElement;
+let sigFig2Inp: HTMLInputElement;
 let sigFig: boolean;
+let sigFig2: boolean;
 let mode: string;
 
 // Operations
@@ -49,31 +51,19 @@ const supportedBrowsers: string[] = [
 ];
 
 /**
- * Round to 10 or specified accuracy
- * 
- * @param   {number} n  - The number to be rounded
- * @param   {number} sf - Decimal places
- * @returns {number}    - Rounded number
- */
-function rnd(n: number, sf: number): number {
-    if (!sigFig) return +n.toPrecision(10);
-    const exp: number = Math.pow(10, -sf);
-    return Math.round(n * exp) / exp;
-}
-
-/**
  * Scientific notations
  * 
- * @param   {number} n  - Input number
- * @param   {number} sf - Decimal places
- * @returns {string}    - Output string
+ * @param   {number} n   - Input number
+ * @param   {number} sfn - SigFigs
+ * @returns {string}     - Output string
  */
-function sciNot(n: number, sf: number): string {
+function sciNot(n: number, sfn: number): string {
     const absN: number = Math.abs(n);
+    if (sfn <= 0) return '0';
     if (absN < 1e6 && absN > 1e-1) {
-        return rnd(n, sf).toString();
+        return n.toPrecision(sfn);
     }
-    return rnd(n, sf).toExponential();
+    return n.toExponential(sfn - 1);
 }
 
 /**
@@ -85,7 +75,25 @@ function sciNot(n: number, sf: number): string {
  * @returns {string}     - Result string
  */
 function resVal(avg: number, sd: number, sf: number): string {
-    const resStr: string = `\\({\\color{red} ${sciNot(avg, sf)}}\\pm{\\color{blue} ${sciNot(sd, sf)}}\\)`;
+    let sfnAvg: number;
+    if (sigFig) {
+        if (sigFig2) sf -= 2;
+        sfnAvg = sigFigDecCov(avg, sf);
+    } else {
+        sfnAvg = 10;
+        sf = sigFigDecCov(avg, sfnAvg);
+    }
+    const avgStr: string = sciNot(avg, sfnAvg);
+    let resStr: string;
+    if (avgStr.includes('e')) {
+        const [avgCo, avgExp]: string[] = avgStr.split('e');
+        const sdStr: string = (sd * Math.pow(10, -avgExp)).toFixed(-sf + +avgExp);
+        resStr = `\\(({\\color{red} ${avgCo}}\\pm{\\color{blue} ${sdStr}})\\times 10^{${avgExp}}\\)`;
+    } else {
+        const sfnSd: number = sigFigDecCov(sd, sf);
+        const sdStr: string = sfnSd <= 0 ? '0' : sd.toPrecision(sfnSd);
+        resStr = `\\({\\color{red} ${avgStr}}\\pm{\\color{blue} ${sdStr}}\\)`;
+    }
     return resStr;
 }
 
@@ -455,6 +463,7 @@ function displayAns(): void {
     }
     // Whether to display sigfig
     sigFig = sigFigInp.checked;
+    sigFig2 = sigFig2Inp.checked;
     // List of Ans IDs present
     let ids: number[] = [];
     // Clear and reassemble table
@@ -531,7 +540,16 @@ document.addEventListener('DOMContentLoaded', (): void => {
         return;
     }
     sigFigInp = <HTMLInputElement>document.getElementById('sigfig');
-    sigFigInp.addEventListener('click', (): void => displayAns());
+    sigFig2Inp = <HTMLInputElement>document.getElementById('sigfig2');
+    sigFigInp.checked = false;
+    sigFig2Inp.checked = false;
+    sigFigInp.addEventListener('click', () => {
+        sigFig2Inp.disabled = !sigFigInp.checked;
+        displayAns();
+    });
+    sigFig2Inp.addEventListener('click', () => {
+        if (!sigFig2Inp.disabled) displayAns();
+    });
     displayAns();
     // Set input
     editDiv = <HTMLDivElement>document.getElementById('edit');

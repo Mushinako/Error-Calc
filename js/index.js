@@ -2,7 +2,9 @@
 let editDiv;
 let formDiv;
 let sigFigInp;
+let sigFig2Inp;
 let sigFig;
+let sigFig2;
 let mode;
 const copers = {
     '+/-': cOperOnClick(['+', '-'], calcAddMin, 'as'),
@@ -24,21 +26,38 @@ const supportedBrowsers = [
     'Microsoft Edge 14+',
     'Opera 41+'
 ];
-function rnd(n, sf) {
-    if (!sigFig)
-        return +n.toPrecision(10);
-    const exp = Math.pow(10, -sf);
-    return Math.round(n * exp) / exp;
-}
-function sciNot(n, sf) {
+function sciNot(n, sfn) {
     const absN = Math.abs(n);
+    if (sfn <= 0)
+        return '0';
     if (absN < 1e6 && absN > 1e-1) {
-        return rnd(n, sf).toString();
+        return n.toPrecision(sfn);
     }
-    return rnd(n, sf).toExponential();
+    return n.toExponential(sfn - 1);
 }
 function resVal(avg, sd, sf) {
-    const resStr = `\\({\\color{red} ${sciNot(avg, sf)}}\\pm{\\color{blue} ${sciNot(sd, sf)}}\\)`;
+    let sfnAvg;
+    if (sigFig) {
+        if (sigFig2)
+            sf -= 2;
+        sfnAvg = sigFigDecCov(avg, sf);
+    }
+    else {
+        sfnAvg = 10;
+        sf = sigFigDecCov(avg, sfnAvg);
+    }
+    const avgStr = sciNot(avg, sfnAvg);
+    let resStr;
+    if (avgStr.includes('e')) {
+        const [avgCo, avgExp] = avgStr.split('e');
+        const sdStr = (sd * Math.pow(10, -avgExp)).toFixed(-sf + +avgExp);
+        resStr = `\\(({\\color{red} ${avgCo}}\\pm{\\color{blue} ${sdStr}})\\times 10^{${avgExp}}\\)`;
+    }
+    else {
+        const sfnSd = sigFigDecCov(sd, sf);
+        const sdStr = sfnSd <= 0 ? '0' : sd.toPrecision(sfnSd);
+        resStr = `\\({\\color{red} ${avgStr}}\\pm{\\color{blue} ${sdStr}}\\)`;
+    }
     return resStr;
 }
 function inpDiv(ph) {
@@ -256,6 +275,7 @@ function displayAns() {
         return;
     }
     sigFig = sigFigInp.checked;
+    sigFig2 = sigFig2Inp.checked;
     let ids = [];
     while (formDiv.hasChildNodes())
         formDiv.removeChild(formDiv.lastChild);
@@ -318,7 +338,17 @@ document.addEventListener('DOMContentLoaded', () => {
         return;
     }
     sigFigInp = document.getElementById('sigfig');
-    sigFigInp.addEventListener('click', () => displayAns());
+    sigFig2Inp = document.getElementById('sigfig2');
+    sigFigInp.checked = false;
+    sigFig2Inp.checked = false;
+    sigFigInp.addEventListener('click', () => {
+        sigFig2Inp.disabled = !sigFigInp.checked;
+        displayAns();
+    });
+    sigFig2Inp.addEventListener('click', () => {
+        if (!sigFig2Inp.disabled)
+            displayAns();
+    });
     displayAns();
     editDiv = document.getElementById('edit');
     setBtns(copers);

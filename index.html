@@ -51,7 +51,16 @@
                             Show extra SigFigs
                             <input type="checkbox" id="sigfig">
                             <span class="lever"></span>
-                            Show required SigFigs (Alpha)
+                            Show required SigFigs (Beta)
+                        </label>
+                    </div>
+                    <div class="switch center tooltipped" data-position="bottom"
+                        data-tooltip="Highly experimental, may not produce accurate results!">
+                        <label>
+                            Follow SigFig rules
+                            <input type="checkbox" id="sigfig2" disabled>
+                            <span class="lever"></span>
+                            SigFig rules + 2 more SigFigs
                         </label>
                     </div>
                     <div class="solid container col s12" id="form"></div>
@@ -70,6 +79,8 @@
                                             precision</li>
                                         <li>Use "×/÷" to calculate reciprocals. Put the number on the first line, choose
                                             "÷", remove the second line, and hit "Calculate"</li>
+                                        <li><em>[Experimental]</em> To calculate SigFigs, use appropriate SigFigs in the
+                                            input (e.g., "3.0" instead of "3")</li>
                                     </ul>
                                 </div>
                             </li>
