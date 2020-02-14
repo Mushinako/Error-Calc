@@ -1,5 +1,5 @@
 "use strict";
-const cacheName = 'mushinako-err-prop-v1.3.52';
+const cacheName = 'mushinako-err-prop-v53';
 const filesToCache = [
     'index.html',
     'css/common.css',

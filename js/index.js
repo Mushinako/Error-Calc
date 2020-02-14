@@ -391,7 +391,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         if (ev.key.toLowerCase() === 'z') {
             ev.preventDefault();
-            if (!formDiv.hasChildNodes())
+            if (confirm('Do you want to delete the last result?') && !formDiv.hasChildNodes())
                 return;
             const tbody = formDiv.childNodes[0].childNodes[1];
             const lastRes = tbody.lastChild;

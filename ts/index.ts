@@ -589,7 +589,7 @@ document.addEventListener('DOMContentLoaded', (): void => {
         }
         if (ev.key.toLowerCase() === 'z') {
             ev.preventDefault();
-            if (!formDiv.hasChildNodes()) return;
+            if (confirm('Do you want to delete the last result?') && !formDiv.hasChildNodes()) return;
             const tbody: ChildNode = formDiv.childNodes[0].childNodes[1];
             const lastRes: ChildNode = tbody.lastChild!;
             const btn: HTMLAnchorElement = <HTMLAnchorElement>lastRes.lastChild!.childNodes[0];
