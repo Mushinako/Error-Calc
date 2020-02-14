@@ -38,76 +38,76 @@
     <main>
         <div class="container">
             <div class="box">
-                <div class="cont">
+                <div class="container">
                     <h1 class="center">Error Propagation</h1>
                     <div class="center margin-bot" id="btns"></div>
-                    <hr class="container">
-                    <div class="center solid container" id="edit"></div>
-                    <div class="center container" id="prev"></div>
-                    <hr class="container">
-                    <div class="switch center tooltipped" data-position="bottom"
-                        data-tooltip="Highly experimental, may not produce accurate results!">
-                        <label>
-                            Show extra SigFigs
-                            <input type="checkbox" id="sigfig">
-                            <span class="lever"></span>
-                            Show required SigFigs (Beta)
-                        </label>
+                    <hr>
+                    <div class="center solid" id="edit"></div>
+                    <div class="center" id="prev"></div>
+                    <hr>
+                    <div class="row">
+                        <div class="switch center tooltipped col s12 l6" data-position="bottom"
+                            data-tooltip="Experimental. Turn on to calculate SigFigs">
+                            <label>
+                                Extra SigFigs
+                                <input type="checkbox" id="sigfig">
+                                <span class="lever"></span>
+                                Required SigFigs
+                            </label>
+                        </div>
+                        <div class="switch center tooltipped col s12 l6" data-position="bottom"
+                            data-tooltip="Experimental. Turn on to produce 2 more SigFigs">
+                            <label>
+                                SigFig rules
+                                <input type="checkbox" id="sigfig2" disabled>
+                                <span class="lever"></span>
+                                SigFig rules + 2
+                            </label>
+                        </div>
                     </div>
-                    <div class="switch center tooltipped" data-position="bottom"
-                        data-tooltip="Highly experimental, may not produce accurate results!">
-                        <label>
-                            Follow SigFig rules
-                            <input type="checkbox" id="sigfig2" disabled>
-                            <span class="lever"></span>
-                            SigFig rules + 2 more SigFigs
-                        </label>
-                    </div>
-                    <div class="solid container col s12" id="form"></div>
-                    <div class="container">
-                        <ul class="collapsible">
-                            <li class="active">
-                                <div class="collapsible-header"><strong>Notes</strong></div>
-                                <div class="collapsible-body">
-                                    <ul class="browser-default">
-                                        <li>The calculated values do <strong>not</strong> round the results according to
-                                            sigfig rules. This feature may be implemented later.</li>
-                                        <li>All the results are stored locally, meaning that all data will be lost if
-                                            the site data for this webpage is cleared.</li>
-                                        <li>Use respective Ans (e.g., "Ans1", "Ans2", etc.) as the average to use
-                                            previously calculated values for better
-                                            precision</li>
-                                        <li>Use "×/÷" to calculate reciprocals. Put the number on the first line, choose
-                                            "÷", remove the second line, and hit "Calculate"</li>
-                                        <li><em>[Experimental]</em> To calculate SigFigs, use appropriate SigFigs in the
-                                            input (e.g., "3.0" instead of "3")</li>
-                                    </ul>
-                                </div>
-                            </li>
-                            <li>
-                                <div class="collapsible-header"><strong>Keyboard shortcuts</strong></div>
-                                <div class="collapsible-body">
-                                    <ul class="browser-default">
-                                        <li><em>Enter:</em> Run calculation</li>
-                                        <li><em>Shift+Enter:</em> Add row
-                                            (when
-                                            applicable)</li>
-                                    </ul>
-                                </div>
-                            </li>
-                            <li>
-                                <div class="collapsible-header"><strong>Data formats accepted</strong></div>
-                                <div class="collapsible-body">
-                                    <ul class="browser-default">
-                                        <li><em>Numbers:</em> 3.1415926; -2020; .57721</li>
-                                        <li><em>Scientific notations:</em> 8e8; .897e-12; 599e+3 </li>
-                                        <li><em>Previous answers:</em> Ans1; Ans22</li>
-                                        <li><em>All empty inputs are treated as 0.</em></li>
-                                    </ul>
-                                </div>
-                            </li>
-                        </ul>
-                    </div>
+                    <div class="solid col s12" id="form"></div>
+                    <ul class="collapsible">
+                        <li class="active">
+                            <div class="collapsible-header"><strong>Notes</strong></div>
+                            <div class="collapsible-body">
+                                <ul class="browser-default">
+                                    <li>The calculated values do <strong>not</strong> round the results according to
+                                        sigfig rules. This feature may be implemented later.</li>
+                                    <li>All the results are stored locally, meaning that all data will be lost if
+                                        the site data for this webpage is cleared.</li>
+                                    <li>Use respective Ans (e.g., "Ans1", "Ans2", etc.) as the average to use
+                                        previously calculated values for better
+                                        precision</li>
+                                    <li>Use "×/÷" to calculate reciprocals. Put the number on the first line, choose
+                                        "÷", remove the second line, and hit "Calculate"</li>
+                                    <li><em>[Experimental]</em> To calculate SigFigs, use appropriate SigFigs in the
+                                        input (e.g., "3.0" instead of "3")</li>
+                                </ul>
+                            </div>
+                        </li>
+                        <li>
+                            <div class="collapsible-header"><strong>Keyboard shortcuts</strong></div>
+                            <div class="collapsible-body">
+                                <ul class="browser-default">
+                                    <li><em>Enter:</em> Run calculation</li>
+                                    <li><em>Shift+Enter:</em> Add row
+                                        (when
+                                        applicable)</li>
+                                </ul>
+                            </div>
+                        </li>
+                        <li>
+                            <div class="collapsible-header"><strong>Data formats accepted</strong></div>
+                            <div class="collapsible-body">
+                                <ul class="browser-default">
+                                    <li><em>Numbers:</em> 3.1415926; -2020; .57721</li>
+                                    <li><em>Scientific notations:</em> 8e8; .897e-12; 599e+3 </li>
+                                    <li><em>Previous answers:</em> Ans1; Ans22</li>
+                                    <li><em>All empty inputs are treated as 0.</em></li>
+                                </ul>
+                            </div>
+                        </li>
+                    </ul>
                 </div>
             </div>
         </div>

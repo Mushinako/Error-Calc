@@ -26,3 +26,9 @@ html {
         background-position: 0% 50%;
     }
 }
+
+@media only screen and (min-width: 993px) {
+    .container {
+        width: 80%;
+    }
+}
