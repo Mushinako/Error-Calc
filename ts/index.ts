@@ -184,7 +184,7 @@ function cOperInputDiv(choices: string[], firstRow: boolean): HTMLDivElement {
     remDiv.classList.add('col', 's1');
     if (!firstRow) {
         const remBtn: HTMLAnchorElement = document.createElement('a');
-        remBtn.classList.add('waves-effect', 'waves-red', 'btn', 'red');
+        remBtn.classList.add('waves-effect', 'btn', 'red');
         remBtn.textContent = '×';
         remBtn.addEventListener('click', (): void => {
             outDiv.parentNode!.removeChild(outDiv);
@@ -278,7 +278,7 @@ function tOperInputDiv(rows: string[]): HTMLDivElement[] {
  */
 function calcBtn(calc: () => void): HTMLAnchorElement {
     const btn: HTMLAnchorElement = document.createElement('a');
-    btn.classList.add('waves-effect', 'waves-light-blue', 'btn', 'blue');
+    btn.classList.add('waves-effect', 'btn', 'blue');
     btn.id = 'calc';
     btn.textContent = 'Calculate';
     btn.addEventListener('click', calc);
@@ -311,7 +311,7 @@ function cOperOnClick(choices: string[], calc: () => void, md: string): () => vo
         btnsDiv.classList.add('container', 'row', 'center');
         // Add row button
         const addRowBtn: HTMLAnchorElement = document.createElement('a');
-        addRowBtn.classList.add('waves-effect', 'waves-teal', 'btn', 'green');
+        addRowBtn.classList.add('waves-effect', 'btn', 'green');
         addRowBtn.id = 'add-row';
         addRowBtn.textContent = 'Add Row';
         addRowBtn.addEventListener('click', (): void => {
@@ -411,11 +411,10 @@ function createOpBtn(name: string, op: () => void): HTMLAnchorElement {
  * @param {Record<string, (): void>} opers - Operations and their function
  *                                           to be run when their method
  *                                           button is clicked
- * @param {string}                   divId - ID of div to append to
  */
-function setBtns(opers: Record<string, () => void>, divId: string): void {
+function setBtns(opers: Record<string, () => void>): void {
     // Add a "|"
-    const div: HTMLDivElement = <HTMLDivElement>document.getElementById(divId);
+    const div: HTMLDivElement = <HTMLDivElement>document.getElementById('btns');
     div.appendChild(document.createTextNode('|'));
     // For each operation, add a button and a "|"
     for (const [name, op] of Object.entries(opers)) {
@@ -483,7 +482,7 @@ function displayAns(): void {
         // Remove button
         const td: HTMLTableCellElement = document.createElement('td');
         const btn: HTMLAnchorElement = document.createElement('a');
-        btn.classList.add('waves-effect', 'waves-red', 'btn', 'red');
+        btn.classList.add('waves-effect', 'btn', 'red');
         btn.textContent = '×';
         btn.addEventListener('click', (): void => {
             window.localStorage.removeItem(ans);
@@ -524,9 +523,9 @@ document.addEventListener('DOMContentLoaded', (): void => {
     // Set input
     editDiv = <HTMLDivElement>document.getElementById('edit');
     // Set buttons
-    setBtns(copers, 'ctbtns');
-    setBtns(topers, 'ctbtns');
-    setBtns(nopers, 'nbtns');
+    setBtns(copers);
+    setBtns(nopers);
+    setBtns(topers);
     // Keyboard events
     document.addEventListener('keypress', (ev: KeyboardEvent): void => {
         if (ev.key === 'Enter' || ev.key === '\n') {
@@ -537,5 +536,5 @@ document.addEventListener('DOMContentLoaded', (): void => {
         }
     });
     // Init +/-
-    (<HTMLAnchorElement>document.getElementById('ctbtns')!.childNodes[1]).click();
+    (<HTMLAnchorElement>document.getElementById('btns')!.childNodes[1]).click();
 });

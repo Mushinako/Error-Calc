@@ -103,7 +103,7 @@ function cOperInputDiv(choices, firstRow) {
     remDiv.classList.add('col', 's1');
     if (!firstRow) {
         const remBtn = document.createElement('a');
-        remBtn.classList.add('waves-effect', 'waves-red', 'btn', 'red');
+        remBtn.classList.add('waves-effect', 'btn', 'red');
         remBtn.textContent = '×';
         remBtn.addEventListener('click', () => {
             outDiv.parentNode.removeChild(outDiv);
@@ -159,7 +159,7 @@ function tOperInputDiv(rows) {
 }
 function calcBtn(calc) {
     const btn = document.createElement('a');
-    btn.classList.add('waves-effect', 'waves-light-blue', 'btn', 'blue');
+    btn.classList.add('waves-effect', 'btn', 'blue');
     btn.id = 'calc';
     btn.textContent = 'Calculate';
     btn.addEventListener('click', calc);
@@ -176,7 +176,7 @@ function cOperOnClick(choices, calc, md) {
         const btnsDiv = document.createElement('div');
         btnsDiv.classList.add('container', 'row', 'center');
         const addRowBtn = document.createElement('a');
-        addRowBtn.classList.add('waves-effect', 'waves-teal', 'btn', 'green');
+        addRowBtn.classList.add('waves-effect', 'btn', 'green');
         addRowBtn.id = 'add-row';
         addRowBtn.textContent = 'Add Row';
         addRowBtn.addEventListener('click', () => {
@@ -226,8 +226,8 @@ function createOpBtn(name, op) {
     btn.addEventListener('click', op);
     return btn;
 }
-function setBtns(opers, divId) {
-    const div = document.getElementById(divId);
+function setBtns(opers) {
+    const div = document.getElementById('btns');
     div.appendChild(document.createTextNode('|'));
     for (const [name, op] of Object.entries(opers)) {
         const btn = createOpBtn(name, op);
@@ -276,7 +276,7 @@ function displayAns() {
         }
         const td = document.createElement('td');
         const btn = document.createElement('a');
-        btn.classList.add('waves-effect', 'waves-red', 'btn', 'red');
+        btn.classList.add('waves-effect', 'btn', 'red');
         btn.textContent = '×';
         btn.addEventListener('click', () => {
             window.localStorage.removeItem(ans);
@@ -311,9 +311,9 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     displayAns();
     editDiv = document.getElementById('edit');
-    setBtns(copers, 'ctbtns');
-    setBtns(topers, 'ctbtns');
-    setBtns(nopers, 'nbtns');
+    setBtns(copers);
+    setBtns(nopers);
+    setBtns(topers);
     document.addEventListener('keypress', (ev) => {
         if (ev.key === 'Enter' || ev.key === '\n') {
             if (ev.shiftKey) {
@@ -325,5 +325,5 @@ document.addEventListener('DOMContentLoaded', () => {
                 document.getElementById('calc').click();
         }
     });
-    document.getElementById('ctbtns').childNodes[1].click();
+    document.getElementById('btns').childNodes[1].click();
 });
