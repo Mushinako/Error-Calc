@@ -1,5 +1,5 @@
 "use strict";
-const cacheName = 'err-prop-v54';
+const cacheName = 'err-prop-v55';
 const filesToCache = [
     'index.html',
     'css/common.css',
