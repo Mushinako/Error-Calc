@@ -43,19 +43,18 @@
                     <div class="center margin-bot" id="btns"></div>
                     <hr>
                     <div class="center solid" id="edit"></div>
-                    <div class="center" id="prev"></div>
                     <hr>
                     <div class="row">
-                        <div class="switch center tooltipped col s12 l6" data-position="bottom"
+                        <div class="switch center tooltipped col s12 m6" data-position="bottom"
                             data-tooltip="Experimental. Turn on to calculate SigFigs">
                             <label>
-                                Extra SigFigs
+                                Fixed SigFigs
                                 <input type="checkbox" id="sigfig">
                                 <span class="lever"></span>
-                                Required SigFigs
+                                Calculate SigFigs
                             </label>
                         </div>
-                        <div class="switch center tooltipped col s12 l6" data-position="bottom"
+                        <div class="switch center tooltipped col s12 m6" data-position="bottom"
                             data-tooltip="Experimental. Turn on to produce 2 more SigFigs">
                             <label>
                                 SigFig rules
@@ -87,10 +86,15 @@
                             <div class="collapsible-header"><strong>Keyboard shortcuts</strong></div>
                             <div class="collapsible-body">
                                 <ul class="browser-default">
-                                    <li><em>Enter:</em> Run calculation</li>
-                                    <li><em>Shift+Enter:</em> Add row
-                                        (when
-                                        applicable)</li>
+                                    <li><em>Shift+Enter:</em> Run calculation</li>
+                                    <li><em>q:</em> Add row (when applicable)</li>
+                                    <li><em>w:</em> Remove row (when applicable)</li>
+                                    <li><em>s:</em> Change "Extra SigFigs - Required SigFigs" switch</li>
+                                    <li><em>d:</em> Change "SigFig rules - SigFig rules + 2" switch</li>
+                                    <li><em>z:</em> Remove last result, if any</li>
+                                    <li>All the inputs, including the dropdown, can be navigated to using <em>Tab</em>
+                                        and <em>Shift+Tab</em>. Use <em>Enter</em> to open the dropdown, <em>↑</em> and
+                                        <em>↓</em> to select functions, and <em>Enter</em> to submit choice</li>
                                 </ul>
                             </div>
                         </li>

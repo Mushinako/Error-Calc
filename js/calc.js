@@ -133,7 +133,7 @@ function calcMulDiv() {
         formStr = formStr.slice(1);
     else
         formStr = '1' + formStr;
-    const sdSum = avgProd * Math.sqrt(sdSqSum);
+    const sdSum = Math.abs(avgProd) * Math.sqrt(sdSqSum);
     postProc(formStr, avgProd, sdSum, sigFigDecCov(avgProd, sfSAll));
 }
 function calcLn() {
@@ -142,7 +142,7 @@ function calcLn() {
     if (!success)
         return;
     const avgRes = Math.log(avg);
-    const sdRes = sd / avg;
+    const sdRes = Math.abs(sd / avg);
     const formStr = `\\ln{${isAns ? ansForm(avgStr) : numForm(avg, sd)}}`;
     postProc(formStr, avgRes, sdRes, -sigFigDecCov(avg, sf));
 }
@@ -152,7 +152,7 @@ function calcLog() {
     if (!success)
         return;
     const avgRes = Math.log10(avg);
-    const sdRes = sd / avg * Math.log10(Math.E);
+    const sdRes = Math.abs(sd / avg * Math.log10(Math.E));
     const formStr = `\\log{${isAns ? ansForm(avgStr) : numForm(avg, sd)}}`;
     postProc(formStr, avgRes, sdRes, -sigFigDecCov(avg, sf));
 }
@@ -162,9 +162,9 @@ function calcExp() {
     if (!success)
         return;
     const avgRes = Math.exp(avg);
-    const sdRes = sd * avgRes;
+    const sdRes = Math.abs(sd * avgRes);
     const formStr = `e^{${isAns ? ansForm(avgStr) : numForm(avg, sd)}}`;
-    postProc(formStr, avgRes, sdRes, sigFigDecCov(avgRes, sf));
+    postProc(formStr, avgRes, sdRes, -sigFigDecCov(avgRes, sf));
 }
 function calc10xp() {
     const [avgInp, avgStr, sdStr] = nGetInp();
@@ -172,9 +172,9 @@ function calc10xp() {
     if (!success)
         return;
     const avgRes = Math.pow(10, avg);
-    const sdRes = sd * avgRes * Math.log(10);
+    const sdRes = Math.abs(sd * avgRes * Math.log(10));
     const formStr = `10^{${isAns ? ansForm(avgStr) : numForm(avg, sd)}}`;
-    postProc(formStr, avgRes, sdRes, sigFigDecCov(avgRes, sf));
+    postProc(formStr, avgRes, sdRes, -sigFigDecCov(avgRes, sf));
 }
 function calcPwr() {
     const [base, exp] = tGetInps();
@@ -183,7 +183,7 @@ function calcPwr() {
     if (!success)
         return;
     const avgRes = Math.pow(avg, exp);
-    const sdRes = sd / avg * exp * avgRes;
+    const sdRes = Math.abs(sd / avg * exp * avgRes);
     const formStr = `{${isAns ? ansForm(avgStr) : numForm(avg, sd)}}^{${exp}}`;
     postProc(formStr, avgRes, sdRes, sigFigDecCov(avgRes, sigFigDecCov(avg, sf)));
 }

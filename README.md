@@ -1,4 +1,4 @@
-# Error Calc
+# Error Propagation
 
 Calculate error propagation
 

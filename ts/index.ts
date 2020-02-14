@@ -60,7 +60,7 @@ const supportedBrowsers: string[] = [
 function sciNot(n: number, sfn: number): string {
     const absN: number = Math.abs(n);
     if (sfn <= 0) return '0';
-    if (absN < 1e6 && absN > 1e-1) {
+    if (absN < 1e3 && absN > 1e-1 || absN === 0) {
         return n.toPrecision(sfn);
     }
     return n.toExponential(sfn - 1);
@@ -88,10 +88,13 @@ function resVal(avg: number, sd: number, sf: number): string {
     if (avgStr.includes('e')) {
         const [avgCo, avgExp]: string[] = avgStr.split('e');
         const sdStr: string = (sd * Math.pow(10, -avgExp)).toFixed(-sf + +avgExp);
-        resStr = `\\(({\\color{red} ${avgCo}}\\pm{\\color{blue} ${sdStr}})\\times 10^{${avgExp}}\\)`;
+        resStr = `\\(({\\color{red} ${avgCo}}\\pm{\\color{blue} ${sdStr}})\\times 10^{${+avgExp}}\\)`;
     } else {
-        const sfnSd: number = sigFigDecCov(sd, sf);
-        const sdStr: string = sfnSd <= 0 ? '0' : sd.toPrecision(sfnSd);
+        let sdStr: string;
+        if (sf > 0) {
+            const exp: number = Math.pow(10, sf);
+            sdStr = (Math.round(sd * exp) / exp).toString();
+        } else sdStr = sd.toFixed(-sf);
         resStr = `\\({\\color{red} ${avgStr}}\\pm{\\color{blue} ${sdStr}}\\)`;
     }
     return resStr;
@@ -197,9 +200,9 @@ function cOperInputDiv(choices: string[], firstRow: boolean): HTMLDivElement {
     // 2 inputs
     outDiv.appendChild(inpsDiv());
     // Remove btn
-    const remDiv: HTMLDivElement = document.createElement('div');
-    remDiv.classList.add('col', 's1');
     if (!firstRow) {
+        const remDiv: HTMLDivElement = document.createElement('div');
+        remDiv.classList.add('col', 's1');
         const remBtn: HTMLAnchorElement = document.createElement('a');
         remBtn.classList.add('waves-effect', 'btn', 'red');
         remBtn.textContent = '×';
@@ -207,8 +210,8 @@ function cOperInputDiv(choices: string[], firstRow: boolean): HTMLDivElement {
             outDiv.parentNode!.removeChild(outDiv);
         });
         remDiv.appendChild(remBtn);
+        outDiv.appendChild(remDiv);
     }
-    outDiv.appendChild(remDiv);
     // Return
     return outDiv;
 }
@@ -543,11 +546,11 @@ document.addEventListener('DOMContentLoaded', (): void => {
     sigFig2Inp = <HTMLInputElement>document.getElementById('sigfig2');
     sigFigInp.checked = false;
     sigFig2Inp.checked = false;
-    sigFigInp.addEventListener('click', () => {
+    sigFigInp.addEventListener('change', () => {
         sigFig2Inp.disabled = !sigFigInp.checked;
         displayAns();
     });
-    sigFig2Inp.addEventListener('click', () => {
+    sigFig2Inp.addEventListener('change', () => {
         if (!sigFig2Inp.disabled) displayAns();
     });
     displayAns();
@@ -560,10 +563,50 @@ document.addEventListener('DOMContentLoaded', (): void => {
     // Keyboard events
     document.addEventListener('keypress', (ev: KeyboardEvent): void => {
         if (ev.key === 'Enter' || ev.key === '\n') {
+            if (ev.altKey || ev.metaKey || ev.ctrlKey) return;
             if (ev.shiftKey) {
-                const addRowBtn: HTMLElement | null = document.getElementById('add-row');
-                if (addRowBtn !== null) (<HTMLAnchorElement>addRowBtn).click();
-            } else (<HTMLAnchorElement>document.getElementById('calc')).click();
+                ev.preventDefault();
+                (<HTMLAnchorElement>document.getElementById('calc')).click();
+            }
+            return;
+        }
+        if (ev.key.toLowerCase() === 'q') {
+            ev.preventDefault();
+            const addRowBtn: HTMLElement | null = document.getElementById('add-row');
+            if (addRowBtn !== null) (<HTMLAnchorElement>addRowBtn).click();
+            return;
+        }
+        if (ev.key.toLowerCase() === 'w') {
+            ev.preventDefault();
+            if (!['as', 'md'].includes(mode)) return;
+            const rows: NodeListOf<ChildNode> = editDiv.childNodes[0].childNodes;
+            const inpRow: ChildNode = rows[rows.length - 2];
+            if (inpRow.childNodes.length < 3) return;
+            const btn: HTMLAnchorElement = <HTMLAnchorElement>inpRow.childNodes[2].childNodes[0];
+            btn.click();
+            return;
+        }
+        if (ev.key.toLowerCase() === 'z') {
+            ev.preventDefault();
+            if (!formDiv.hasChildNodes()) return;
+            const tbody: ChildNode = formDiv.childNodes[0].childNodes[1];
+            const lastRes: ChildNode = tbody.lastChild!;
+            const btn: HTMLAnchorElement = <HTMLAnchorElement>lastRes.lastChild!.childNodes[0];
+            btn.click();
+        }
+        if (ev.key.toLowerCase() === 's') {
+            ev.preventDefault();
+            sigFigInp.checked = !sigFigInp.checked;
+            sigFig2Inp.disabled = !sigFigInp.checked;
+            displayAns();
+            return;
+        }
+        if (ev.key.toLowerCase() === 'd') {
+            ev.preventDefault();
+            if (sigFig2Inp.disabled) return;
+            sigFig2Inp.checked = !sigFig2Inp.checked;
+            displayAns();
+            return;
         }
     });
     // Init +/-

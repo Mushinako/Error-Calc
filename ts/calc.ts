@@ -255,7 +255,7 @@ function calcMulDiv(): void {
     }
     if (formStr.charAt(0) === '×') formStr = formStr.slice(1);
     else formStr = '1' + formStr;
-    const sdSum = avgProd * Math.sqrt(sdSqSum);
+    const sdSum = Math.abs(avgProd) * Math.sqrt(sdSqSum);
     postProc(formStr, avgProd, sdSum, sigFigDecCov(avgProd, sfSAll));
 }
 
@@ -267,7 +267,7 @@ function calcLn(): void {
     const [success, avg, sd, isAns, sf]: [number, number, number, number, number] = getNums(avgInp, avgStr, sdStr);
     if (!success) return;
     const avgRes: number = Math.log(avg);
-    const sdRes: number = sd / avg;
+    const sdRes: number = Math.abs(sd / avg);
     const formStr: string = `\\ln{${isAns ? ansForm(avgStr) : numForm(avg, sd)}}`;
     postProc(formStr, avgRes, sdRes, -sigFigDecCov(avg, sf));
 }
@@ -280,7 +280,7 @@ function calcLog(): void {
     const [success, avg, sd, isAns, sf]: [number, number, number, number, number] = getNums(avgInp, avgStr, sdStr);
     if (!success) return;
     const avgRes: number = Math.log10(avg);
-    const sdRes: number = sd / avg * Math.log10(Math.E);
+    const sdRes: number = Math.abs(sd / avg * Math.log10(Math.E));
     const formStr: string = `\\log{${isAns ? ansForm(avgStr) : numForm(avg, sd)}}`;
     postProc(formStr, avgRes, sdRes, -sigFigDecCov(avg, sf));
 }
@@ -293,9 +293,9 @@ function calcExp(): void {
     const [success, avg, sd, isAns, sf]: [number, number, number, number, number] = getNums(avgInp, avgStr, sdStr);
     if (!success) return;
     const avgRes: number = Math.exp(avg);
-    const sdRes: number = sd * avgRes;
+    const sdRes: number = Math.abs(sd * avgRes);
     const formStr: string = `e^{${isAns ? ansForm(avgStr) : numForm(avg, sd)}}`;
-    postProc(formStr, avgRes, sdRes, sigFigDecCov(avgRes, sf));
+    postProc(formStr, avgRes, sdRes, -sigFigDecCov(avgRes, sf));
 }
 
 /**
@@ -306,9 +306,9 @@ function calc10xp(): void {
     const [success, avg, sd, isAns, sf]: [number, number, number, number, number] = getNums(avgInp, avgStr, sdStr);
     if (!success) return;
     const avgRes: number = Math.pow(10, avg);
-    const sdRes: number = sd * avgRes * Math.log(10);
+    const sdRes: number = Math.abs(sd * avgRes * Math.log(10));
     const formStr: string = `10^{${isAns ? ansForm(avgStr) : numForm(avg, sd)}}`;
-    postProc(formStr, avgRes, sdRes, sigFigDecCov(avgRes, sf));
+    postProc(formStr, avgRes, sdRes, -sigFigDecCov(avgRes, sf));
 }
 
 /**
@@ -320,7 +320,7 @@ function calcPwr(): void {
     const [success, avg, sd, isAns, sf]: [number, number, number, number, number] = getNums(inp, avgStr, sdStr);
     if (!success) return;
     const avgRes: number = Math.pow(avg, exp);
-    const sdRes: number = sd / avg * exp * avgRes;
+    const sdRes: number = Math.abs(sd / avg * exp * avgRes);
     const formStr: string = `{${isAns ? ansForm(avgStr) : numForm(avg, sd)}}^{${exp}}`;
     postProc(formStr, avgRes, sdRes, sigFigDecCov(avgRes, sigFigDecCov(avg, sf)));
 }

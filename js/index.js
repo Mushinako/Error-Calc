@@ -30,7 +30,7 @@ function sciNot(n, sfn) {
     const absN = Math.abs(n);
     if (sfn <= 0)
         return '0';
-    if (absN < 1e6 && absN > 1e-1) {
+    if (absN < 1e3 && absN > 1e-1 || absN === 0) {
         return n.toPrecision(sfn);
     }
     return n.toExponential(sfn - 1);
@@ -51,11 +51,16 @@ function resVal(avg, sd, sf) {
     if (avgStr.includes('e')) {
         const [avgCo, avgExp] = avgStr.split('e');
         const sdStr = (sd * Math.pow(10, -avgExp)).toFixed(-sf + +avgExp);
-        resStr = `\\(({\\color{red} ${avgCo}}\\pm{\\color{blue} ${sdStr}})\\times 10^{${avgExp}}\\)`;
+        resStr = `\\(({\\color{red} ${avgCo}}\\pm{\\color{blue} ${sdStr}})\\times 10^{${+avgExp}}\\)`;
     }
     else {
-        const sfnSd = sigFigDecCov(sd, sf);
-        const sdStr = sfnSd <= 0 ? '0' : sd.toPrecision(sfnSd);
+        let sdStr;
+        if (sf > 0) {
+            const exp = Math.pow(10, sf);
+            sdStr = (Math.round(sd * exp) / exp).toString();
+        }
+        else
+            sdStr = sd.toFixed(-sf);
         resStr = `\\({\\color{red} ${avgStr}}\\pm{\\color{blue} ${sdStr}}\\)`;
     }
     return resStr;
@@ -125,9 +130,9 @@ function cOperInputDiv(choices, firstRow) {
     selDiv.appendChild(sel);
     outDiv.appendChild(selDiv);
     outDiv.appendChild(inpsDiv());
-    const remDiv = document.createElement('div');
-    remDiv.classList.add('col', 's1');
     if (!firstRow) {
+        const remDiv = document.createElement('div');
+        remDiv.classList.add('col', 's1');
         const remBtn = document.createElement('a');
         remBtn.classList.add('waves-effect', 'btn', 'red');
         remBtn.textContent = '×';
@@ -135,8 +140,8 @@ function cOperInputDiv(choices, firstRow) {
             outDiv.parentNode.removeChild(outDiv);
         });
         remDiv.appendChild(remBtn);
+        outDiv.appendChild(remDiv);
     }
-    outDiv.appendChild(remDiv);
     return outDiv;
 }
 function nOperInputDiv(func) {
@@ -341,11 +346,11 @@ document.addEventListener('DOMContentLoaded', () => {
     sigFig2Inp = document.getElementById('sigfig2');
     sigFigInp.checked = false;
     sigFig2Inp.checked = false;
-    sigFigInp.addEventListener('click', () => {
+    sigFigInp.addEventListener('change', () => {
         sigFig2Inp.disabled = !sigFigInp.checked;
         displayAns();
     });
-    sigFig2Inp.addEventListener('click', () => {
+    sigFig2Inp.addEventListener('change', () => {
         if (!sigFig2Inp.disabled)
             displayAns();
     });
@@ -356,13 +361,56 @@ document.addEventListener('DOMContentLoaded', () => {
     setBtns(topers);
     document.addEventListener('keypress', (ev) => {
         if (ev.key === 'Enter' || ev.key === '\n') {
+            if (ev.altKey || ev.metaKey || ev.ctrlKey)
+                return;
             if (ev.shiftKey) {
-                const addRowBtn = document.getElementById('add-row');
-                if (addRowBtn !== null)
-                    addRowBtn.click();
-            }
-            else
+                ev.preventDefault();
                 document.getElementById('calc').click();
+            }
+            return;
+        }
+        if (ev.key.toLowerCase() === 'q') {
+            ev.preventDefault();
+            const addRowBtn = document.getElementById('add-row');
+            if (addRowBtn !== null)
+                addRowBtn.click();
+            return;
+        }
+        if (ev.key.toLowerCase() === 'w') {
+            ev.preventDefault();
+            if (!['as', 'md'].includes(mode))
+                return;
+            const rows = editDiv.childNodes[0].childNodes;
+            const inpRow = rows[rows.length - 2];
+            if (inpRow.childNodes.length < 3)
+                return;
+            const btn = inpRow.childNodes[2].childNodes[0];
+            btn.click();
+            return;
+        }
+        if (ev.key.toLowerCase() === 'z') {
+            ev.preventDefault();
+            if (!formDiv.hasChildNodes())
+                return;
+            const tbody = formDiv.childNodes[0].childNodes[1];
+            const lastRes = tbody.lastChild;
+            const btn = lastRes.lastChild.childNodes[0];
+            btn.click();
+        }
+        if (ev.key.toLowerCase() === 's') {
+            ev.preventDefault();
+            sigFigInp.checked = !sigFigInp.checked;
+            sigFig2Inp.disabled = !sigFigInp.checked;
+            displayAns();
+            return;
+        }
+        if (ev.key.toLowerCase() === 'd') {
+            ev.preventDefault();
+            if (sigFig2Inp.disabled)
+                return;
+            sigFig2Inp.checked = !sigFig2Inp.checked;
+            displayAns();
+            return;
         }
     });
     document.getElementById('btns').childNodes[1].click();
