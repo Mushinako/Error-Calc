@@ -1,4 +1,7 @@
 "use strict";
+let propDiv;
+let statDiv;
+let lregDiv;
 let editDiv;
 let formDiv;
 let sigFigInp;
@@ -328,7 +331,11 @@ function displayAns() {
     formDiv.appendChild(tbl);
     parse();
 }
+function propInit() { }
 document.addEventListener('DOMContentLoaded', () => {
+    propDiv = document.getElementById('propdiv');
+    statDiv = document.getElementById('statdiv');
+    lregDiv = document.getElementById('lregdiv');
     formDiv = document.getElementById('form');
     if (!Object.entries || !window.localStorage) {
         const noSupportP = document.createElement('p');

@@ -32,6 +32,9 @@
                 <li class="tooltipped" data-position="bottom" data-tooltip="Not implemented yet"><a href="#"
                         id="stat">1-Var Stat</a></li>
                 <li>|</li>
+                <li class="tooltipped" data-position="bottom" data-tooltip="Not implemented yet"><a href="#"
+                        id="lreg">Lin Reg</a></li>
+                <li>|</li>
                 <li><a href="https://github.com/Mushinako/Error-Calc" target="_blank"
                         rel="noopener noreferrer">Source</a></li>
                 <li>|</li>
@@ -50,22 +53,20 @@
                 <div class="center solid" id="edit"></div>
                 <hr>
                 <div class="row">
-                    <div class="switch center tooltipped col s12 m6" data-position="bottom"
+                    <div class="switch center tooltipped col s6" data-position="bottom"
                         data-tooltip="Experimental. Turn on to calculate SigFigs">
                         <label>
-                            Fixed SigFigs
+                            Calculate SigFigs
                             <input type="checkbox" id="sigfig">
                             <span class="lever"></span>
-                            Calculate SigFigs
                         </label>
                     </div>
-                    <div class="switch center tooltipped col s12 m6" data-position="bottom"
+                    <div class="switch center tooltipped col s6" data-position="bottom"
                         data-tooltip="Experimental. Turn on to produce 2 more SigFigs">
                         <label>
-                            SigFig rules
+                            2 more SigFigs
                             <input type="checkbox" id="sigfig2" disabled>
                             <span class="lever"></span>
-                            SigFig rules + 2
                         </label>
                     </div>
                 </div>
@@ -205,13 +206,15 @@
                     <li>
                         <div class="collapsible-header"><strong>Version</strong></div>
                         <div class="collapsible-body">
-                            <p>Commit #58</p>
+                            <p>Commit #59</p>
                         </div>
                     </li>
                 </ul>
             </div>
 
             <div class="container" id="statdiv"></div>
+
+            <div class="container" id="lregdiv"></div>
         </div>
     </main>
 

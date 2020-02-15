@@ -18,6 +18,9 @@ declare var MathJax: MathJax;
 declare const M: Materialize;
 
 // Global variables
+let propDiv: HTMLDivElement;
+let statDiv: HTMLDivElement;
+let lregDiv: HTMLDivElement;
 let editDiv: HTMLDivElement;
 let formDiv: HTMLDivElement;
 let sigFigInp: HTMLInputElement;
@@ -526,8 +529,15 @@ function displayAns(): void {
     parse();
 }
 
+/**
+ * Initialize propagation
+ */
+function propInit(): void { }
 
 document.addEventListener('DOMContentLoaded', (): void => {
+    propDiv = <HTMLDivElement>document.getElementById('propdiv');
+    statDiv = <HTMLDivElement>document.getElementById('statdiv');
+    lregDiv = <HTMLDivElement>document.getElementById('lregdiv');
     // Set output
     formDiv = <HTMLDivElement>document.getElementById('form');
     if (!Object.entries || !window.localStorage) {
