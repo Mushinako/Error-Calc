@@ -1,5 +1,5 @@
 "use strict";
-const cacheName = 'commit-59';
+const cacheName = 'commit-60';
 const filesToCache = [
     'index.html',
     'css/common.css',
@@ -8,8 +8,8 @@ const filesToCache = [
     'images/icons/icon-768x768.png',
     'images/icons/icon-1000x1000.png',
     'images/icons/icon-2000x2000.png',
-    'js/calc.js',
-    'js/index.js',
+    'js/prop.js',
+    'js/prop-calc.js',
     'js/MathJax-loader.js',
     'js/pwa.js',
     'lib/materialize.min.css',
