@@ -25,15 +25,16 @@
 
 <body>
     <nav class="black-trans">
-        <div class="nav-wrapper center">
+        <div class="nav-wrapper center container">
+            <a class="right no-click">Version: Commit #61</a>
             <ul class="inb" id="nav-mobile">
-                <li class="active"><a href="#" id="prop">Err Prop</a></li>
+                <li class="active"><a id="prop">Err Prop</a></li>
                 <li>|</li>
-                <li class="tooltipped" data-position="bottom" data-tooltip="Not implemented yet"><a href="#"
-                        id="stat">1-Var Stat</a></li>
+                <li class="tooltipped" data-position="bottom" data-tooltip="Not implemented yet"><a id="stat">1-Var
+                        Stat</a></li>
                 <li>|</li>
-                <li class="tooltipped" data-position="bottom" data-tooltip="Not implemented yet"><a href="#"
-                        id="lreg">Lin Reg</a></li>
+                <li class="tooltipped" data-position="bottom" data-tooltip="Not implemented yet"><a id="lreg">Lin
+                        Reg</a></li>
                 <li>|</li>
                 <li><a href="https://github.com/Mushinako/Error-Calc" target="_blank"
                         rel="noopener noreferrer">Source</a></li>
@@ -50,14 +51,14 @@
                 <h1 class="center">Error Propagation</h1>
                 <div class="center margin-bot" id="btns"></div>
                 <hr>
-                <div class="center solid" id="edit"></div>
+                <div class="center" id="propedit"></div>
                 <hr>
                 <div class="row">
                     <div class="switch center tooltipped col s6" data-position="bottom"
                         data-tooltip="Experimental. Turn on to calculate SigFigs">
                         <label>
                             Calculate SigFigs
-                            <input type="checkbox" id="sigfig">
+                            <input type="checkbox" id="propsigfig">
                             <span class="lever"></span>
                         </label>
                     </div>
@@ -65,12 +66,12 @@
                         data-tooltip="Experimental. Turn on to produce 2 more SigFigs">
                         <label>
                             2 more SigFigs
-                            <input type="checkbox" id="sigfig2" disabled>
+                            <input type="checkbox" id="propsigfig2" disabled>
                             <span class="lever"></span>
                         </label>
                     </div>
                 </div>
-                <div class="solid col s12" id="form"></div>
+                <div class="solid" id="propform"></div>
                 <ul class="collapsible">
                     <li class="active">
                         <div class="collapsible-header"><strong>Notes</strong></div>
@@ -203,18 +204,113 @@
                             </table>
                         </div>
                     </li>
-                    <li>
-                        <div class="collapsible-header"><strong>Version</strong></div>
+                </ul>
+            </div>
+
+            <div class="container no-display" id="statdiv">
+                <h1 class="center">One-Variable Statistics</h1>
+                <div class="center">
+                    <form>
+                        <div class="row">
+                            <div class="col s1"><a class="btn-flat no-click">x</a></div>
+                            <div class="col s11 input-field" id="statpast">
+                                <textarea class="materialize-textarea" id="statinp"></textarea>
+                            </div>
+                        </div>
+                        <div class="container row center">
+                            <a class="waves-effect blue btn" id="statcalc">Calculate</a>
+                        </div>
+                    </form>
+                </div>
+                <hr>
+                <div>
+                    <form class="row">
+                        <div class="col s12 m6 input-field">
+                            <div class="col s2 center">\(n\)</div>
+                            <input type="text" class="col s10" id="statn" disabled>
+                        </div>
+                        <div class="col s12 m6 input-field">
+                            <div class="col s2 center">\(\bar{x}\)</div>
+                            <input type="text" class="col s10" id="statxbar" disabled>
+                        </div>
+                        <div class="col s12 m6 input-field">
+                            <div class="col s2 center">\(s^{2}\)</div>
+                            <input type="text" class="col s10" id="stats2" disabled>
+                        </div>
+                        <div class="col s12 m6 input-field">
+                            <div class="col s2 center">\(s\)</div>
+                            <input type="text" class="col s10" id="stats" disabled>
+                        </div>
+                    </form>
+                </div>
+                <div class="solid" id="statform"></div>
+                <ul class="collapsible">
+                    <li class="active">
+                        <div class="collapsible-header"><strong>Notes</strong></div>
                         <div class="collapsible-body">
-                            <p>Commit #60</p>
+                            <ul class="browser-default">
+                                <li>All the results are stored locally, meaning that all data will be
+                                    lost if the site
+                                    data for this webpage is cleared</li>
+                                <li>Input one number on each line. Press <em>Enter</em> to add a line</li>
+                                <li>If copying a column of data from excel, directly paste into the input</li>
+                            </ul>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="collapsible-header"><strong>Keyboard shortcuts</strong></div>
+                        <div class="collapsible-body">
+                            <table class="highlight">
+                                <thead>
+                                    <tr>
+                                        <th>Key Combination</th>
+                                        <th>Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td><em>Enter</em></td>
+                                        <td>New line</td>
+                                    </tr>
+                                    <tr>
+                                        <td><em>Shift+Enter</em></td>
+                                        <td>Run calculation</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="collapsible-header"><strong>Data formats accepted</strong></div>
+                        <div class="collapsible-body">
+                            <table class="highlight">
+                                <thead>
+                                    <tr>
+                                        <th>Type</th>
+                                        <th>Example</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td><em>Numbers</em></td>
+                                        <td>3.1415926; -2020; .57721</td>
+                                    </tr>
+                                    <tr>
+                                        <td><em>Scientific Notations</em></td>
+                                        <td>8e7; .897e-12; 599e+3</td>
+                                    </tr>
+                                </tbody>
+                            </table>
                         </div>
                     </li>
                 </ul>
             </div>
 
-            <div class="container" id="statdiv"></div>
-
-            <div class="container" id="lregdiv"></div>
+            <div class="container no-display" id="lregdiv">
+                <h1 class="center">Linear Regression</h1>
+                <div class="center" id="lregedit"></div>
+                <hr>
+            </div>
         </div>
     </main>
 
@@ -223,6 +319,10 @@
     <script id="MathJax-script" src="lib/tex-chtml.js"></script>
     <script src="js/prop-calc.js"></script>
     <script src="js/prop.js"></script>
+    <script src="js/stat-calc.js"></script>
+    <script src="js/stat.js"></script>
+    <script src="js/lreg.js"></script>
+    <script src="js/index.js"></script>
 </body>
 
 </html>

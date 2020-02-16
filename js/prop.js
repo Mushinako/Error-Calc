@@ -1,7 +1,4 @@
 "use strict";
-let propDiv;
-let statDiv;
-let lregDiv;
 let editDiv;
 let formDiv;
 let sigFigInp;
@@ -195,7 +192,7 @@ function tOperInputDiv(rows) {
 function calcBtn(calc) {
     const btn = document.createElement('a');
     btn.classList.add('waves-effect', 'btn', 'blue');
-    btn.id = 'calc';
+    btn.id = 'propcalc';
     btn.textContent = 'Calculate';
     btn.addEventListener('click', calc);
     return btn;
@@ -212,7 +209,7 @@ function cOperOnClick(choices, calc, md) {
         btnsDiv.classList.add('container', 'row', 'center');
         const addRowBtn = document.createElement('a');
         addRowBtn.classList.add('waves-effect', 'btn', 'green');
-        addRowBtn.id = 'add-row';
+        addRowBtn.id = 'propaddrow';
         addRowBtn.textContent = 'Add Row';
         addRowBtn.addEventListener('click', () => {
             formDiv.insertBefore(cOperInputDiv(choices, false), formDiv.lastChild);
@@ -279,7 +276,8 @@ function parse() {
     }
 }
 function displayAns() {
-    if (!Object.keys(window.localStorage).length) {
+    const keys = Object.keys(window.localStorage).filter((val) => val.slice(0, 3) === 'Ans');
+    if (!keys.length) {
         ansCounter = 1;
         return;
     }
@@ -300,8 +298,9 @@ function displayAns() {
     thead.appendChild(trHead);
     tbl.appendChild(thead);
     const tbody = document.createElement('tbody');
-    for (const [ans, data] of Object.entries(window.localStorage).sort((a, b) => +a[0].slice(3) - +b[0].slice(3))) {
-        ids.push(parseInt(ans.slice(3)));
+    for (const ans of keys.sort((a, b) => +a.slice(3) - +b.slice(3))) {
+        const data = window.localStorage.getItem(ans);
+        ids.push(+ans.slice(3));
         const [form, avg, sd, sf] = JSON.parse(data);
         const formStr = `\\(${form}\\)`;
         const resStr = resVal(avg, sd, sf);
@@ -331,12 +330,76 @@ function displayAns() {
     formDiv.appendChild(tbl);
     parse();
 }
+function keyProp(ev) {
+    if (ev.key === 'Enter' || ev.key === '\n') {
+        if (ev.altKey || ev.metaKey || ev.ctrlKey)
+            return;
+        if (ev.shiftKey) {
+            ev.preventDefault();
+            document.getElementById('propcalc').click();
+        }
+        return;
+    }
+    if (ev.key.toLowerCase() === 'q') {
+        ev.preventDefault();
+        const addRowBtn = document.getElementById('propaddrow');
+        if (addRowBtn !== null)
+            addRowBtn.click();
+        return;
+    }
+    if (ev.key.toLowerCase() === 'w') {
+        ev.preventDefault();
+        if (!['as', 'md'].includes(mode))
+            return;
+        const rows = editDiv.childNodes[0].childNodes;
+        const inpRow = rows[rows.length - 2];
+        if (inpRow.childNodes.length < 3)
+            return;
+        const btn = inpRow.childNodes[2].childNodes[0];
+        btn.click();
+        return;
+    }
+    if (ev.key.toLowerCase() === 'z') {
+        ev.preventDefault();
+        if (confirm('Do you want to delete the last result?') && !formDiv.hasChildNodes())
+            return;
+        const tbody = formDiv.childNodes[0].childNodes[1];
+        const lastRes = tbody.lastChild;
+        const btn = lastRes.lastChild.childNodes[0];
+        btn.click();
+        return;
+    }
+    if (ev.key.toLowerCase() === 's') {
+        ev.preventDefault();
+        sigFigInp.checked = !sigFigInp.checked;
+        sigFig2Inp.disabled = !sigFigInp.checked;
+        displayAns();
+        return;
+    }
+    if (ev.key.toLowerCase() === 'd') {
+        ev.preventDefault();
+        if (sigFig2Inp.disabled)
+            return;
+        sigFig2Inp.checked = !sigFig2Inp.checked;
+        displayAns();
+        return;
+    }
+    const func = funcKeys.indexOf(ev.key.toLowerCase());
+    if (func > -1) {
+        ev.preventDefault();
+        const btnNodes = document.getElementById('btns').childNodes;
+        const btns = Array.from(btnNodes).filter((val) => {
+            const tn = val.tagName;
+            if (tn === undefined)
+                return false;
+            return tn.toLowerCase() === 'a';
+        });
+        btns[func].click();
+    }
+}
 function propInit() { }
 document.addEventListener('DOMContentLoaded', () => {
-    propDiv = document.getElementById('propdiv');
-    statDiv = document.getElementById('statdiv');
-    lregDiv = document.getElementById('lregdiv');
-    formDiv = document.getElementById('form');
+    formDiv = document.getElementById('propform');
     if (!Object.entries || !window.localStorage) {
         const noSupportP = document.createElement('p');
         noSupportP.textContent = 'Your browser is not supported. Please use:';
@@ -350,8 +413,8 @@ document.addEventListener('DOMContentLoaded', () => {
         formDiv.appendChild(supportedList);
         return;
     }
-    sigFigInp = document.getElementById('sigfig');
-    sigFig2Inp = document.getElementById('sigfig2');
+    sigFigInp = document.getElementById('propsigfig');
+    sigFig2Inp = document.getElementById('propsigfig2');
     sigFigInp.checked = false;
     sigFig2Inp.checked = false;
     sigFigInp.addEventListener('change', () => {
@@ -363,76 +426,9 @@ document.addEventListener('DOMContentLoaded', () => {
             displayAns();
     });
     displayAns();
-    editDiv = document.getElementById('edit');
+    editDiv = document.getElementById('propedit');
     setBtns(copers);
     setBtns(nopers);
     setBtns(topers);
-    document.addEventListener('keypress', (ev) => {
-        if (ev.key === 'Enter' || ev.key === '\n') {
-            if (ev.altKey || ev.metaKey || ev.ctrlKey)
-                return;
-            if (ev.shiftKey) {
-                ev.preventDefault();
-                document.getElementById('calc').click();
-            }
-            return;
-        }
-        if (ev.key.toLowerCase() === 'q') {
-            ev.preventDefault();
-            const addRowBtn = document.getElementById('add-row');
-            if (addRowBtn !== null)
-                addRowBtn.click();
-            return;
-        }
-        if (ev.key.toLowerCase() === 'w') {
-            ev.preventDefault();
-            if (!['as', 'md'].includes(mode))
-                return;
-            const rows = editDiv.childNodes[0].childNodes;
-            const inpRow = rows[rows.length - 2];
-            if (inpRow.childNodes.length < 3)
-                return;
-            const btn = inpRow.childNodes[2].childNodes[0];
-            btn.click();
-            return;
-        }
-        if (ev.key.toLowerCase() === 'z') {
-            ev.preventDefault();
-            if (confirm('Do you want to delete the last result?') && !formDiv.hasChildNodes())
-                return;
-            const tbody = formDiv.childNodes[0].childNodes[1];
-            const lastRes = tbody.lastChild;
-            const btn = lastRes.lastChild.childNodes[0];
-            btn.click();
-            return;
-        }
-        if (ev.key.toLowerCase() === 's') {
-            ev.preventDefault();
-            sigFigInp.checked = !sigFigInp.checked;
-            sigFig2Inp.disabled = !sigFigInp.checked;
-            displayAns();
-            return;
-        }
-        if (ev.key.toLowerCase() === 'd') {
-            ev.preventDefault();
-            if (sigFig2Inp.disabled)
-                return;
-            sigFig2Inp.checked = !sigFig2Inp.checked;
-            displayAns();
-            return;
-        }
-        const func = funcKeys.indexOf(ev.key.toLowerCase());
-        if (func > -1) {
-            ev.preventDefault();
-            const btnNodes = document.getElementById('btns').childNodes;
-            const btns = Array.from(btnNodes).filter((val) => {
-                const tn = val.tagName;
-                if (tn === undefined)
-                    return false;
-                return tn.toLowerCase() === 'a';
-            });
-            btns[func].click();
-        }
-    });
     document.getElementById('btns').childNodes[1].click();
 });

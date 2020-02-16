@@ -3,6 +3,16 @@ label {
     color: #666666;
 }
 
+textarea.materialize-textarea {
+    padding: 0;
+    min-height: 0;
+    height: 2rem;
+}
+
+.no-display {
+    display: none;
+}
+
 .btn-flat {
     height: 24px;
     line-height: 24px;

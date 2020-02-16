@@ -18,9 +18,6 @@ declare var MathJax: MathJax;
 declare const M: Materialize;
 
 // Global variables
-let propDiv: HTMLDivElement;
-let statDiv: HTMLDivElement;
-let lregDiv: HTMLDivElement;
 let editDiv: HTMLDivElement;
 let formDiv: HTMLDivElement;
 let sigFigInp: HTMLInputElement;
@@ -303,7 +300,7 @@ function tOperInputDiv(rows: string[]): HTMLDivElement[] {
 function calcBtn(calc: () => void): HTMLAnchorElement {
     const btn: HTMLAnchorElement = document.createElement('a');
     btn.classList.add('waves-effect', 'btn', 'blue');
-    btn.id = 'calc';
+    btn.id = 'propcalc';
     btn.textContent = 'Calculate';
     btn.addEventListener('click', calc);
     return btn;
@@ -336,7 +333,7 @@ function cOperOnClick(choices: string[], calc: () => void, md: string): () => vo
         // Add row button
         const addRowBtn: HTMLAnchorElement = document.createElement('a');
         addRowBtn.classList.add('waves-effect', 'btn', 'green');
-        addRowBtn.id = 'add-row';
+        addRowBtn.id = 'propaddrow';
         addRowBtn.textContent = 'Add Row';
         addRowBtn.addEventListener('click', (): void => {
             formDiv.insertBefore(cOperInputDiv(choices, false), formDiv.lastChild);
@@ -463,8 +460,9 @@ function parse(): void {
  * Display Ans from localStorage, also set counter
  */
 function displayAns(): void {
+    const keys: string[] = Object.keys(window.localStorage).filter((val: string) => val.slice(0, 3) === 'Ans');
     // Check if localStorage is empty
-    if (!Object.keys(window.localStorage).length) {
+    if (!keys.length) {
         ansCounter = 1;
         return;
     }
@@ -493,9 +491,10 @@ function displayAns(): void {
     tbl.appendChild(thead);
     // Table body
     const tbody: HTMLTableSectionElement = document.createElement('tbody');
-    for (const [ans, data] of Object.entries(window.localStorage).sort((a: [string, any], b: [string, any]): number => +a[0].slice(3) - +b[0].slice(3))) {
+    for (const ans of keys.sort((a: string, b: string): number => +a.slice(3) - +b.slice(3))) {
+        const data: string = window.localStorage.getItem(ans)!;
         // Register ID
-        ids.push(parseInt(ans.slice(3)));
+        ids.push(+ans.slice(3));
         // Parse from localStorage
         const [form, avg, sd, sf]: [string, number, number, number] = JSON.parse(data);
         const formStr: string = `\\(${form}\\)`;
@@ -530,16 +529,79 @@ function displayAns(): void {
 }
 
 /**
+ * Error propagation keyboard shortcuts
+ * 
+ * @param {KeyboardEvent} ev - Keyboard event
+ */
+function keyProp(ev: KeyboardEvent): void {
+    if (ev.key === 'Enter' || ev.key === '\n') {
+        if (ev.altKey || ev.metaKey || ev.ctrlKey) return;
+        if (ev.shiftKey) {
+            ev.preventDefault();
+            (<HTMLAnchorElement>document.getElementById('propcalc')).click();
+        }
+        return;
+    }
+    if (ev.key.toLowerCase() === 'q') {
+        ev.preventDefault();
+        const addRowBtn: HTMLElement | null = document.getElementById('propaddrow');
+        if (addRowBtn !== null) (<HTMLAnchorElement>addRowBtn).click();
+        return;
+    }
+    if (ev.key.toLowerCase() === 'w') {
+        ev.preventDefault();
+        if (!['as', 'md'].includes(mode)) return;
+        const rows: NodeListOf<ChildNode> = editDiv.childNodes[0].childNodes;
+        const inpRow: ChildNode = rows[rows.length - 2];
+        if (inpRow.childNodes.length < 3) return;
+        const btn: HTMLAnchorElement = <HTMLAnchorElement>inpRow.childNodes[2].childNodes[0];
+        btn.click();
+        return;
+    }
+    if (ev.key.toLowerCase() === 'z') {
+        ev.preventDefault();
+        if (confirm('Do you want to delete the last result?') && !formDiv.hasChildNodes()) return;
+        const tbody: ChildNode = formDiv.childNodes[0].childNodes[1];
+        const lastRes: ChildNode = tbody.lastChild!;
+        const btn: HTMLAnchorElement = <HTMLAnchorElement>lastRes.lastChild!.childNodes[0];
+        btn.click();
+        return;
+    }
+    if (ev.key.toLowerCase() === 's') {
+        ev.preventDefault();
+        sigFigInp.checked = !sigFigInp.checked;
+        sigFig2Inp.disabled = !sigFigInp.checked;
+        displayAns();
+        return;
+    }
+    if (ev.key.toLowerCase() === 'd') {
+        ev.preventDefault();
+        if (sigFig2Inp.disabled) return;
+        sigFig2Inp.checked = !sigFig2Inp.checked;
+        displayAns();
+        return;
+    }
+    const func: number = funcKeys.indexOf(ev.key.toLowerCase());
+    if (func > -1) {
+        ev.preventDefault();
+        const btnNodes: NodeListOf<ChildNode> = document.getElementById('btns')!.childNodes;
+        const btns: ChildNode[] = Array.from(btnNodes).filter((val: ChildNode): boolean => {
+            const tn: string = (<Element>val).tagName;
+            if (tn === undefined) return false;
+            return tn.toLowerCase() === 'a';
+        });
+        (<HTMLAnchorElement>btns[func]).click();
+    }
+}
+
+/**
  * Initialize propagation
  */
 function propInit(): void { }
 
 document.addEventListener('DOMContentLoaded', (): void => {
-    propDiv = <HTMLDivElement>document.getElementById('propdiv');
-    statDiv = <HTMLDivElement>document.getElementById('statdiv');
-    lregDiv = <HTMLDivElement>document.getElementById('lregdiv');
     // Set output
-    formDiv = <HTMLDivElement>document.getElementById('form');
+    formDiv = <HTMLDivElement>document.getElementById('propform');
     if (!Object.entries || !window.localStorage) {
         const noSupportP: HTMLParagraphElement = document.createElement('p');
         noSupportP.textContent = 'Your browser is not supported. Please use:'
@@ -553,8 +615,8 @@ document.addEventListener('DOMContentLoaded', (): void => {
         formDiv.appendChild(supportedList);
         return;
     }
-    sigFigInp = <HTMLInputElement>document.getElementById('sigfig');
-    sigFig2Inp = <HTMLInputElement>document.getElementById('sigfig2');
+    sigFigInp = <HTMLInputElement>document.getElementById('propsigfig');
+    sigFig2Inp = <HTMLInputElement>document.getElementById('propsigfig2');
     sigFigInp.checked = false;
     sigFig2Inp.checked = false;
     sigFigInp.addEventListener('change', () => {
@@ -566,72 +628,11 @@ document.addEventListener('DOMContentLoaded', (): void => {
     });
     displayAns();
     // Set input
-    editDiv = <HTMLDivElement>document.getElementById('edit');
+    editDiv = <HTMLDivElement>document.getElementById('propedit');
     // Set buttons
     setBtns(copers);
     setBtns(nopers);
     setBtns(topers);
-    // Keyboard events
-    document.addEventListener('keypress', (ev: KeyboardEvent): void => {
-        if (ev.key === 'Enter' || ev.key === '\n') {
-            if (ev.altKey || ev.metaKey || ev.ctrlKey) return;
-            if (ev.shiftKey) {
-                ev.preventDefault();
-                (<HTMLAnchorElement>document.getElementById('calc')).click();
-            }
-            return;
-        }
-        if (ev.key.toLowerCase() === 'q') {
-            ev.preventDefault();
-            const addRowBtn: HTMLElement | null = document.getElementById('add-row');
-            if (addRowBtn !== null) (<HTMLAnchorElement>addRowBtn).click();
-            return;
-        }
-        if (ev.key.toLowerCase() === 'w') {
-            ev.preventDefault();
-            if (!['as', 'md'].includes(mode)) return;
-            const rows: NodeListOf<ChildNode> = editDiv.childNodes[0].childNodes;
-            const inpRow: ChildNode = rows[rows.length - 2];
-            if (inpRow.childNodes.length < 3) return;
-            const btn: HTMLAnchorElement = <HTMLAnchorElement>inpRow.childNodes[2].childNodes[0];
-            btn.click();
-            return;
-        }
-        if (ev.key.toLowerCase() === 'z') {
-            ev.preventDefault();
-            if (confirm('Do you want to delete the last result?') && !formDiv.hasChildNodes()) return;
-            const tbody: ChildNode = formDiv.childNodes[0].childNodes[1];
-            const lastRes: ChildNode = tbody.lastChild!;
-            const btn: HTMLAnchorElement = <HTMLAnchorElement>lastRes.lastChild!.childNodes[0];
-            btn.click();
-            return;
-        }
-        if (ev.key.toLowerCase() === 's') {
-            ev.preventDefault();
-            sigFigInp.checked = !sigFigInp.checked;
-            sigFig2Inp.disabled = !sigFigInp.checked;
-            displayAns();
-            return;
-        }
-        if (ev.key.toLowerCase() === 'd') {
-            ev.preventDefault();
-            if (sigFig2Inp.disabled) return;
-            sigFig2Inp.checked = !sigFig2Inp.checked;
-            displayAns();
-            return;
-        }
-        const func: number = funcKeys.indexOf(ev.key.toLowerCase());
-        if (func > -1) {
-            ev.preventDefault();
-            const btnNodes: NodeListOf<ChildNode> = document.getElementById('btns')!.childNodes;
-            const btns: ChildNode[] = Array.from(btnNodes).filter((val: ChildNode): boolean => {
-                const tn: string = (<Element>val).tagName;
-                if (tn === undefined) return false;
-                return tn.toLowerCase() === 'a';
-            });
-            (<HTMLAnchorElement>btns[func]).click();
-        }
-    });
     // Init +/-
     (<HTMLAnchorElement>document.getElementById('btns')!.childNodes[1]).click();
 });
