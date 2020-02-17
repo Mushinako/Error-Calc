@@ -313,7 +313,7 @@ function displayAns(): void {
     // Clear and reassemble table
     clearChildren(outDiv);
     const tbl: HTMLTableElement = document.createElement('table');
-    tbl.classList.add('highlight', 'responsive-table', 'centered');
+    tbl.classList.add('highlight', 'responsive-table', 'centered', 'margin-bottom');
     // Table header
     const thead: HTMLTableSectionElement = document.createElement('thead');
     const trHead: HTMLTableRowElement = document.createElement('tr');
@@ -346,9 +346,10 @@ function displayAns(): void {
         btn.classList.add('waves-effect', 'btn', 'red');
         btn.textContent = '×';
         btn.addEventListener('click', (): void => {
+            if (!confirm('Do you want to delete this result?')) return;
             window.localStorage.removeItem(key);
             if (Object.keys(window.localStorage).length) tbody.removeChild(tr);
-            else outDiv.removeChild(tbl);
+            else clearChildren(outDiv);
         });
         td.appendChild(btn);
         tr.appendChild(td);
@@ -361,6 +362,19 @@ function displayAns(): void {
     tbl.appendChild(tbody);
     outDiv.appendChild(tbl);
     parse();
+    // 'Remove all' btn
+    const clearDiv: HTMLDivElement = document.createElement('div');
+    clearDiv.classList.add('center');
+    outDiv.appendChild(clearDiv);
+    const clearBtn: HTMLAnchorElement = document.createElement('a');
+    clearBtn.classList.add('waves-effect', 'btn', 'red');
+    clearBtn.textContent = 'Remove all';
+    clearBtn.addEventListener('click', (): void => {
+        if (!confirm('Do you want to delete all results?')) return;
+        for (const key of Object.keys(window.localStorage)) window.localStorage.removeItem(key);
+        clearChildren(outDiv);
+    });
+    clearDiv.appendChild(clearBtn);
 }
 
 /**
