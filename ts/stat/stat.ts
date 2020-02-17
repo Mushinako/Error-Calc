@@ -13,7 +13,15 @@ function keyStat(ev: KeyboardEvent): void {
     }
 }
 
+
+function statInit(): void { }
+
 document.addEventListener('DOMContentLoaded', (): void => {
+    // Keyboard events
+    document.addEventListener('keypress', keyStat);
+    document.removeEventListener('keypress', keyProp);
+    document.removeEventListener('keypress', keyLreg);
+    // Something
     statInp = <HTMLTextAreaElement>document.getElementById('statinp');
     const calc: HTMLAnchorElement = <HTMLAnchorElement>document.getElementById('statcalc');
     calc.addEventListener('click', statCalc);

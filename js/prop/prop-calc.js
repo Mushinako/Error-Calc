@@ -1,6 +1,6 @@
 "use strict";
 let ansCounter;
-const ansForm = (ans) => `\\text{Ans}${ans.slice(3)}`;
+const ansForm = (ans) => `\\text{Err}${ans.slice(3)}`;
 const numForm = (avg, sd) => `(${beauInp(avg)}\\pm${beauInp(sd)})`;
 const highestExp = (n) => +n.toExponential().split('e')[1];
 const sigFigDecCov = (n, sf) => +n.toExponential().split('e')[1] - sf + 1;
@@ -76,7 +76,7 @@ function getNums(avgInp, avgStr, sdStr) {
     let avg;
     let sd;
     let sf;
-    const isAns = /^Ans\d$/.test(avgStr);
+    const isAns = /^Err\d$/.test(avgStr);
     if (isAns) {
         let success;
         [success, avg, sd, sf] = parAns(avgInp, avgStr);
@@ -91,7 +91,7 @@ function getNums(avgInp, avgStr, sdStr) {
     return [1, avg, sd, isAns ? 1 : 0, sf];
 }
 function postProc(form, avg, sd, sf) {
-    window.localStorage.setItem(`Ans${ansCounter}`, JSON.stringify([form, avg, sd, sf]));
+    window.localStorage.setItem(`Err${ansCounter}`, JSON.stringify([form, avg, sd, sf]));
     displayAns();
 }
 function calcAddMin() {

@@ -10,7 +10,11 @@ function keyStat(ev) {
         }
     }
 }
+function statInit() { }
 document.addEventListener('DOMContentLoaded', () => {
+    document.addEventListener('keypress', keyStat);
+    document.removeEventListener('keypress', keyProp);
+    document.removeEventListener('keypress', keyLreg);
     statInp = document.getElementById('statinp');
     const calc = document.getElementById('statcalc');
     calc.addEventListener('click', statCalc);

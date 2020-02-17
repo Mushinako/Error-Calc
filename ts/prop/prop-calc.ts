@@ -9,7 +9,7 @@ let ansCounter: number;
  * @param   {string} ans - Ans name
  * @returns {string}     - TeX representation
  */
-const ansForm = (ans: string): string => `\\text{Ans}${ans.slice(3)}`;
+const ansForm = (ans: string): string => `\\text{Err}${ans.slice(3)}`;
 
 /**
  * Formula representation for avg±sd
@@ -192,7 +192,7 @@ function getNums(avgInp: HTMLInputElement, avgStr: string, sdStr: string): [numb
     let avg: number;
     let sd: number;
     let sf: number;
-    const isAns: boolean = /^Ans\d$/.test(avgStr);
+    const isAns: boolean = /^Err\d$/.test(avgStr);
     // Different reactions, depending on whether the input is Ans request
     if (isAns) {
         let success: number;
@@ -215,7 +215,7 @@ function getNums(avgInp: HTMLInputElement, avgStr: string, sdStr: string): [numb
  * @param {number} sf   - Accuration log10
  */
 function postProc(form: string, avg: number, sd: number, sf: number): void {
-    window.localStorage.setItem(`Ans${ansCounter}`, JSON.stringify([form, avg, sd, sf]));
+    window.localStorage.setItem(`Err${ansCounter}`, JSON.stringify([form, avg, sd, sf]));
     displayAns();
 }
 

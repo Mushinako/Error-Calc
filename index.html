@@ -26,7 +26,7 @@
 <body>
     <nav class="black-trans">
         <div class="nav-wrapper center container">
-            <a class="right no-click">Ver 62</a>
+            <a class="right no-click">Ver 63</a>
             <ul class="inb" id="nav-mobile">
                 <li class="active"><a id="prop">Err Prop</a></li>
                 <li>|</li>
@@ -44,164 +44,10 @@
 
     <main>
         <div class="box container">
-            <div class="container" id="propdiv">
-                <h1 class="center">Error Propagation</h1>
-                <div class="center margin-bot" id="btns"></div>
-                <hr>
-                <div class="center" id="propedit"></div>
-                <hr>
-                <div class="row">
-                    <div class="switch center tooltipped col s6" data-position="bottom"
-                        data-tooltip="Experimental. Turn on to calculate SigFigs">
-                        <label>
-                            Calculate SigFigs
-                            <input type="checkbox" id="propsigfig">
-                            <span class="lever"></span>
-                        </label>
-                    </div>
-                    <div class="switch center tooltipped col s6" data-position="bottom"
-                        data-tooltip="Experimental. Turn on to produce 2 more SigFigs">
-                        <label>
-                            2 more SigFigs
-                            <input type="checkbox" id="propsigfig2" disabled>
-                            <span class="lever"></span>
-                        </label>
-                    </div>
-                </div>
-                <div class="solid" id="propform"></div>
-                <ul class="collapsible">
-                    <li class="active">
-                        <div class="collapsible-header"><strong>Notes</strong></div>
-                        <div class="collapsible-body">
-                            <ul class="browser-default">
-                                <li>All the results are stored locally, meaning that all data will be lost if the site
-                                    data for this webpage is cleared</li>
-                                <li>All variables are assumed to be independent of one another</li>
-                                <li>Use respective Ans (e.g., "Ans1", "Ans2", etc.) as the average to use previously
-                                    calculated values for better precision</li>
-                                <li>Use "×/÷" to calculate reciprocals. Put the number on the first line, choose "÷",
-                                    remove the second line, and hit "Calculate"</li>
-                                <li><em>[Experimental]</em> To calculate SigFigs, use appropriate SigFigs in the input
-                                    (e.g., "3.0" instead of "3")</li>
-                            </ul>
-                        </div>
-                    </li>
-                    <li>
-                        <div class="collapsible-header"><strong>Keyboard shortcuts</strong></div>
-                        <div class="collapsible-body">
-                            <table class="highlight">
-                                <thead>
-                                    <tr>
-                                        <th>Key Combination</th>
-                                        <th>Action</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr>
-                                        <td><em>Enter</em></td>
-                                        <td>Open dropdown (when applicable); Submit choice (when applicable)</td>
-                                    </tr>
-                                    <tr>
-                                        <td><em>Shift+Enter</em></td>
-                                        <td>Run calculation</td>
-                                    </tr>
-                                    <tr>
-                                        <td><em>Tab</em></td>
-                                        <td>Next input/element</td>
-                                    </tr>
-                                    <tr>
-                                        <td><em>Shift+Tab</em></td>
-                                        <td>Previous input/element</td>
-                                    </tr>
-                                    <tr>
-                                        <td><em>↓</em></td>
-                                        <td>Next dropdown choice</td>
-                                    </tr>
-                                    <tr>
-                                        <td><em>↑</em></td>
-                                        <td>Previous dropdown choice</td>
-                                    </tr>
-                                    <tr>
-                                        <td><em>q</em></td>
-                                        <td>Add row (when applicable)</td>
-                                    </tr>
-                                    <tr>
-                                        <td><em>w</em></td>
-                                        <td>Remove row (when applicable)</td>
-                                    </tr>
-                                    <tr>
-                                        <td><em>s</em></td>
-                                        <td>Change "Fixed SigFigs - Calculate SigFigs" switch</td>
-                                    </tr>
-                                    <tr>
-                                        <td><em>d</em></td>
-                                        <td>Change "SigFig rules - SigFig rules + 2" switch</td>
-                                    </tr>
-                                    <tr>
-                                        <td><em>z</em></td>
-                                        <td>Remove last result, if any</td>
-                                    </tr>
-                                    <tr>
-                                        <td><em>r</em></td>
-                                        <td>Change mode to "+/-"</td>
-                                    </tr>
-                                    <tr>
-                                        <td><em>t</em></td>
-                                        <td>Change mode to "×/÷"</td>
-                                    </tr>
-                                    <tr>
-                                        <td><em>y</em></td>
-                                        <td>Change mode to "ln"</td>
-                                    </tr>
-                                    <tr>
-                                        <td><em>u</em></td>
-                                        <td>Change mode to "log"</td>
-                                    </tr>
-                                    <tr>
-                                        <td><em>i</em></td>
-                                        <td>Change mode to "e^"</td>
-                                    </tr>
-                                    <tr>
-                                        <td><em>o</em></td>
-                                        <td>Change mode to "10^"</td>
-                                    </tr>
-                                    <tr>
-                                        <td><em>p</em></td>
-                                        <td>Change mode to "a^x"</td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
-                    </li>
-                    <li>
-                        <div class="collapsible-header"><strong>Data formats accepted</strong></div>
-                        <div class="collapsible-body">
-                            <p>All empty inputs are treated as 0</p>
-                            <table class="highlight">
-                                <thead>
-                                    <tr>
-                                        <th>Type</th>
-                                        <th>Example</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr>
-                                        <td><em>Numbers</em></td>
-                                        <td>3.1415926; -2020; .57721</td>
-                                    </tr>
-                                    <tr>
-                                        <td><em>Scientific Notations</em></td>
-                                        <td>8e7; .897e-12; 599e+3</td>
-                                    </tr>
-                                    <tr>
-                                        <td><em>Previous Answers</em></td>
-                                        <td>Ans1; Ans22</td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
-                    </li>
-                </ul>
+            <div class="container">
+                <div id="indiv"></div>
+                <div class="solid" id="outdiv"></div>
+                <div id="helpdiv"></div>
             </div>
 
             <div class="container no-display" id="statdiv">
@@ -314,11 +160,13 @@
     <script src="js/MathJax-loader.js"></script>
     <script src="lib/materialize.min.js"></script>
     <script id="MathJax-script" src="lib/tex-chtml.js"></script>
-    <script src="js/prop-calc.js"></script>
-    <script src="js/prop.js"></script>
-    <script src="js/stat-calc.js"></script>
-    <script src="js/stat.js"></script>
-    <script src="js/lreg.js"></script>
+    <script src="js/prop/prop-calc.js"></script>
+    <script src="js/prop/prop-input.js"></script>
+    <script src="js/prop/prop-method.js"></script>
+    <script src="js/prop/prop-main.js"></script>
+    <script src="js/stat/stat-calc.js"></script>
+    <script src="js/stat/stat.js"></script>
+    <script src="js/lreg/lreg.js"></script>
     <script src="js/index.js"></script>
 </body>
 
