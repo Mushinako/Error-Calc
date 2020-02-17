@@ -8,6 +8,7 @@
  */
 
 // Global variables
+let btnsDiv: HTMLDivElement;
 let propInpsDiv: HTMLDivElement;
 let sigFigInp: HTMLInputElement;
 let sigFig2Inp: HTMLInputElement;
@@ -26,7 +27,7 @@ function keyProp(ev: KeyboardEvent): void {
         if (ev.shiftKey) {
             // Shift+Enter: Run calculation
             ev.preventDefault();
-            (<HTMLAnchorElement>document.getElementById('propcalc')).click();
+            (<HTMLAnchorElement>document.getElementById('calc')).click();
         }
         return;
     }
@@ -35,8 +36,9 @@ function keyProp(ev: KeyboardEvent): void {
     if (ev.key.toLowerCase() === 'q') {
         // q: Add row
         ev.preventDefault();
-        const addRowBtn: HTMLElement | null = document.getElementById('propaddrow');
-        if (addRowBtn !== null) (<HTMLAnchorElement>addRowBtn).click();
+        if (!['as', 'md'].includes(mode)) return;
+        const addRowBtn: HTMLAnchorElement = <HTMLAnchorElement>document.getElementById('propaddrow');
+        addRowBtn.click();
         return;
     }
     if (ev.key.toLowerCase() === 'w') {
@@ -53,7 +55,7 @@ function keyProp(ev: KeyboardEvent): void {
     if (ev.key.toLowerCase() === 'z') {
         // z: Remove last result
         ev.preventDefault();
-        if (!outDiv.hasChildNodes() && confirm('Do you want to delete the last result?')) return;
+        if (!outDiv.hasChildNodes() || !confirm('Do you want to delete the last result?')) return;
         const tbody: ChildNode = outDiv.childNodes[0].childNodes[1];
         const lastRes: ChildNode = tbody.lastChild!;
         const btn: HTMLAnchorElement = <HTMLAnchorElement>lastRes.lastChild!.childNodes[0];
@@ -76,18 +78,27 @@ function keyProp(ev: KeyboardEvent): void {
         displayAns();
         return;
     }
-    const funcKeys: string[] = ['r', 't', 'y', 'u', 'i', 'o', 'p'];
-    const func: number = funcKeys.indexOf(ev.key.toLowerCase());
-    if (func > -1) {
+    const funcKeys: string[] = ['h', 'j', 'k'];
+    const funcI: number = funcKeys.indexOf(ev.key.toLowerCase());
+    if (funcI > -1) {
+        // b-m: Functions
+        ev.preventDefault();
+        const btns: HTMLElement[] = ['prop', 'stat', 'lreg'].map((val: string): HTMLElement => <HTMLElement>document.getElementById(val));
+        (<HTMLAnchorElement>btns[funcI]).click();
+        return;
+    }
+    const methodKeys: string[] = ['r', 't', 'y', 'u', 'i', 'o', 'p'];
+    const methodI: number = methodKeys.indexOf(ev.key.toLowerCase());
+    if (methodI > -1) {
         // r-p: Methods
         ev.preventDefault();
-        const btnNodes: NodeListOf<ChildNode> = document.getElementById('btns')!.childNodes;
+        const btnNodes: NodeListOf<ChildNode> = btnsDiv.childNodes;
         const btns: ChildNode[] = Array.from(btnNodes).filter((val: ChildNode): boolean => {
             const tn: string = (<Element>val).tagName;
             if (tn === undefined) return false;
             return tn.toLowerCase() === 'a';
         });
-        (<HTMLAnchorElement>btns[func]).click();
+        (<HTMLAnchorElement>btns[methodI]).click();
         return;
     }
 }
@@ -106,7 +117,7 @@ function propInit(): void {
     const ttlElmt: HTMLHeadingElement = createTtl('Error Propagation')
     inDiv.appendChild(ttlElmt);
     // Method buttons
-    const btnsDiv: HTMLDivElement = document.createElement('div');
+    btnsDiv = document.createElement('div');
     btnsDiv.classList.add('center', 'margin-bottom');
     setBtns(copers, btnsDiv);
     setBtns(nopers, btnsDiv);
@@ -142,6 +153,9 @@ function propInit(): void {
         's': 'Change \"Calculate SigFigs\" switch',
         'd': 'Change \"2 more SigFigs\" switch',
         'z': 'Remove last result (if any)',
+        'h': 'Change to \"Err Prop\" calculations (no use)',
+        'j': 'Change to \"1-Var Stat\" calculation',
+        'k': 'Change to \"Lin Reg\" calculation',
         'r': 'Change mode to \"+/-\"',
         't': 'Change mode to \"×/÷\"',
         'y': 'Change mode to \"ln\"',

@@ -1,4 +1,5 @@
 "use strict";
+let btnsDiv;
 let propInpsDiv;
 let sigFigInp;
 let sigFig2Inp;
@@ -10,7 +11,7 @@ function keyProp(ev) {
     if (ev.key === 'Enter' || ev.key === '\n') {
         if (ev.shiftKey) {
             ev.preventDefault();
-            document.getElementById('propcalc').click();
+            document.getElementById('calc').click();
         }
         return;
     }
@@ -18,9 +19,10 @@ function keyProp(ev) {
         return;
     if (ev.key.toLowerCase() === 'q') {
         ev.preventDefault();
+        if (!['as', 'md'].includes(mode))
+            return;
         const addRowBtn = document.getElementById('propaddrow');
-        if (addRowBtn !== null)
-            addRowBtn.click();
+        addRowBtn.click();
         return;
     }
     if (ev.key.toLowerCase() === 'w') {
@@ -37,7 +39,7 @@ function keyProp(ev) {
     }
     if (ev.key.toLowerCase() === 'z') {
         ev.preventDefault();
-        if (!outDiv.hasChildNodes() && confirm('Do you want to delete the last result?'))
+        if (!outDiv.hasChildNodes() || !confirm('Do you want to delete the last result?'))
             return;
         const tbody = outDiv.childNodes[0].childNodes[1];
         const lastRes = tbody.lastChild;
@@ -60,18 +62,26 @@ function keyProp(ev) {
         displayAns();
         return;
     }
-    const funcKeys = ['r', 't', 'y', 'u', 'i', 'o', 'p'];
-    const func = funcKeys.indexOf(ev.key.toLowerCase());
-    if (func > -1) {
+    const funcKeys = ['h', 'j', 'k'];
+    const funcI = funcKeys.indexOf(ev.key.toLowerCase());
+    if (funcI > -1) {
         ev.preventDefault();
-        const btnNodes = document.getElementById('btns').childNodes;
+        const btns = ['prop', 'stat', 'lreg'].map((val) => document.getElementById(val));
+        btns[funcI].click();
+        return;
+    }
+    const methodKeys = ['r', 't', 'y', 'u', 'i', 'o', 'p'];
+    const methodI = methodKeys.indexOf(ev.key.toLowerCase());
+    if (methodI > -1) {
+        ev.preventDefault();
+        const btnNodes = btnsDiv.childNodes;
         const btns = Array.from(btnNodes).filter((val) => {
             const tn = val.tagName;
             if (tn === undefined)
                 return false;
             return tn.toLowerCase() === 'a';
         });
-        btns[func].click();
+        btns[methodI].click();
         return;
     }
 }
@@ -82,7 +92,7 @@ function propInit() {
     clearChildren(inDiv);
     const ttlElmt = createTtl('Error Propagation');
     inDiv.appendChild(ttlElmt);
-    const btnsDiv = document.createElement('div');
+    btnsDiv = document.createElement('div');
     btnsDiv.classList.add('center', 'margin-bottom');
     setBtns(copers, btnsDiv);
     setBtns(nopers, btnsDiv);
@@ -113,6 +123,9 @@ function propInit() {
         's': 'Change \"Calculate SigFigs\" switch',
         'd': 'Change \"2 more SigFigs\" switch',
         'z': 'Remove last result (if any)',
+        'h': 'Change to \"Err Prop\" calculations (no use)',
+        'j': 'Change to \"1-Var Stat\" calculation',
+        'k': 'Change to \"Lin Reg\" calculation',
         'r': 'Change mode to \"+/-\"',
         't': 'Change mode to \"×/÷\"',
         'y': 'Change mode to \"ln\"',

@@ -66,7 +66,7 @@ function createTtl(ttl: string): HTMLHeadingElement {
 function createCalcBtn(calc: () => void): HTMLAnchorElement {
     const btn: HTMLAnchorElement = document.createElement('a');
     btn.classList.add('waves-effect', 'btn', 'blue');
-    btn.id = 'propcalc';
+    btn.id = 'calc';
     btn.textContent = 'Calculate';
     btn.addEventListener('click', calc);
     return btn;
@@ -345,8 +345,8 @@ function displayAns(): void {
         const btn: HTMLAnchorElement = document.createElement('a');
         btn.classList.add('waves-effect', 'btn', 'red');
         btn.textContent = '×';
-        btn.addEventListener('click', (): void => {
-            if (!confirm('Do you want to delete this result?')) return;
+        btn.addEventListener('click', (ev: MouseEvent): void => {
+            if (ev.isTrusted && !confirm('Do you want to delete this result?')) return;
             window.localStorage.removeItem(key);
             if (Object.keys(window.localStorage).length) tbody.removeChild(tr);
             else clearChildren(outDiv);

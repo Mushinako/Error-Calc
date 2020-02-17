@@ -17,7 +17,7 @@ function createTtl(ttl) {
 function createCalcBtn(calc) {
     const btn = document.createElement('a');
     btn.classList.add('waves-effect', 'btn', 'blue');
-    btn.id = 'propcalc';
+    btn.id = 'calc';
     btn.textContent = 'Calculate';
     btn.addEventListener('click', calc);
     return btn;
@@ -221,8 +221,8 @@ function displayAns() {
         const btn = document.createElement('a');
         btn.classList.add('waves-effect', 'btn', 'red');
         btn.textContent = '×';
-        btn.addEventListener('click', () => {
-            if (!confirm('Do you want to delete this result?'))
+        btn.addEventListener('click', (ev) => {
+            if (ev.isTrusted && !confirm('Do you want to delete this result?'))
                 return;
             window.localStorage.removeItem(key);
             if (Object.keys(window.localStorage).length)

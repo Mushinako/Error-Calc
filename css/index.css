@@ -9,10 +9,6 @@ textarea.materialize-textarea {
     height: 2rem;
 }
 
-.no-display {
-    display: none;
-}
-
 .btn-flat {
     height: 24px;
     line-height: 24px;
