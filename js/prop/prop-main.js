@@ -97,7 +97,7 @@ function propInit() {
     const notes = [
         'All the results are stored locally, meaning that all data will be lost if the site data for this webpage is cleared',
         'All variables are assumed to be independent of one another',
-        'Use respective Ans (e.g., \"Ans1\", \"Ans2\", etc.) as the average to use previously calculated values for better precision',
+        'Use respective answer (e.g., \"Err1\", \"Var2\", \"Lin3\", etc.) as the average to use previously calculated values for better precision',
         'Use \"×/÷\" to calculate reciprocals. Put the number on the first line, choose \"÷\", remove the second line, and hit \"Calculate\"',
         'To calculate SigFigs, use appropriate SigFigs in the input (e.g., \"3.0\" instead of \"3\")'
     ];

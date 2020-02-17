@@ -184,7 +184,7 @@ function tOperInputDiv(rows: string[]): HTMLDivElement[] {
     expRow.appendChild(div);
     // Check inputs
     expInp.addEventListener('input', (): void => {
-        if (expInp.value.charAt(0).toLowerCase() === 'a') {
+        if (['e', 'v', 'l'].includes(expInp.value.charAt(0).toLowerCase())) {
             alert('Exponent cannot be a previous answer!');
             expInp.value = '';
         }

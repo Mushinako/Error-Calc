@@ -294,7 +294,7 @@ function resultToString(avg: number, sd: number, sf: number): string {
  * Display Ans from localStorage, also set counter
  */
 function displayAns(): void {
-    const keys: string[] = Object.keys(window.localStorage).filter((val: string) => ['Ans', 'Err', 'Var', 'Lin'].includes(val.slice(0, 3)));
+    const keys: string[] = Object.keys(window.localStorage).filter((val: string) => ['Err', 'Var', 'Lin'].includes(val.slice(0, 3)));
     // Check if localStorage is empty
     if (!keys.length) {
         ansCounter = 1;
@@ -328,13 +328,6 @@ function displayAns(): void {
     const tbody: HTMLTableSectionElement = document.createElement('tbody');
     for (const key of keys.sort((a: string, b: string): number => +a.slice(3) - +b.slice(3))) {
         const data: string = window.localStorage.getItem(key)!;
-        // Change name for 'Ans'
-        let newKey: string;
-        if (key.slice(0, 3) === 'Ans') {
-            newKey = `Err${key.slice(3)}`;
-            window.localStorage.removeItem(key);
-            window.localStorage.setItem(newKey, data);
-        } else newKey = key;
         // Register ID
         ids.push(+key.slice(3));
         // Parse from localStorage

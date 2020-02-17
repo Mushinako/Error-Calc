@@ -1,5 +1,11 @@
 "use strict";
 
+/**
+ * Error propagation calculation functions
+ * 
+ * - Calculations
+ */
+
 // Ans ID counter
 let ansCounter: number;
 

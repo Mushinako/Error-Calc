@@ -178,7 +178,7 @@ function resultToString(avg, sd, sf) {
     return resStr;
 }
 function displayAns() {
-    const keys = Object.keys(window.localStorage).filter((val) => ['Ans', 'Err', 'Var', 'Lin'].includes(val.slice(0, 3)));
+    const keys = Object.keys(window.localStorage).filter((val) => ['Err', 'Var', 'Lin'].includes(val.slice(0, 3)));
     if (!keys.length) {
         ansCounter = 1;
         return;
@@ -207,14 +207,6 @@ function displayAns() {
     const tbody = document.createElement('tbody');
     for (const key of keys.sort((a, b) => +a.slice(3) - +b.slice(3))) {
         const data = window.localStorage.getItem(key);
-        let newKey;
-        if (key.slice(0, 3) === 'Ans') {
-            newKey = `Err${key.slice(3)}`;
-            window.localStorage.removeItem(key);
-            window.localStorage.setItem(newKey, data);
-        }
-        else
-            newKey = key;
         ids.push(+key.slice(3));
         const [form, avg, sd, sf] = JSON.parse(data);
         const formStr = `\\(${form}\\)`;
