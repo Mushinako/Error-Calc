@@ -1,13 +1,14 @@
 "use strict";
-const cacheName = 'commit-66';
+const cacheName = 'commit-67';
 const filesToCache = [
     'index.html',
     'css/common.css',
     'css/index.css',
+    'images/icons/icon-96x96.png',
+    'images/icons/icon-144x144.png',
+    'images/icons/icon-192x192.png',
+    'images/icons/icon-256x256.png',
     'images/icons/icon-512x512.png',
-    'images/icons/icon-768x768.png',
-    'images/icons/icon-1000x1000.png',
-    'images/icons/icon-2000x2000.png',
     'js/index.js',
     'js/prop/prop-main.js',
     'js/prop/prop-method.js',
