@@ -234,7 +234,23 @@ function displayAns() {
         const data = window.localStorage.getItem(key);
         ids.push(+key.slice(3));
         const [form, avg, sd, sf] = JSON.parse(data);
-        const formStr = `\\(${form}\\)`;
+        let formStr;
+        if (key.slice(0, 3) === 'Err') {
+            formStr = `\\(${form}\\)`;
+        }
+        else {
+            formStr = '';
+            for (const n of form.split(';')) {
+                if (formStr.length < 13) {
+                    formStr += `${n};`;
+                }
+                else {
+                    formStr += '...';
+                    break;
+                }
+            }
+            formStr = `\\(${formStr}\\)`;
+        }
         const resStr = resultToString(avg, sd, sf);
         const tr = document.createElement('tr');
         tbody.appendChild(tr);

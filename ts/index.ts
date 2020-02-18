@@ -364,7 +364,21 @@ function displayAns(): void {
         ids.push(+key.slice(3));
         // Parse from localStorage
         const [form, avg, sd, sf]: [string, number, number, number] = JSON.parse(data);
-        const formStr: string = `\\(${form}\\)`;
+        let formStr: string;
+        if (key.slice(0, 3) === 'Err') {
+            formStr = `\\(${form}\\)`;
+        } else {
+            formStr = '';
+            for (const n of form.split(';')) {
+                if (formStr.length < 13) {
+                    formStr += `${n};`;
+                } else {
+                    formStr += '...';
+                    break;
+                }
+            }
+            formStr = `\\(${formStr}\\)`;
+        }
         const resStr: string = resultToString(avg, sd, sf);
         const tr: HTMLTableRowElement = document.createElement('tr');
         tbody.appendChild(tr);

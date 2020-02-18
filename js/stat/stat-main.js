@@ -14,6 +14,14 @@ function keyStat(ev) {
     }
     if (ev.shiftKey)
         return;
+    const funcKeys = ['h', 'j', 'k'];
+    const funcI = funcKeys.indexOf(ev.key.toLowerCase());
+    if (funcI > -1) {
+        ev.preventDefault();
+        const btns = ['prop', 'stat', 'lreg'].map((val) => document.getElementById(val));
+        btns[funcI].click();
+        return;
+    }
 }
 function statInit() {
     document.addEventListener('keypress', keyStat);
@@ -121,7 +129,7 @@ function statInit() {
     const statOutForm = document.createElement('form');
     statOutOutDiv.classList.add('row');
     statOutOutDiv.appendChild(statOutForm);
-    const outputs = {
+    const outputsHalf = {
         'n': 'n',
         'xbar': '\\bar{x}',
         's2': 's^{2}',
@@ -129,8 +137,13 @@ function statInit() {
         't': 't',
         'ts': 't\\cdot s'
     };
-    for (const [name, formula] of Object.entries(outputs))
-        statOutForm.appendChild(createStatOutputDiv(name, formula));
+    for (const [name, formula] of Object.entries(outputsHalf))
+        statOutForm.appendChild(createStatOutputHalfDiv(name, formula));
+    const outputsFull = {
+        'q': 'Q\\text{-test}'
+    };
+    for (const [name, formula] of Object.entries(outputsFull))
+        statOutForm.appendChild(createStatOutputFullDiv(name, formula));
     const notes = [
         'All the results are stored locally, meaning that all data will be lost if the site data for this webpage is cleared',
         'This program will try to parse any unrecognizable data. The parsed output will be shown in the \"Parsed\" area',
@@ -144,6 +157,9 @@ function statInit() {
         'Shift+Tab': 'Previous input/element',
         '↓': 'Next dropdown choice',
         '↑': 'Previous dropdown choice',
+        'h': 'Change to \"Err Prop\" calculations (no use)',
+        'j': 'Change to \"1-Var Stat\" calculation',
+        'k': 'Change to \"Lin Reg\" calculation'
     };
     const formats = {
         'Numbers': ['3.1415926', '-2020', '.57721'],

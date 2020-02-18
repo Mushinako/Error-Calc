@@ -30,6 +30,15 @@ function keyStat(ev: KeyboardEvent): void {
     }
     // No shift allowed
     if (ev.shiftKey) return;
+    const funcKeys: string[] = ['h', 'j', 'k'];
+    const funcI: number = funcKeys.indexOf(ev.key.toLowerCase());
+    if (funcI > -1) {
+        // b-m: Functions
+        ev.preventDefault();
+        const btns: HTMLElement[] = ['prop', 'stat', 'lreg'].map((val: string): HTMLElement => <HTMLElement>document.getElementById(val));
+        (<HTMLAnchorElement>btns[funcI]).click();
+        return;
+    }
 }
 
 /**
@@ -156,7 +165,7 @@ function statInit(): void {
     const statOutForm: HTMLFormElement = document.createElement('form');
     statOutOutDiv.classList.add('row');
     statOutOutDiv.appendChild(statOutForm);
-    const outputs: Record<string, string> = {
+    const outputsHalf: Record<string, string> = {
         'n': 'n',
         'xbar': '\\bar{x}',
         's2': 's^{2}',
@@ -164,7 +173,11 @@ function statInit(): void {
         't': 't',
         'ts': 't\\cdot s'
     };
-    for (const [name, formula] of Object.entries(outputs)) statOutForm.appendChild(createStatOutputDiv(name, formula));
+    for (const [name, formula] of Object.entries(outputsHalf)) statOutForm.appendChild(createStatOutputHalfDiv(name, formula));
+    const outputsFull: Record<string, string> = {
+        'q': 'Q\\text{-test}'
+    };
+    for (const [name, formula] of Object.entries(outputsFull)) statOutForm.appendChild(createStatOutputFullDiv(name, formula));
     // Help
     const notes: string[] = [
         'All the results are stored locally, meaning that all data will be lost if the site data for this webpage is cleared',
@@ -179,6 +192,9 @@ function statInit(): void {
         'Shift+Tab': 'Previous input/element',
         '↓': 'Next dropdown choice',
         '↑': 'Previous dropdown choice',
+        'h': 'Change to \"Err Prop\" calculations (no use)',
+        'j': 'Change to \"1-Var Stat\" calculation',
+        'k': 'Change to \"Lin Reg\" calculation'
     };
     const formats: Record<string, string[]> = {
         'Numbers': ['3.1415926', '-2020', '.57721'],

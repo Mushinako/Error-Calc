@@ -1,45 +1,57 @@
 "use strict";
 function statSanInp(inpStr) {
-    if (inpStr.slice(0, 3) === 'Var') {
-        const inpAnsKey = inpStr.split('\n')[0];
-        const parsedAnsKey = /^(Var\d+)(?:\D|$)/.exec(inpAnsKey);
-        if (parsedAnsKey === null) {
-            alert(`${inpAnsKey} is not a parsable previous answer!`);
-            return [];
-        }
-        const ansKey = parsedAnsKey[1];
-        const ans = window.localStorage.getItem(ansKey);
-        if (ans === null) {
-            alert(`${ansKey} does not exist!`);
-            return [];
-        }
-        const formula = JSON.parse(ans)[0];
-        const nums = formula.split(',');
-        return nums;
-    }
     const inps = inpStr.split('\n').filter((val) => val !== '' && val.charAt(0).toLowerCase() !== 'e');
-    const sanInps = [];
+    let sanVals = [];
+    let sanInps = [];
     for (const inp of inps) {
-        const parsed = /^([\+\-]?\d*(?:\.\d*)?(?:[Ee][\+\-]?\d+)?)(?:\D|$)/.exec(inp);
-        if (parsed === null)
+        if (inp.slice(0, 3) === 'Var') {
+            const parsedAnsKey = /^(Var\d+)(?:\D|$)/.exec(inp);
+            if (parsedAnsKey === null) {
+                alert(`\"${inp}\" is not a parsable previous answer!`);
+                continue;
+            }
+            const ansKey = parsedAnsKey[1];
+            const ans = window.localStorage.getItem(ansKey);
+            if (ans === null) {
+                alert(`\"${ansKey}\" does not exist!`);
+                continue;
+            }
+            const formula = JSON.parse(ans)[0];
+            const nums = formula.split(';');
+            sanVals = sanVals.concat(nums);
+            sanInps.push(ans);
+        }
+        else if (['Err', 'Lin'].includes(inp.slice(0, 3))) {
+            alert('\"Err\" and \"Lin\" are not allowed!');
             continue;
-        const parsedVal = parsed[1];
-        if (parsedVal === '')
-            continue;
-        sanInps.push(parsedVal);
+        }
+        else {
+            const parsed = /^([\+\-]?\d*(?:\.\d*)?(?:[Ee][\+\-]?\d+)?)(?:\D|$)/.exec(inp);
+            if (parsed === null)
+                continue;
+            const parsedVal = parsed[1];
+            if (parsedVal === '')
+                continue;
+            sanInps.push(parsedVal);
+            sanVals.push(parsedVal);
+        }
     }
-    return sanInps;
+    return [sanVals, sanInps];
 }
 function statCalc() {
     const inpStr = statInp.value;
-    const sanInpStrs = statSanInp(inpStr);
+    const [sanValStrs, sanInpStrs] = statSanInp(inpStr);
     if (!sanInpStrs.length) {
         alert('No valid input!');
         return;
     }
-    statInp2.value = sanInpStrs.join('\n');
+    const check = sanInpStrs.length === 1 && sanInpStrs[0].slice(0, 3) === 'Var';
+    statInp2.value = sanValStrs.join('\n');
+    const name = `Var${ansCounter}`;
+    if (!check)
+        statInp2.value += `\n(Saved as \"${name}\")`;
     M.textareaAutoResize(statInp2);
-    const sanInps = sanInpStrs.map((val) => +val);
+    const sanInps = sanValStrs.map((val) => +val);
     const n = sanInps.length;
     document.getElementById('statn').value = n.toString();
     const sum = sanInps.reduce((acc, cur) => acc + cur, 0);
@@ -52,6 +64,11 @@ function statCalc() {
     document.getElementById('stats').value = sd.toString();
     document.getElementById('statt').value = 'Not implemented yet';
     document.getElementById('statts').value = 'Not implemented yet';
-    window.localStorage.setItem(`Var${ansCounter}`, JSON.stringify([sanInpStrs.join(','), avg, sd, sigFigDecimalConversion(avg, 15)]));
+    const qTextarea = document.getElementById('statq');
+    qTextarea.value = 'Not implemented yet';
+    M.textareaAutoResize(qTextarea);
+    const sigFig = Math.max(...sanValStrs.map((val) => numAccuracy(val)));
+    if (!check)
+        window.localStorage.setItem(name, JSON.stringify([sanValStrs.join(';'), avg, sd, sigFig]));
     setAnsCounter();
 }

@@ -10,38 +10,45 @@
  * Sanitize statistics input
  * 
  * @param   {string} inpStr - Raw input string from textarea
+ * @returns {string[]}      - Parsed values
  * @returns {string[]}      - Parsed inputs
  */
-function statSanInp(inpStr: string): string[] {
-    if (inpStr.slice(0, 3) === 'Var') {
-        // Ans
-        const inpAnsKey: string = inpStr.split('\n')[0];
-        const parsedAnsKey: RegExpExecArray | null = /^(Var\d+)(?:\D|$)/.exec(inpAnsKey);
-        if (parsedAnsKey === null) {
-            alert(`${inpAnsKey} is not a parsable previous answer!`);
-            return [];
-        }
-        const ansKey: string = parsedAnsKey[1];
-        const ans: string | null = window.localStorage.getItem(ansKey);
-        if (ans === null) {
-            alert(`${ansKey} does not exist!`);
-            return [];
-        }
-        const formula: string = JSON.parse(ans)[0];
-        const nums: string[] = formula.split(',');
-        return nums;
-    }
-    // No ans
+function statSanInp(inpStr: string): [string[], string[]] {
     const inps: string[] = inpStr.split('\n').filter((val: string): boolean => val !== '' && val.charAt(0).toLowerCase() !== 'e');
-    const sanInps: string[] = [];
+    let sanVals: string[] = [];
+    let sanInps: string[] = [];
     for (const inp of inps) {
-        const parsed: RegExpExecArray | null = /^([\+\-]?\d*(?:\.\d*)?(?:[Ee][\+\-]?\d+)?)(?:\D|$)/.exec(inp);
-        if (parsed === null) continue;
-        const parsedVal: string = parsed[1];
-        if (parsedVal === '') continue;
-        sanInps.push(parsedVal);
+        if (inp.slice(0, 3) === 'Var') {
+            // Ans
+            const parsedAnsKey: RegExpExecArray | null = /^(Var\d+)(?:\D|$)/.exec(inp);
+            if (parsedAnsKey === null) {
+                alert(`\"${inp}\" is not a parsable previous answer!`);
+                continue;
+            }
+            const ansKey: string = parsedAnsKey[1];
+            const ans: string | null = window.localStorage.getItem(ansKey);
+            if (ans === null) {
+                alert(`\"${ansKey}\" does not exist!`);
+                continue;
+            }
+            const formula: string = JSON.parse(ans)[0];
+            const nums: string[] = formula.split(';');
+            sanVals = sanVals.concat(nums);
+            sanInps.push(ans);
+        } else if (['Err', 'Lin'].includes(inp.slice(0, 3))) {
+            alert('\"Err\" and \"Lin\" are not allowed!');
+            continue;
+        } else {
+            // No ans
+            const parsed: RegExpExecArray | null = /^([\+\-]?\d*(?:\.\d*)?(?:[Ee][\+\-]?\d+)?)(?:\D|$)/.exec(inp);
+            if (parsed === null) continue;
+            const parsedVal: string = parsed[1];
+            if (parsedVal === '') continue;
+            sanInps.push(parsedVal);
+            sanVals.push(parsedVal);
+        }
     }
-    return sanInps;
+    return [sanVals, sanInps];
 }
 
 /**
@@ -51,16 +58,19 @@ function statCalc(): void {
     // Get input
     const inpStr: string = statInp.value;
     // Sanitize input
-    const sanInpStrs: string[] = statSanInp(inpStr);
+    const [sanValStrs, sanInpStrs]: [string[], string[]] = statSanInp(inpStr);
     if (!sanInpStrs.length) {
         alert('No valid input!');
         return;
     }
+    const check: boolean = sanInpStrs.length === 1 && sanInpStrs[0].slice(0, 3) === 'Var';
     // Show parsed output
-    statInp2.value = sanInpStrs.join('\n');
+    statInp2.value = sanValStrs.join('\n');
+    const name: string = `Var${ansCounter}`;
+    if (!check) statInp2.value += `\n(Saved as \"${name}\")`;
     M.textareaAutoResize(statInp2);
     // Calculations
-    const sanInps: number[] = sanInpStrs.map((val: string): number => +val);
+    const sanInps: number[] = sanValStrs.map((val: string): number => +val);
     // n
     const n: number = sanInps.length;
     (<HTMLInputElement>document.getElementById('statn')).value = n.toString();
@@ -79,8 +89,14 @@ function statCalc(): void {
     (<HTMLInputElement>document.getElementById('statt')).value = 'Not implemented yet';
     // ts
     (<HTMLInputElement>document.getElementById('statts')).value = 'Not implemented yet';
+    // q
+    const qTextarea: HTMLTextAreaElement = <HTMLTextAreaElement>document.getElementById('statq');
+    qTextarea.value = 'Not implemented yet';
+    M.textareaAutoResize(qTextarea);
+    // SigFig
+    const sigFig: number = Math.max(...sanValStrs.map((val: string): number => numAccuracy(val)));
     // Save
-    window.localStorage.setItem(`Var${ansCounter}`, JSON.stringify([sanInpStrs.join(','), avg, sd, sigFigDecimalConversion(avg, 15)]));
+    if (!check) window.localStorage.setItem(name, JSON.stringify([sanValStrs.join(';'), avg, sd, sigFig]));
     // Set counter
     setAnsCounter();
 }
