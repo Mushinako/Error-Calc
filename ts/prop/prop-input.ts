@@ -97,6 +97,7 @@ function cOperInputDiv(choices: string[], firstRow: boolean): HTMLDivElement {
     selDiv.classList.add('input-field', 'col', 's1');
     div.appendChild(selDiv);
     const sel: HTMLSelectElement = document.createElement('select');
+    selDiv.appendChild(sel);
     let first: boolean = true;
     for (const c of choices) {
         const opt: HTMLOptionElement = document.createElement('option');
@@ -108,7 +109,6 @@ function cOperInputDiv(choices: string[], firstRow: boolean): HTMLDivElement {
         }
         sel.appendChild(opt);
     }
-    selDiv.appendChild(sel);
     // 2 inputs
     div.appendChild(createInpsDiv());
     // Remove btn

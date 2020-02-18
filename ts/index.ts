@@ -21,6 +21,7 @@ interface MathJax {
 
 interface Materialize {
     AutoInit(): void,
+    textareaAutoResize(textarea: HTMLTextAreaElement): void,
     FormSelect: {
         init(elems: any[], options?: Record<string, any>): void;
     }
@@ -270,7 +271,7 @@ function resultToString(avg: number, sd: number, sf: number): string {
         if (sigFig2) sf -= 2;
         sfnAvg = sigFigDecimalConversion(avg, sf);
     } else {
-        sfnAvg = 10;
+        sfnAvg = 15;
         sf = sigFigDecimalConversion(avg, sfnAvg);
     }
     const avgStr: string = sciNotation(avg, sfnAvg);
@@ -291,10 +292,26 @@ function resultToString(avg: number, sd: number, sf: number): string {
 }
 
 /**
+ * Set counter only
+ */
+function setAnsCounter(): void {
+    const keys: string[] = Object.keys(window.localStorage).filter((val: string): boolean => ['Err', 'Var', 'Lin'].includes(val.slice(0, 3)));
+    // Check if localStorage is empty
+    if (!keys.length) {
+        ansCounter = 1;
+        return;
+    }
+    // List of Ans IDs present
+    const ids: number[] = keys.map((val: string): number => +val.slice(3));
+    // Ensure no overlapping ID
+    ansCounter = Math.max(...ids) + 1;
+}
+
+/**
  * Display Ans from localStorage, also set counter
  */
 function displayAns(): void {
-    const keys: string[] = Object.keys(window.localStorage).filter((val: string) => ['Err', 'Var', 'Lin'].includes(val.slice(0, 3)));
+    const keys: string[] = Object.keys(window.localStorage).filter((val: string): boolean => ['Err', 'Var', 'Lin'].includes(val.slice(0, 3)));
     // Check if localStorage is empty
     if (!keys.length) {
         ansCounter = 1;
@@ -425,13 +442,13 @@ document.addEventListener('DOMContentLoaded', (): void => {
         // Initialize
         propInit();
     });
-    // statBtn.addEventListener('click', (): void => {
-    //     statBtn.parentElement!.classList.add('active');
-    //     propBtn.parentElement!.classList.remove('active');
-    //     lregBtn.parentElement!.classList.remove('active');
-    //     // Initialize
-    //     statInit();
-    // });
+    statBtn.addEventListener('click', (): void => {
+        statBtn.parentElement!.classList.add('active');
+        propBtn.parentElement!.classList.remove('active');
+        lregBtn.parentElement!.classList.remove('active');
+        // Initialize
+        statInit();
+    });
     // lregBtn.addEventListener('click', (): void => {
     //     lregBtn.parentElement!.classList.add('active');
     //     propBtn.parentElement!.classList.remove('active');
@@ -441,6 +458,4 @@ document.addEventListener('DOMContentLoaded', (): void => {
     // });
     // Initialize error propagation
     propInit();
-    // Display saved answers
-    displayAns();
 });

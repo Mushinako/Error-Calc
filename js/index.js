@@ -155,7 +155,7 @@ function resultToString(avg, sd, sf) {
         sfnAvg = sigFigDecimalConversion(avg, sf);
     }
     else {
-        sfnAvg = 10;
+        sfnAvg = 15;
         sf = sigFigDecimalConversion(avg, sfnAvg);
     }
     const avgStr = sciNotation(avg, sfnAvg);
@@ -176,6 +176,15 @@ function resultToString(avg, sd, sf) {
         resStr = `\\({\\color{red} ${avgStr}}\\pm{\\color{blue} ${sdStr}}\\)`;
     }
     return resStr;
+}
+function setAnsCounter() {
+    const keys = Object.keys(window.localStorage).filter((val) => ['Err', 'Var', 'Lin'].includes(val.slice(0, 3)));
+    if (!keys.length) {
+        ansCounter = 1;
+        return;
+    }
+    const ids = keys.map((val) => +val.slice(3));
+    ansCounter = Math.max(...ids) + 1;
 }
 function displayAns() {
     const keys = Object.keys(window.localStorage).filter((val) => ['Err', 'Var', 'Lin'].includes(val.slice(0, 3)));
@@ -295,6 +304,11 @@ document.addEventListener('DOMContentLoaded', () => {
         lregBtn.parentElement.classList.remove('active');
         propInit();
     });
+    statBtn.addEventListener('click', () => {
+        statBtn.parentElement.classList.add('active');
+        propBtn.parentElement.classList.remove('active');
+        lregBtn.parentElement.classList.remove('active');
+        statInit();
+    });
     propInit();
-    displayAns();
 });

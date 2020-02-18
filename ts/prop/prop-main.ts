@@ -179,4 +179,6 @@ function propInit(): void {
     helpDiv.appendChild(helpUl);
     // Init +/-
     (<HTMLAnchorElement>btnsDiv.childNodes[1]).click();
+    // Display saved answers
+    displayAns();
 }

@@ -148,4 +148,5 @@ function propInit() {
     const helpUl = helpGen(noteLi, shortcutsLi, formatLi);
     helpDiv.appendChild(helpUl);
     btnsDiv.childNodes[1].click();
+    displayAns();
 }

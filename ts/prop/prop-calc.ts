@@ -220,7 +220,7 @@ function parseNumsFromRow(avgInp: HTMLInputElement, avgStr: string, sdStr: strin
  * @param {string} form - Formula, TeX format
  * @param {number} avg  - Calculated average
  * @param {number} sd   - Calculated SD
- * @param {number} sf   - Accuration log10
+ * @param {number} sf   - Accuracy log10
  */
 function postProcessing(form: string, avg: number, sd: number, sf: number): void {
     window.localStorage.setItem(`Err${ansCounter}`, JSON.stringify([form, avg, sd, sf]));

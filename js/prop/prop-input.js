@@ -57,6 +57,7 @@ function cOperInputDiv(choices, firstRow) {
     selDiv.classList.add('input-field', 'col', 's1');
     div.appendChild(selDiv);
     const sel = document.createElement('select');
+    selDiv.appendChild(sel);
     let first = true;
     for (const c of choices) {
         const opt = document.createElement('option');
@@ -68,7 +69,6 @@ function cOperInputDiv(choices, firstRow) {
         }
         sel.appendChild(opt);
     }
-    selDiv.appendChild(sel);
     div.appendChild(createInpsDiv());
     if (!firstRow) {
         const remDiv = document.createElement('div');
