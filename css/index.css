@@ -89,6 +89,7 @@ textarea.materialize-textarea:disabled {
 
 .no-click {
     cursor: default;
+    text-transform: none;
 }
 
 .input-field {

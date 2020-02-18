@@ -68,14 +68,14 @@ function statInit() {
     ciDiv.classList.add('col', 's12');
     statInpDiv.appendChild(ciDiv);
     const ciLblDiv = document.createElement('div');
-    ciLblDiv.classList.add('center', 'col', 's6');
+    ciLblDiv.classList.add('center', 'col', 's4');
     ciDiv.appendChild(ciLblDiv);
     const ciLblBtn = document.createElement('a');
     ciLblBtn.classList.add('btn-flat', 'no-click');
-    ciLblBtn.textContent = 'T-test 2-tail/1-tail/α';
+    ciLblBtn.textContent = '2-tail/1-tail/α';
     ciLblDiv.appendChild(ciLblBtn);
     statCiDiv = document.createElement('div');
-    statCiDiv.classList.add('input-field', 'col', 's6');
+    statCiDiv.classList.add('input-field', 'col', 's8');
     ciDiv.appendChild(statCiDiv);
     const sel = document.createElement('select');
     statCiDiv.appendChild(sel);

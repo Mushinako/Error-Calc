@@ -97,15 +97,15 @@ function statInit(): void {
     statInpDiv.appendChild(ciDiv);
     // Confidence interval label
     const ciLblDiv: HTMLDivElement = document.createElement('div');
-    ciLblDiv.classList.add('center', 'col', 's6');
+    ciLblDiv.classList.add('center', 'col', 's4');
     ciDiv.appendChild(ciLblDiv);
     const ciLblBtn: HTMLAnchorElement = document.createElement('a');
     ciLblBtn.classList.add('btn-flat', 'no-click');
-    ciLblBtn.textContent = 'T-test 2-tail/1-tail/α';
+    ciLblBtn.textContent = '2-tail/1-tail/α';
     ciLblDiv.appendChild(ciLblBtn);
     // Confidence interval choice
     statCiDiv = document.createElement('div');
-    statCiDiv.classList.add('input-field', 'col', 's6');
+    statCiDiv.classList.add('input-field', 'col', 's8');
     ciDiv.appendChild(statCiDiv);
     const sel: HTMLSelectElement = document.createElement('select');
     statCiDiv.appendChild(sel);

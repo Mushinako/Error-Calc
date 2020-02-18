@@ -44,12 +44,12 @@ function createStatOutputFullDiv(name: string, formula: string): HTMLDivElement 
     div.classList.add('col', 's12', 'input-field');
     // Label
     const lblDiv: HTMLDivElement = document.createElement('div');
-    lblDiv.classList.add('col', 's1', 'center');
+    lblDiv.classList.add('col', 's2', 'center');
     lblDiv.textContent = `\\(${formula}\\)`;
     div.appendChild(lblDiv);
     // Output
     const output: HTMLTextAreaElement = document.createElement('textarea');
-    output.classList.add('col', 's11', 'materialize-textarea');
+    output.classList.add('col', 's10', 'materialize-textarea');
     output.id = `stat${name}`;
     output.disabled = true;
     div.appendChild(output);
