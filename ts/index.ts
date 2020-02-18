@@ -251,7 +251,7 @@ function helpGen(noteLi: HTMLLIElement, shortcutLi: HTMLLIElement, formatLi: HTM
 function sciNotation(n: number, sfn: number): string {
     const absN: number = Math.abs(n);
     if (sfn <= 0) return '0';
-    if (absN < 1e3 && absN > 1e-1 || absN === 0) {
+    if (absN < 1e6 && absN > 1e-1 || absN === 0) {
         return n.toPrecision(sfn);
     }
     return n.toExponential(sfn - 1);
