@@ -37,7 +37,7 @@
                         Reg</a></li>
                 <li>|</li>
                 <li><a href="https://github.com/Mushinako/Error-Calc" target="_blank" rel="noopener noreferrer">Ver
-                        #68</a></li>
+                        #69</a></li>
                 <li>|</li>
             </ul>
         </div>
@@ -50,112 +50,6 @@
                 <div class="solid" id="outdiv"></div>
                 <div id="helpdiv"></div>
             </div>
-
-            <div class="container" id="statdiv" style="display: none;">
-                <h1 class="center">One-Variable Statistics</h1>
-                <div class="center">
-                    <form>
-                        <div class="row">
-                            <div class="col s1"><a class="btn-flat no-click">x</a></div>
-                            <div class="col s11 input-field" id="statpast">
-                                <textarea class="materialize-textarea" id="statinp"></textarea>
-                            </div>
-                        </div>
-                        <div class="container row center">
-                            <a class="waves-effect blue btn" id="statcalc">Calculate</a>
-                        </div>
-                    </form>
-                </div>
-                <hr>
-                <div>
-                    <form class="row">
-                        <div class="col s12 m6 input-field">
-                            <div class="col s2 center">\(n\)</div>
-                            <input type="text" class="col s10" id="statn" disabled>
-                        </div>
-                        <div class="col s12 m6 input-field">
-                            <div class="col s2 center">\(\bar{x}\)</div>
-                            <input type="text" class="col s10" id="statxbar" disabled>
-                        </div>
-                        <div class="col s12 m6 input-field">
-                            <div class="col s2 center">\(s^{2}\)</div>
-                            <input type="text" class="col s10" id="stats2" disabled>
-                        </div>
-                        <div class="col s12 m6 input-field">
-                            <div class="col s2 center">\(s\)</div>
-                            <input type="text" class="col s10" id="stats" disabled>
-                        </div>
-                    </form>
-                </div>
-                <div class="solid" id="statform"></div>
-                <ul class="collapsible">
-                    <li class="active">
-                        <div class="collapsible-header"><strong>Notes</strong></div>
-                        <div class="collapsible-body">
-                            <ul class="browser-default">
-                                <li>All the results are stored locally, meaning that all data will be
-                                    lost if the site
-                                    data for this webpage is cleared</li>
-                                <li>Input one number on each line. Press <em>Enter</em> to add a line</li>
-                                <li>If copying a column of data from excel, directly paste into the input</li>
-                            </ul>
-                        </div>
-                    </li>
-                    <li>
-                        <div class="collapsible-header"><strong>Keyboard shortcuts</strong></div>
-                        <div class="collapsible-body">
-                            <table class="highlight">
-                                <thead>
-                                    <tr>
-                                        <th>Key Combination</th>
-                                        <th>Action</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr>
-                                        <td><em>Enter</em></td>
-                                        <td>New line</td>
-                                    </tr>
-                                    <tr>
-                                        <td><em>Shift+Enter</em></td>
-                                        <td>Run calculation</td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
-                    </li>
-                    <li>
-                        <div class="collapsible-header"><strong>Data formats accepted</strong></div>
-                        <div class="collapsible-body">
-                            <table class="highlight">
-                                <thead>
-                                    <tr>
-                                        <th>Type</th>
-                                        <th>Example</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr>
-                                        <td><em>Numbers</em></td>
-                                        <td>3.1415926; -2020; .57721</td>
-                                    </tr>
-                                    <tr>
-                                        <td><em>Scientific Notations</em></td>
-                                        <td>8e7; .897e-12; 599e+3</td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
-                    </li>
-                </ul>
-            </div>
-
-            <div class="container" id="lregdiv" style="display: none;">
-                <h1 class="center">Linear Regression</h1>
-                <div class="center" id="lregedit"></div>
-                <hr>
-            </div>
-        </div>
     </main>
 
     <script src="js/MathJax-loader.js"></script>
@@ -166,6 +60,7 @@
     <script src="js/prop/prop-method.js"></script>
     <script src="js/prop/prop-main.js"></script>
     <script src="js/stat/stat-calc.js"></script>
+    <script src="js/stat/stat-input.js"></script>
     <script src="js/stat/stat-main.js"></script>
     <script src="js/lreg/lreg-main.js"></script>
     <script src="js/index.js"></script>

@@ -268,10 +268,10 @@ function resultToString(avg: number, sd: number, sf: number): string {
     let sfnAvg: number;
     if (sigFig) {
         if (sigFig2) sf -= 2;
-        sfnAvg = sigFigDecCov(avg, sf);
+        sfnAvg = sigFigDecimalConversion(avg, sf);
     } else {
         sfnAvg = 10;
-        sf = sigFigDecCov(avg, sfnAvg);
+        sf = sigFigDecimalConversion(avg, sfnAvg);
     }
     const avgStr: string = sciNotation(avg, sfnAvg);
     let resStr: string;
@@ -314,18 +314,33 @@ function displayAns(): void {
     clearChildren(outDiv);
     const tbl: HTMLTableElement = document.createElement('table');
     tbl.classList.add('highlight', 'responsive-table', 'centered', 'margin-bottom');
+    outDiv.appendChild(tbl);
     // Table header
     const thead: HTMLTableSectionElement = document.createElement('thead');
+    tbl.appendChild(thead);
     const trHead: HTMLTableRowElement = document.createElement('tr');
-    for (const title of ['Ans', 'Formula', 'Result', '']) {
+    thead.appendChild(trHead);
+    for (const title of ['Ans', 'Formula', 'Result']) {
         const th: HTMLTableHeaderCellElement = document.createElement('th');
         th.textContent = title;
         trHead.appendChild(th);
     }
-    thead.appendChild(trHead);
-    tbl.appendChild(thead);
+    // 'Remove all' btn
+    const clearTh: HTMLTableHeaderCellElement = document.createElement('th');
+    clearTh.classList.add('center');
+    trHead.appendChild(clearTh);
+    const clearBtn: HTMLAnchorElement = document.createElement('a');
+    clearBtn.classList.add('waves-effect', 'btn', 'red');
+    clearBtn.textContent = 'All';
+    clearBtn.addEventListener('click', (): void => {
+        if (!confirm('Do you want to delete all results?')) return;
+        for (const key of Object.keys(window.localStorage)) window.localStorage.removeItem(key);
+        clearChildren(outDiv);
+    });
+    clearTh.appendChild(clearBtn);
     // Table body
     const tbody: HTMLTableSectionElement = document.createElement('tbody');
+    tbl.appendChild(tbody);
     for (const key of keys.sort((a: string, b: string): number => +a.slice(3) - +b.slice(3))) {
         const data: string = window.localStorage.getItem(key)!;
         // Register ID
@@ -335,6 +350,7 @@ function displayAns(): void {
         const formStr: string = `\\(${form}\\)`;
         const resStr: string = resultToString(avg, sd, sf);
         const tr: HTMLTableRowElement = document.createElement('tr');
+        tbody.appendChild(tr);
         for (const item of [key, formStr, resStr]) {
             const td: HTMLTableCellElement = document.createElement('td');
             td.textContent = item;
@@ -342,6 +358,7 @@ function displayAns(): void {
         }
         // Remove button
         const td: HTMLTableCellElement = document.createElement('td');
+        tr.appendChild(td);
         const btn: HTMLAnchorElement = document.createElement('a');
         btn.classList.add('waves-effect', 'btn', 'red');
         btn.textContent = '×';
@@ -352,29 +369,11 @@ function displayAns(): void {
             else clearChildren(outDiv);
         });
         td.appendChild(btn);
-        tr.appendChild(td);
-        // Append row to body
-        tbody.appendChild(tr);
     }
     // Ensure no overlapping ID
     ansCounter = Math.max(...ids) + 1;
-    // Append and parse MathJax
-    tbl.appendChild(tbody);
-    outDiv.appendChild(tbl);
+    // Parse MathJax
     parse();
-    // 'Remove all' btn
-    const clearDiv: HTMLDivElement = document.createElement('div');
-    clearDiv.classList.add('center');
-    outDiv.appendChild(clearDiv);
-    const clearBtn: HTMLAnchorElement = document.createElement('a');
-    clearBtn.classList.add('waves-effect', 'btn', 'red');
-    clearBtn.textContent = 'Remove all';
-    clearBtn.addEventListener('click', (): void => {
-        if (!confirm('Do you want to delete all results?')) return;
-        for (const key of Object.keys(window.localStorage)) window.localStorage.removeItem(key);
-        clearChildren(outDiv);
-    });
-    clearDiv.appendChild(clearBtn);
 }
 
 /**

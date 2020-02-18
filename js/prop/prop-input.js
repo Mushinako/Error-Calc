@@ -19,11 +19,11 @@ function createInpsDiv() {
     div.appendChild(avgDiv);
     const pmDiv = document.createElement('div');
     pmDiv.classList.add('center', 'col', 's2');
+    div.appendChild(pmDiv);
     const pmBtn = document.createElement('a');
     pmBtn.classList.add('btn-flat', 'no-click');
     pmBtn.textContent = '±';
     pmDiv.appendChild(pmBtn);
-    div.appendChild(pmDiv);
     const [sdDiv, sdInp] = createInpDiv('SD');
     div.appendChild(sdDiv);
     avgInp.addEventListener('input', () => {
@@ -55,6 +55,7 @@ function cOperInputDiv(choices, firstRow) {
     div.classList.add('row', 'inps');
     const selDiv = document.createElement('div');
     selDiv.classList.add('input-field', 'col', 's1');
+    div.appendChild(selDiv);
     const sel = document.createElement('select');
     let first = true;
     for (const c of choices) {
@@ -68,7 +69,6 @@ function cOperInputDiv(choices, firstRow) {
         sel.appendChild(opt);
     }
     selDiv.appendChild(sel);
-    div.appendChild(selDiv);
     div.appendChild(createInpsDiv());
     if (!firstRow) {
         const remDiv = document.createElement('div');
@@ -89,11 +89,11 @@ function nOperInputDiv(func) {
     div.classList.add('row', 'inps');
     const funcDiv = document.createElement('div');
     funcDiv.classList.add('col', 's1');
+    div.appendChild(funcDiv);
     const funcBtn = document.createElement('a');
     funcBtn.classList.add('btn-flat', 'no-click', 'no-pad');
     funcBtn.textContent = func;
     funcDiv.appendChild(funcBtn);
-    div.appendChild(funcDiv);
     div.appendChild(createInpsDiv());
     return div;
 }
@@ -103,16 +103,16 @@ function tOperInputDiv(rows) {
     expRow.classList.add('row', 'inps');
     const funcDiv = document.createElement('div');
     funcDiv.classList.add('col', 's1');
+    expRow.appendChild(funcDiv);
     const funcBtn = document.createElement('a');
     funcBtn.classList.add('btn-flat', 'no-click', 'no-pad');
     funcBtn.textContent = rows[1];
     funcDiv.appendChild(funcBtn);
-    expRow.appendChild(funcDiv);
     const div = document.createElement('div');
     div.classList.add('col', 's10');
+    expRow.appendChild(div);
     const [expDiv, expInp] = createInpDiv('Exp');
     div.appendChild(expDiv);
-    expRow.appendChild(div);
     expInp.addEventListener('input', () => {
         if (['e', 'v', 'l'].includes(expInp.value.charAt(0).toLowerCase())) {
             alert('Exponent cannot be a previous answer!');

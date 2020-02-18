@@ -45,11 +45,11 @@ function createInpsDiv(): HTMLDivElement {
     // pm
     const pmDiv: HTMLDivElement = document.createElement('div');
     pmDiv.classList.add('center', 'col', 's2');
+    div.appendChild(pmDiv);
     const pmBtn: HTMLAnchorElement = document.createElement('a');
     pmBtn.classList.add('btn-flat', 'no-click');
     pmBtn.textContent = '±';
     pmDiv.appendChild(pmBtn);
-    div.appendChild(pmDiv);
     // SD input div
     const [sdDiv, sdInp]: [HTMLDivElement, HTMLInputElement] = createInpDiv('SD');
     div.appendChild(sdDiv);
@@ -95,6 +95,7 @@ function cOperInputDiv(choices: string[], firstRow: boolean): HTMLDivElement {
     // Select
     const selDiv: HTMLDivElement = document.createElement('div');
     selDiv.classList.add('input-field', 'col', 's1');
+    div.appendChild(selDiv);
     const sel: HTMLSelectElement = document.createElement('select');
     let first: boolean = true;
     for (const c of choices) {
@@ -108,7 +109,6 @@ function cOperInputDiv(choices: string[], firstRow: boolean): HTMLDivElement {
         sel.appendChild(opt);
     }
     selDiv.appendChild(sel);
-    div.appendChild(selDiv);
     // 2 inputs
     div.appendChild(createInpsDiv());
     // Remove btn
@@ -142,11 +142,11 @@ function nOperInputDiv(func: string): HTMLDivElement {
     // Func
     const funcDiv: HTMLDivElement = document.createElement('div');
     funcDiv.classList.add('col', 's1');
+    div.appendChild(funcDiv);
     const funcBtn: HTMLAnchorElement = document.createElement('a');
     funcBtn.classList.add('btn-flat', 'no-click', 'no-pad');
     funcBtn.textContent = func;
     funcDiv.appendChild(funcBtn);
-    div.appendChild(funcDiv);
     // 2 inputs
     div.appendChild(createInpsDiv());
     // Return, skipping the delete button
@@ -169,19 +169,19 @@ function tOperInputDiv(rows: string[]): HTMLDivElement[] {
     // Func
     const funcDiv: HTMLDivElement = document.createElement('div');
     funcDiv.classList.add('col', 's1');
+    expRow.appendChild(funcDiv);
     const funcBtn: HTMLAnchorElement = document.createElement('a');
     funcBtn.classList.add('btn-flat', 'no-click', 'no-pad');
     funcBtn.textContent = rows[1];
     funcDiv.appendChild(funcBtn);
-    expRow.appendChild(funcDiv);
     // Create outer input div
     const div: HTMLDivElement = document.createElement('div');
     div.classList.add('col', 's10');
+    expRow.appendChild(div);
     // Exponent input div
     // Create outer div
     const [expDiv, expInp]: [HTMLDivElement, HTMLInputElement] = createInpDiv('Exp');
     div.appendChild(expDiv);
-    expRow.appendChild(div);
     // Check inputs
     expInp.addEventListener('input', (): void => {
         if (['e', 'v', 'l'].includes(expInp.value.charAt(0).toLowerCase())) {

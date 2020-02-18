@@ -43,12 +43,14 @@ function cOperOnClick(choices: string[], calc: () => void, md: string): () => vo
         // Clear and re-init form
         clearChildren(propInpsDiv);
         const form: HTMLFormElement = document.createElement('form');
+        propInpsDiv.appendChild(form);
         // Inputs
         form.appendChild(cOperInputDiv(choices, true));
         form.appendChild(cOperInputDiv(choices, false));
         // Button row wrapper
         const btnsDiv: HTMLDivElement = document.createElement('div');
         btnsDiv.classList.add('container', 'row', 'center');
+        form.appendChild(btnsDiv);
         // Add row button
         const addRowBtn: HTMLAnchorElement = document.createElement('a');
         addRowBtn.classList.add('waves-effect', 'btn', 'green');
@@ -61,9 +63,7 @@ function cOperOnClick(choices: string[], calc: () => void, md: string): () => vo
         btnsDiv.appendChild(addRowBtn);
         // Calculate button
         btnsDiv.appendChild(createCalcBtn(calc));
-        // Append and init
-        form.appendChild(btnsDiv);
-        propInpsDiv.appendChild(form);
+        // Init
         M.AutoInit();
     };
 }
@@ -86,16 +86,15 @@ function nOperOnClick(func: string, calc: () => void, md: string): () => void {
         // Clear and re-init form
         clearChildren(propInpsDiv);
         const form: HTMLFormElement = document.createElement('form');
+        propInpsDiv.appendChild(form);
         // Inputs
         form.appendChild(nOperInputDiv(func));
         // Button row wrapper
         const btnsDiv: HTMLDivElement = document.createElement('div');
         btnsDiv.classList.add('container', 'row', 'center');
+        form.appendChild(btnsDiv);
         // Calculate button
         btnsDiv.appendChild(createCalcBtn(calc));
-        // Append
-        form.appendChild(btnsDiv);
-        propInpsDiv.appendChild(form);
     };
 }
 
@@ -117,16 +116,15 @@ function tOperOnClick(rows: string[], calc: () => void, md: string): () => void 
         // Clear and re-init form
         clearChildren(propInpsDiv);
         const form: HTMLFormElement = document.createElement('form');
+        propInpsDiv.appendChild(form);
         // Inputs
         for (const div of tOperInputDiv(rows)) form.appendChild(div);
         // Button row wrapper
         const btnsDiv: HTMLDivElement = document.createElement('div');
         btnsDiv.classList.add('container', 'row', 'center');
+        form.appendChild(btnsDiv);
         // Calculate button
         btnsDiv.appendChild(createCalcBtn(calc));
-        // Append
-        form.appendChild(btnsDiv);
-        propInpsDiv.appendChild(form);
     };
 }
 

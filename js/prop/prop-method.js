@@ -18,10 +18,12 @@ function cOperOnClick(choices, calc, md) {
         mode = md;
         clearChildren(propInpsDiv);
         const form = document.createElement('form');
+        propInpsDiv.appendChild(form);
         form.appendChild(cOperInputDiv(choices, true));
         form.appendChild(cOperInputDiv(choices, false));
         const btnsDiv = document.createElement('div');
         btnsDiv.classList.add('container', 'row', 'center');
+        form.appendChild(btnsDiv);
         const addRowBtn = document.createElement('a');
         addRowBtn.classList.add('waves-effect', 'btn', 'green');
         addRowBtn.id = 'propaddrow';
@@ -32,8 +34,6 @@ function cOperOnClick(choices, calc, md) {
         });
         btnsDiv.appendChild(addRowBtn);
         btnsDiv.appendChild(createCalcBtn(calc));
-        form.appendChild(btnsDiv);
-        propInpsDiv.appendChild(form);
         M.AutoInit();
     };
 }
@@ -42,12 +42,12 @@ function nOperOnClick(func, calc, md) {
         mode = md;
         clearChildren(propInpsDiv);
         const form = document.createElement('form');
+        propInpsDiv.appendChild(form);
         form.appendChild(nOperInputDiv(func));
         const btnsDiv = document.createElement('div');
         btnsDiv.classList.add('container', 'row', 'center');
-        btnsDiv.appendChild(createCalcBtn(calc));
         form.appendChild(btnsDiv);
-        propInpsDiv.appendChild(form);
+        btnsDiv.appendChild(createCalcBtn(calc));
     };
 }
 function tOperOnClick(rows, calc, md) {
@@ -55,13 +55,13 @@ function tOperOnClick(rows, calc, md) {
         mode = md;
         clearChildren(propInpsDiv);
         const form = document.createElement('form');
+        propInpsDiv.appendChild(form);
         for (const div of tOperInputDiv(rows))
             form.appendChild(div);
         const btnsDiv = document.createElement('div');
         btnsDiv.classList.add('container', 'row', 'center');
-        btnsDiv.appendChild(createCalcBtn(calc));
         form.appendChild(btnsDiv);
-        propInpsDiv.appendChild(form);
+        btnsDiv.appendChild(createCalcBtn(calc));
     };
 }
 function createOpBtn(name, op) {
