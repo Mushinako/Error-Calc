@@ -6,7 +6,13 @@
  * - Create outputs
  */
 
-
+/**
+ * Create single stat output div
+ * 
+ * @param   {string} name    - Name of output
+ * @param   {string} formula - Formula of output
+ * @returns {HTMLDivElement} - The div element
+ */
 function createStatOutputDiv(name: string, formula: string): HTMLDivElement {
     const div: HTMLDivElement = document.createElement('div');
     div.classList.add('col', 's12', 'm6', 'input-field');

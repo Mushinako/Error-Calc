@@ -18,16 +18,20 @@ function statInit() {
     document.removeEventListener('keypress', keyProp);
     document.removeEventListener('keypress', keyLreg);
     clearChildren(inDiv);
+    clearChildren(outDiv);
+    clearChildren(helpDiv);
     const ttlElmt = createTtl('One-Variable Statistics');
     inDiv.appendChild(ttlElmt);
     const statInpOutDiv = document.createElement('div');
     inDiv.appendChild(statInpOutDiv);
     const statInpForm = document.createElement('form');
-    statInpForm.classList.add('row');
     statInpOutDiv.appendChild(statInpForm);
+    const statInpsDiv = document.createElement('div');
+    statInpsDiv.classList.add('row');
+    statInpForm.appendChild(statInpsDiv);
     const statInpDiv = document.createElement('div');
     statInpDiv.classList.add('col', 's12', 'm6');
-    statInpForm.appendChild(statInpDiv);
+    statInpsDiv.appendChild(statInpDiv);
     const lblDiv = document.createElement('div');
     lblDiv.classList.add('center', 'col', 's12');
     statInpDiv.appendChild(lblDiv);
@@ -43,7 +47,7 @@ function statInit() {
     inpDiv.appendChild(statInp);
     const statInpDiv2 = document.createElement('div');
     statInpDiv2.classList.add('col', 's12', 'm6');
-    statInpForm.appendChild(statInpDiv2);
+    statInpsDiv.appendChild(statInpDiv2);
     const lblDiv2 = document.createElement('div');
     lblDiv2.classList.add('center', 'col', 's12');
     statInpDiv2.appendChild(lblDiv2);
@@ -58,7 +62,7 @@ function statInit() {
     statInp2.classList.add('materialize-textarea');
     inpDiv2.appendChild(statInp2);
     const btnDiv = document.createElement('div');
-    btnDiv.classList.add('container', 'row', 'center');
+    btnDiv.classList.add('container', 'center');
     statInpForm.appendChild(btnDiv);
     btnDiv.appendChild(createCalcBtn(statCalc));
     appendHr(inDiv);
@@ -98,4 +102,5 @@ function statInit() {
     const helpUl = helpGen(noteLi, shortcutsLi, formatLi);
     helpDiv.appendChild(helpUl);
     parse();
+    M.AutoInit();
 }

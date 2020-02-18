@@ -30,7 +30,9 @@ function keyStat(ev: KeyboardEvent): void {
     if (ev.shiftKey) return;
 }
 
-
+/**
+ * Initialize one-variable statistics calculation interfaces
+ */
 function statInit(): void {
     // Keyboard events
     document.addEventListener('keypress', keyStat);
@@ -38,6 +40,8 @@ function statInit(): void {
     document.removeEventListener('keypress', keyLreg);
     // Clear input div
     clearChildren(inDiv);
+    clearChildren(outDiv);
+    clearChildren(helpDiv);
     // Title
     const ttlElmt: HTMLHeadingElement = createTtl('One-Variable Statistics');
     inDiv.appendChild(ttlElmt);
@@ -45,12 +49,14 @@ function statInit(): void {
     const statInpOutDiv: HTMLDivElement = document.createElement('div');
     inDiv.appendChild(statInpOutDiv);
     const statInpForm: HTMLFormElement = document.createElement('form');
-    statInpForm.classList.add('row');
     statInpOutDiv.appendChild(statInpForm);
+    const statInpsDiv: HTMLDivElement = document.createElement('div');
+    statInpsDiv.classList.add('row');
+    statInpForm.appendChild(statInpsDiv);
     // Input div
     const statInpDiv: HTMLDivElement = document.createElement('div');
     statInpDiv.classList.add('col', 's12', 'm6');
-    statInpForm.appendChild(statInpDiv);
+    statInpsDiv.appendChild(statInpDiv);
     // Label
     const lblDiv: HTMLDivElement = document.createElement('div');
     lblDiv.classList.add('center', 'col', 's12');
@@ -69,7 +75,7 @@ function statInit(): void {
     // Parsed div
     const statInpDiv2: HTMLDivElement = document.createElement('div');
     statInpDiv2.classList.add('col', 's12', 'm6');
-    statInpForm.appendChild(statInpDiv2);
+    statInpsDiv.appendChild(statInpDiv2);
     // Label
     const lblDiv2: HTMLDivElement = document.createElement('div');
     lblDiv2.classList.add('center', 'col', 's12');
@@ -87,7 +93,7 @@ function statInit(): void {
     inpDiv2.appendChild(statInp2);
     // Calculate button
     const btnDiv: HTMLDivElement = document.createElement('div');
-    btnDiv.classList.add('container', 'row', 'center');
+    btnDiv.classList.add('container', 'center');
     statInpForm.appendChild(btnDiv);
     btnDiv.appendChild(createCalcBtn(statCalc));
     // Append horizontal line
@@ -130,4 +136,5 @@ function statInit(): void {
     helpDiv.appendChild(helpUl);
     // Init
     parse();
+    M.AutoInit();
 }

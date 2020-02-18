@@ -113,6 +113,8 @@ function propInit(): void {
     document.removeEventListener('keypress', keyLreg);
     // Clear input div
     clearChildren(inDiv);
+    clearChildren(outDiv);
+    clearChildren(helpDiv);
     // Title
     const ttlElmt: HTMLHeadingElement = createTtl('Error Propagation')
     inDiv.appendChild(ttlElmt);

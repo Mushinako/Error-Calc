@@ -90,6 +90,8 @@ function propInit() {
     document.removeEventListener('keypress', keyStat);
     document.removeEventListener('keypress', keyLreg);
     clearChildren(inDiv);
+    clearChildren(outDiv);
+    clearChildren(helpDiv);
     const ttlElmt = createTtl('Error Propagation');
     inDiv.appendChild(ttlElmt);
     btnsDiv = document.createElement('div');
