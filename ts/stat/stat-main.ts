@@ -28,22 +28,6 @@ function keyStat(ev: KeyboardEvent): void {
         }
         return;
     }
-    if (ev.key.toLowerCase() === 't') {
-        const choiceLis: NodeListOf<ChildNode> = statCiDiv.childNodes[0].childNodes[1].childNodes;
-        // Find selected
-        let i: number;
-        for (i = 0; i < choiceLis.length; i++) if ((<HTMLLIElement>choiceLis[i]).classList.contains('selected')) break;
-        (<HTMLLIElement>choiceLis[i]).classList.remove('selected');
-        if (ev.shiftKey) {
-            // Shift+t: Previous CI
-            i = (i + choiceLis.length - 1) % choiceLis.length;
-        } else {
-            // t: Next CI
-            i = (i + 1) % choiceLis.length;
-        }
-        (<HTMLLIElement>choiceLis[i]).classList.add('selected');
-        return;
-    }
     // No shift allowed
     if (ev.shiftKey) return;
 }
@@ -89,6 +73,14 @@ function statInit(): void {
     statInpDiv.appendChild(inpDiv);
     statInp = document.createElement('textarea');
     statInp.classList.add('materialize-textarea');
+    statInp.spellcheck = false;
+    statInp.addEventListener('input', (): void => {
+        // Autofill
+        if (statInp.value.toLowerCase() === 'v') statInp.value = 'Var';
+    });
+    statInp.addEventListener('keydown', (ev: KeyboardEvent): void => {
+        if (statInp.value === 'Var' && ev.key === 'Backspace') statInp.value = '';
+    });
     inpDiv.appendChild(statInp);
     // Confidence interval
     const ciDiv: HTMLDivElement = document.createElement('div');
@@ -168,7 +160,9 @@ function statInit(): void {
         'n': 'n',
         'xbar': '\\bar{x}',
         's2': 's^{2}',
-        's': 's'
+        's': 's',
+        't': 't',
+        'ts': 't\\cdot s'
     };
     for (const [name, formula] of Object.entries(outputs)) statOutForm.appendChild(createStatOutputDiv(name, formula));
     // Help
@@ -179,10 +173,12 @@ function statInit(): void {
         'If copying a column of data from excel, directly paste into the input'
     ];
     const shortcuts: Record<string, string> = {
-        'Enter': 'New line',
+        'Enter': 'New line; Open dropdown; Confirm choice',
         'Shift+Enter': 'Run calculation',
-        't': 'Next confidence interval',
-        'Shift+t': 'Previous confidence interval'
+        'Tab': 'Next input/element',
+        'Shift+Tab': 'Previous input/element',
+        '↓': 'Next dropdown choice',
+        '↑': 'Previous dropdown choice',
     };
     const formats: Record<string, string[]> = {
         'Numbers': ['3.1415926', '-2020', '.57721'],

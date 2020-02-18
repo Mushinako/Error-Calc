@@ -114,7 +114,7 @@ function propInit() {
         'To calculate SigFigs, use appropriate SigFigs in the input (e.g., \"3.0\" instead of \"3\")'
     ];
     const shortcuts = {
-        'Enter': 'Open dropdown (when applicable); Submit choice (when applicable)',
+        'Enter': 'Open dropdown (when applicable); Confirm choice (when applicable)',
         'Shift+Enter': 'Run calculation',
         'Tab': 'Next input/element',
         'Shift+Tab': 'Previous input/element',

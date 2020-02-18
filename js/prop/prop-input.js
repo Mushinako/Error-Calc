@@ -27,26 +27,20 @@ function createInpsDiv() {
     const [sdDiv, sdInp] = createInpDiv('SD');
     div.appendChild(sdDiv);
     avgInp.addEventListener('input', () => {
-        if (avgInp.value.toLowerCase() === 'e') {
+        if (avgInp.value.toLowerCase() === 'e')
             avgInp.value = 'Err';
-        }
-        else if (avgInp.value.toLowerCase() === 'v') {
+        else if (avgInp.value.toLowerCase() === 'v')
             avgInp.value = 'Var';
-        }
-        else if (avgInp.value.toLowerCase() === 'l') {
+        else if (avgInp.value.toLowerCase() === 'l')
             avgInp.value = 'Lin';
-        }
-        if (['E', 'V', 'L'].includes(avgInp.value.charAt(0))) {
+        if (['E', 'V', 'L'].includes(avgInp.value.charAt(0)))
             sdInp.disabled = true;
-        }
-        else {
+        else
             sdInp.disabled = false;
-        }
     });
     avgInp.addEventListener('keydown', (ev) => {
-        if (['Err', 'Var', 'Lin'].includes(avgInp.value) && ev.key === 'Backspace') {
+        if (['Err', 'Var', 'Lin'].includes(avgInp.value) && ev.key === 'Backspace')
             avgInp.value = '';
-        }
     });
     return div;
 }

@@ -13,6 +13,25 @@
  * @returns {string[]}      - Parsed inputs
  */
 function statSanInp(inpStr: string): string[] {
+    if (inpStr.slice(0, 3) === 'Var') {
+        // Ans
+        const inpAnsKey: string = inpStr.split('\n')[0];
+        const parsedAnsKey: RegExpExecArray | null = /^(Var\d+)(?:\D|$)/.exec(inpAnsKey);
+        if (parsedAnsKey === null) {
+            alert(`${inpAnsKey} is not a parsable previous answer!`);
+            return [];
+        }
+        const ansKey: string = parsedAnsKey[1];
+        const ans: string | null = window.localStorage.getItem(ansKey);
+        if (ans === null) {
+            alert(`${ansKey} does not exist!`);
+            return [];
+        }
+        const formula: string = JSON.parse(ans)[0];
+        const nums: string[] = formula.split(',');
+        return nums;
+    }
+    // No ans
     const inps: string[] = inpStr.split('\n').filter((val: string): boolean => val !== '' && val.charAt(0).toLowerCase() !== 'e');
     const sanInps: string[] = [];
     for (const inp of inps) {
@@ -33,6 +52,10 @@ function statCalc(): void {
     const inpStr: string = statInp.value;
     // Sanitize input
     const sanInpStrs: string[] = statSanInp(inpStr);
+    if (!sanInpStrs.length) {
+        alert('No valid input!');
+        return;
+    }
     // Show parsed output
     statInp2.value = sanInpStrs.join('\n');
     M.textareaAutoResize(statInp2);
@@ -52,6 +75,10 @@ function statCalc(): void {
     // s
     const sd: number = Math.sqrt(variance);
     (<HTMLInputElement>document.getElementById('stats')).value = sd.toString();
+    // t
+    (<HTMLInputElement>document.getElementById('statt')).value = 'Not implemented yet';
+    // ts
+    (<HTMLInputElement>document.getElementById('statts')).value = 'Not implemented yet';
     // Save
     window.localStorage.setItem(`Var${ansCounter}`, JSON.stringify([sanInpStrs.join(','), avg, sd, sigFigDecimalConversion(avg, 15)]));
     // Set counter

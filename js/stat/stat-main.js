@@ -12,22 +12,6 @@ function keyStat(ev) {
         }
         return;
     }
-    if (ev.key.toLowerCase() === 't') {
-        const choiceLis = statCiDiv.childNodes[0].childNodes[1].childNodes;
-        let i;
-        for (i = 0; i < choiceLis.length; i++)
-            if (choiceLis[i].classList.contains('selected'))
-                break;
-        choiceLis[i].classList.remove('selected');
-        if (ev.shiftKey) {
-            i = (i + choiceLis.length - 1) % choiceLis.length;
-        }
-        else {
-            i = (i + 1) % choiceLis.length;
-        }
-        choiceLis[i].classList.add('selected');
-        return;
-    }
     if (ev.shiftKey)
         return;
 }
@@ -62,6 +46,15 @@ function statInit() {
     statInpDiv.appendChild(inpDiv);
     statInp = document.createElement('textarea');
     statInp.classList.add('materialize-textarea');
+    statInp.spellcheck = false;
+    statInp.addEventListener('input', () => {
+        if (statInp.value.toLowerCase() === 'v')
+            statInp.value = 'Var';
+    });
+    statInp.addEventListener('keydown', (ev) => {
+        if (statInp.value === 'Var' && ev.key === 'Backspace')
+            statInp.value = '';
+    });
     inpDiv.appendChild(statInp);
     const ciDiv = document.createElement('div');
     ciDiv.classList.add('col', 's12');
@@ -132,7 +125,9 @@ function statInit() {
         'n': 'n',
         'xbar': '\\bar{x}',
         's2': 's^{2}',
-        's': 's'
+        's': 's',
+        't': 't',
+        'ts': 't\\cdot s'
     };
     for (const [name, formula] of Object.entries(outputs))
         statOutForm.appendChild(createStatOutputDiv(name, formula));
@@ -143,10 +138,12 @@ function statInit() {
         'If copying a column of data from excel, directly paste into the input'
     ];
     const shortcuts = {
-        'Enter': 'New line',
+        'Enter': 'New line; Open dropdown; Confirm choice',
         'Shift+Enter': 'Run calculation',
-        't': 'Next confidence interval',
-        'Shift+t': 'Previous confidence interval'
+        'Tab': 'Next input/element',
+        'Shift+Tab': 'Previous input/element',
+        '↓': 'Next dropdown choice',
+        '↑': 'Previous dropdown choice',
     };
     const formats = {
         'Numbers': ['3.1415926', '-2020', '.57721'],

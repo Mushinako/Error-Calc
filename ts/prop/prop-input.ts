@@ -56,23 +56,15 @@ function createInpsDiv(): HTMLDivElement {
     // Check inputs
     avgInp.addEventListener('input', (): void => {
         // Autofill
-        if (avgInp.value.toLowerCase() === 'e') {
-            avgInp.value = 'Err';
-        } else if (avgInp.value.toLowerCase() === 'v') {
-            avgInp.value = 'Var';
-        } else if (avgInp.value.toLowerCase() === 'l') {
-            avgInp.value = 'Lin';
-        }
-        if (['E', 'V', 'L'].includes(avgInp.value.charAt(0))) {
-            sdInp.disabled = true;
-        } else {
-            sdInp.disabled = false;
-        }
+        if (avgInp.value.toLowerCase() === 'e') avgInp.value = 'Err';
+        else if (avgInp.value.toLowerCase() === 'v') avgInp.value = 'Var';
+        else if (avgInp.value.toLowerCase() === 'l') avgInp.value = 'Lin';
+        if (['E', 'V', 'L'].includes(avgInp.value.charAt(0))) sdInp.disabled = true;
+        else sdInp.disabled = false;
+
     });
     avgInp.addEventListener('keydown', (ev: KeyboardEvent): void => {
-        if (['Err', 'Var', 'Lin'].includes(avgInp.value) && ev.key === 'Backspace') {
-            avgInp.value = '';
-        }
+        if (['Err', 'Var', 'Lin'].includes(avgInp.value) && ev.key === 'Backspace') avgInp.value = '';
     });
     // Return
     return div;
