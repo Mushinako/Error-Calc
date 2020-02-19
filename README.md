@@ -22,4 +22,4 @@ As much as I'm confident in my algorithms, I do not guarantee the accuracies of 
 
 ## Useful sources
 
-* [Dixon Q-test implementation paper](https://doi.org/10.18637/jss.v057.i02), Verma, M.; Suarez, M. C. DixonTest.CriticalValues: A Computer Code to Calculate Critical Values for the Dixon Statistical Data Treatment Approach. *J. Stat. Softw.* **2014**, *57* (1), 1–12.
+* [Dixon Q-test implementation paper](https://doi.org/10.18637/jss.v057.i02): Verma, M.; Suarez, M. C. DixonTest.CriticalValues: A Computer Code to Calculate Critical Values for the Dixon Statistical Data Treatment Approach. *J. Stat. Softw.* **2014**, *57* (1), 1–12.

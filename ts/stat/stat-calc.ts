@@ -6,6 +6,13 @@
  * - Calculation
  */
 
+/**
+ * Factorial
+ * 
+ * @param   {number} n - The number to be factorialized
+ * @returns {number}   - The result
+ */
+// const factorial = (n: number): number => [...Array(n).keys()].map((val: number): number => val + 1).reduce((acc: number, cur: number): number => acc * cur, 1);
 
 /**
  * Sanitize statistics input
@@ -50,6 +57,43 @@ function statSanInp(inpStr: string): [string[], string[]] {
         }
     }
     return [sanVals, sanInps];
+}
+
+
+function calcNc(n: number, l: number, u: number): number {
+    // n! / ((l-1)! * (u-1)! * (n-l-u-1)!) * (2π)^(-3/2)
+    // Remain
+    const r: number = n - l - u;
+    // Max
+    let os: number[] = [l, u, r].sort();
+    const m: number = os.pop()!;
+    // Calc
+    let result: number = [...Array(n - m + 1).keys()].map((val: number): number => val + m).reduce((acc: number, cur: number): number => acc * cur, 1);
+    for (const o of os) result /= [...Array(o - 1).keys()].map((val: number): number => val + 1).reduce((acc: number, cur: number): number => acc * cur, 1);
+    result /= Math.pow(2 * Math.PI, 1.5);
+    return result;
+}
+
+
+function calcP(r: number, n: number, l: number, u: number): number {
+    const nc: number = calcNc(n, l, u);
+    return 0;
+}
+
+
+function calcQScore(n: number, p: number, l: number, u: number): number {
+    let rL: number = 0;
+    let rH: number = 1;
+    let r: number = (rL + rH) / 2;
+    let rP: number = calcP(r, n, l, u);
+    for (let i: number = 0; i < 200; i++) {
+        if (Math.abs(rP - p) <= Number.EPSILON) break;
+        r = (rL + rH) / 2;
+        rP = calcP(r, n, l, u);
+        if (rP > p) rH = r;
+        else rL = r;
+    }
+    return r;
 }
 
 
@@ -98,7 +142,7 @@ function statCalc(): void {
         sd = Math.sqrt(variance);
         (<HTMLInputElement>document.getElementById('stats')).value = sd.toString();
         // t
-        const ciInp: HTMLInputElement = <HTMLInputElement>statCiDiv.childNodes[0].childNodes[0];
+        const ciInp: HTMLInputElement = <HTMLInputElement>statTDiv.childNodes[0].childNodes[0];
         const alpha: number = +ciInp.value.split('/')[2];
         const t: number = jStat.studentt.inv(1 - alpha, n - 1);
         (<HTMLInputElement>document.getElementById('statt')).value = t.toString();

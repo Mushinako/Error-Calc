@@ -10,7 +10,8 @@
 // Global variables
 let statInp: HTMLTextAreaElement;
 let statInp2: HTMLTextAreaElement;
-let statCiDiv: HTMLDivElement;
+let statTDiv: HTMLDivElement;
+let statQDiv: HTMLDivElement;
 
 /**
  * One-variable statistics keyboard shortcuts
@@ -91,47 +92,6 @@ function statInit(): void {
         if (statInp.value === 'Var' && ev.key === 'Backspace') statInp.value = '';
     });
     inpDiv.appendChild(statInp);
-    // Confidence interval
-    const ciDiv: HTMLDivElement = document.createElement('div');
-    ciDiv.classList.add('col', 's12');
-    statInpDiv.appendChild(ciDiv);
-    // Confidence interval label
-    const ciLblDiv: HTMLDivElement = document.createElement('div');
-    ciLblDiv.classList.add('center', 'col', 's4');
-    ciDiv.appendChild(ciLblDiv);
-    const ciLblBtn: HTMLAnchorElement = document.createElement('a');
-    ciLblBtn.classList.add('btn-flat', 'no-click');
-    ciLblBtn.textContent = '2-tail/1-tail/α';
-    ciLblDiv.appendChild(ciLblBtn);
-    // Confidence interval choice
-    statCiDiv = document.createElement('div');
-    statCiDiv.classList.add('input-field', 'col', 's8');
-    ciDiv.appendChild(statCiDiv);
-    const sel: HTMLSelectElement = document.createElement('select');
-    statCiDiv.appendChild(sel);
-    let first: boolean = true;
-    const cis: string[] = [
-        '50.00%/75.00%/0.2500',
-        '60.00%/80.00%/0.2000',
-        '70.00%/85.00%/0.1500',
-        '80.00%/90.00%/0.1000',
-        '90.00%/95.00%/0.0500',
-        '95.00%/97.50%/0.0250',
-        '98.00%/99.00%/0.0100',
-        '99.00%/99.50%/0.0050',
-        '99.80%/99.90%/0.0010',
-        '99.90%/99.95%/0.0005'
-    ];
-    for (const c of cis) {
-        const opt: HTMLOptionElement = document.createElement('option');
-        opt.value = c;
-        opt.textContent = c;
-        if (first) {
-            opt.selected = true;
-            first = false;
-        }
-        sel.appendChild(opt);
-    }
     // Parsed div
     const statInpDiv2: HTMLDivElement = document.createElement('div');
     statInpDiv2.classList.add('col', 's12', 'm6');
@@ -152,6 +112,92 @@ function statInit(): void {
     statInp2.classList.add('materialize-textarea');
     statInp2.disabled = true;
     inpDiv2.appendChild(statInp2);
+    // Choices
+    const choicesDiv: HTMLDivElement = document.createElement('div');
+    choicesDiv.classList.add('row');
+    statInpForm.appendChild(choicesDiv);
+    // T-test
+    const tDiv: HTMLDivElement = document.createElement('div');
+    tDiv.classList.add('col', 's12', 'm6');
+    choicesDiv.appendChild(tDiv);
+    // T-test label
+    const tLblDiv: HTMLDivElement = document.createElement('div');
+    tLblDiv.classList.add('center', 'col', 's4');
+    tDiv.appendChild(tLblDiv);
+    const tLblBtn: HTMLAnchorElement = document.createElement('a');
+    tLblBtn.classList.add('btn-flat', 'no-click');
+    tLblBtn.textContent = 't 2-tail/1-tail/α';
+    tLblDiv.appendChild(tLblBtn);
+    // T-test choice
+    statTDiv = document.createElement('div');
+    statTDiv.classList.add('input-field', 'col', 's8');
+    tDiv.appendChild(statTDiv);
+    const tSel: HTMLSelectElement = document.createElement('select');
+    statTDiv.appendChild(tSel);
+    let tFirst: boolean = true;
+    const tCis: string[] = [
+        '50.00%/75.00%/0.2500',
+        '60.00%/80.00%/0.2000',
+        '70.00%/85.00%/0.1500',
+        '80.00%/90.00%/0.1000',
+        '90.00%/95.00%/0.0500',
+        '95.00%/97.50%/0.0250',
+        '98.00%/99.00%/0.0100',
+        '99.00%/99.50%/0.0050',
+        '99.80%/99.90%/0.0010',
+        '99.90%/99.95%/0.0005'
+    ];
+    for (const c of tCis) {
+        const opt: HTMLOptionElement = document.createElement('option');
+        opt.value = c;
+        opt.textContent = c;
+        if (tFirst) {
+            opt.selected = true;
+            tFirst = false;
+        }
+        tSel.appendChild(opt);
+    }
+    // Q-test
+    const qDiv: HTMLDivElement = document.createElement('div');
+    qDiv.classList.add('col', 's12', 'm6');
+    choicesDiv.appendChild(qDiv);
+    // Q-test label
+    const qLblDiv: HTMLDivElement = document.createElement('div');
+    qLblDiv.classList.add('center', 'col', 's4');
+    qDiv.appendChild(qLblDiv);
+    const qLblBtn: HTMLAnchorElement = document.createElement('a');
+    qLblBtn.classList.add('btn-flat', 'no-click');
+    qLblBtn.textContent = 'q 1-tail/α';
+    qLblDiv.appendChild(qLblBtn);
+    // Q-test choice
+    statQDiv = document.createElement('div');
+    statQDiv.classList.add('input-field', 'col', 's8');
+    qDiv.appendChild(statQDiv);
+    const qSel: HTMLSelectElement = document.createElement('select');
+    statQDiv.appendChild(qSel);
+    let qFirst: boolean = true;
+    const qCis: string[] = [
+        '75.00%/0.2500',
+        '80.00%/0.2000',
+        '85.00%/0.1500',
+        '90.00%/0.1000',
+        '95.00%/0.0500',
+        '97.50%/0.0250',
+        '99.00%/0.0100',
+        '99.50%/0.0050',
+        '99.90%/0.0010',
+        '99.95%/0.0005'
+    ];
+    for (const c of qCis) {
+        const opt: HTMLOptionElement = document.createElement('option');
+        opt.value = c;
+        opt.textContent = c;
+        if (qFirst) {
+            opt.selected = true;
+            qFirst = false;
+        }
+        qSel.appendChild(opt);
+    }
     // Calculate button
     const btnDiv: HTMLDivElement = document.createElement('div');
     btnDiv.classList.add('container', 'center');

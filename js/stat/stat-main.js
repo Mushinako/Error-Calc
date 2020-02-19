@@ -1,7 +1,8 @@
 "use strict";
 let statInp;
 let statInp2;
-let statCiDiv;
+let statTDiv;
+let statQDiv;
 function keyStat(ev) {
     if (ev.altKey || ev.metaKey || ev.ctrlKey)
         return;
@@ -64,44 +65,6 @@ function statInit() {
             statInp.value = '';
     });
     inpDiv.appendChild(statInp);
-    const ciDiv = document.createElement('div');
-    ciDiv.classList.add('col', 's12');
-    statInpDiv.appendChild(ciDiv);
-    const ciLblDiv = document.createElement('div');
-    ciLblDiv.classList.add('center', 'col', 's4');
-    ciDiv.appendChild(ciLblDiv);
-    const ciLblBtn = document.createElement('a');
-    ciLblBtn.classList.add('btn-flat', 'no-click');
-    ciLblBtn.textContent = '2-tail/1-tail/α';
-    ciLblDiv.appendChild(ciLblBtn);
-    statCiDiv = document.createElement('div');
-    statCiDiv.classList.add('input-field', 'col', 's8');
-    ciDiv.appendChild(statCiDiv);
-    const sel = document.createElement('select');
-    statCiDiv.appendChild(sel);
-    let first = true;
-    const cis = [
-        '50.00%/75.00%/0.2500',
-        '60.00%/80.00%/0.2000',
-        '70.00%/85.00%/0.1500',
-        '80.00%/90.00%/0.1000',
-        '90.00%/95.00%/0.0500',
-        '95.00%/97.50%/0.0250',
-        '98.00%/99.00%/0.0100',
-        '99.00%/99.50%/0.0050',
-        '99.80%/99.90%/0.0010',
-        '99.90%/99.95%/0.0005'
-    ];
-    for (const c of cis) {
-        const opt = document.createElement('option');
-        opt.value = c;
-        opt.textContent = c;
-        if (first) {
-            opt.selected = true;
-            first = false;
-        }
-        sel.appendChild(opt);
-    }
     const statInpDiv2 = document.createElement('div');
     statInpDiv2.classList.add('col', 's12', 'm6');
     statInpsDiv.appendChild(statInpDiv2);
@@ -119,6 +82,85 @@ function statInit() {
     statInp2.classList.add('materialize-textarea');
     statInp2.disabled = true;
     inpDiv2.appendChild(statInp2);
+    const choicesDiv = document.createElement('div');
+    choicesDiv.classList.add('row');
+    statInpForm.appendChild(choicesDiv);
+    const tDiv = document.createElement('div');
+    tDiv.classList.add('col', 's12', 'm6');
+    choicesDiv.appendChild(tDiv);
+    const tLblDiv = document.createElement('div');
+    tLblDiv.classList.add('center', 'col', 's4');
+    tDiv.appendChild(tLblDiv);
+    const tLblBtn = document.createElement('a');
+    tLblBtn.classList.add('btn-flat', 'no-click');
+    tLblBtn.textContent = 't 2-tail/1-tail/α';
+    tLblDiv.appendChild(tLblBtn);
+    statTDiv = document.createElement('div');
+    statTDiv.classList.add('input-field', 'col', 's8');
+    tDiv.appendChild(statTDiv);
+    const tSel = document.createElement('select');
+    statTDiv.appendChild(tSel);
+    let tFirst = true;
+    const tCis = [
+        '50.00%/75.00%/0.2500',
+        '60.00%/80.00%/0.2000',
+        '70.00%/85.00%/0.1500',
+        '80.00%/90.00%/0.1000',
+        '90.00%/95.00%/0.0500',
+        '95.00%/97.50%/0.0250',
+        '98.00%/99.00%/0.0100',
+        '99.00%/99.50%/0.0050',
+        '99.80%/99.90%/0.0010',
+        '99.90%/99.95%/0.0005'
+    ];
+    for (const c of tCis) {
+        const opt = document.createElement('option');
+        opt.value = c;
+        opt.textContent = c;
+        if (tFirst) {
+            opt.selected = true;
+            tFirst = false;
+        }
+        tSel.appendChild(opt);
+    }
+    const qDiv = document.createElement('div');
+    qDiv.classList.add('col', 's12', 'm6');
+    choicesDiv.appendChild(qDiv);
+    const qLblDiv = document.createElement('div');
+    qLblDiv.classList.add('center', 'col', 's4');
+    qDiv.appendChild(qLblDiv);
+    const qLblBtn = document.createElement('a');
+    qLblBtn.classList.add('btn-flat', 'no-click');
+    qLblBtn.textContent = 'q 1-tail/α';
+    qLblDiv.appendChild(qLblBtn);
+    statQDiv = document.createElement('div');
+    statQDiv.classList.add('input-field', 'col', 's8');
+    qDiv.appendChild(statQDiv);
+    const qSel = document.createElement('select');
+    statQDiv.appendChild(qSel);
+    let qFirst = true;
+    const qCis = [
+        '75.00%/0.2500',
+        '80.00%/0.2000',
+        '85.00%/0.1500',
+        '90.00%/0.1000',
+        '95.00%/0.0500',
+        '97.50%/0.0250',
+        '99.00%/0.0100',
+        '99.50%/0.0050',
+        '99.90%/0.0010',
+        '99.95%/0.0005'
+    ];
+    for (const c of qCis) {
+        const opt = document.createElement('option');
+        opt.value = c;
+        opt.textContent = c;
+        if (qFirst) {
+            opt.selected = true;
+            qFirst = false;
+        }
+        qSel.appendChild(opt);
+    }
     const btnDiv = document.createElement('div');
     btnDiv.classList.add('container', 'center');
     statInpForm.appendChild(btnDiv);

@@ -38,6 +38,37 @@ function statSanInp(inpStr) {
     }
     return [sanVals, sanInps];
 }
+function calcNc(n, l, u) {
+    const r = n - l - u;
+    let os = [l, u, r].sort();
+    const m = os.pop();
+    let result = [...Array(n - m + 1).keys()].map((val) => val + m).reduce((acc, cur) => acc * cur, 1);
+    for (const o of os)
+        result /= [...Array(o - 1).keys()].map((val) => val + 1).reduce((acc, cur) => acc * cur, 1);
+    result /= Math.pow(2 * Math.PI, 1.5);
+    return result;
+}
+function calcP(r, n, l, u) {
+    const nc = calcNc(n, l, u);
+    return 0;
+}
+function calcQScore(n, p, l, u) {
+    let rL = 0;
+    let rH = 1;
+    let r = (rL + rH) / 2;
+    let rP = calcP(r, n, l, u);
+    for (let i = 0; i < 200; i++) {
+        if (Math.abs(rP - p) <= Number.EPSILON)
+            break;
+        r = (rL + rH) / 2;
+        rP = calcP(r, n, l, u);
+        if (rP > p)
+            rH = r;
+        else
+            rL = r;
+    }
+    return r;
+}
 function statCalc() {
     const inpStr = statInp.value;
     const [sanValStrs, sanInpStrs] = statSanInp(inpStr);
@@ -73,7 +104,7 @@ function statCalc() {
         document.getElementById('stats2').value = variance.toString();
         sd = Math.sqrt(variance);
         document.getElementById('stats').value = sd.toString();
-        const ciInp = statCiDiv.childNodes[0].childNodes[0];
+        const ciInp = statTDiv.childNodes[0].childNodes[0];
         const alpha = +ciInp.value.split('/')[2];
         const t = jStat.studentt.inv(1 - alpha, n - 1);
         document.getElementById('statt').value = t.toString();
