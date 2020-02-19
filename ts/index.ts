@@ -426,6 +426,7 @@ function parse(): void {
 }
 
 document.addEventListener('DOMContentLoaded', (): void => {
+    document.getElementById('no-script')!.style.display = 'none';
     // Set in/out divs
     inDiv = <HTMLDivElement>document.getElementById('indiv');
     outDiv = <HTMLDivElement>document.getElementById('outdiv');
