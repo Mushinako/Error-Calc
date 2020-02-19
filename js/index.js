@@ -287,6 +287,7 @@ function parse() {
     }
 }
 document.addEventListener('DOMContentLoaded', () => {
+    document.getElementById('no-script').style.display = 'none';
     inDiv = document.getElementById('indiv');
     outDiv = document.getElementById('outdiv');
     helpDiv = document.getElementById('helpdiv');
