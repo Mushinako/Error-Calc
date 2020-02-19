@@ -19,7 +19,7 @@ function statSanInp(inpStr) {
             const formula = JSON.parse(ans)[0];
             const nums = formula.split(';');
             sanVals = sanVals.concat(nums);
-            sanInps.push(ans);
+            sanInps.push(ansKey);
         }
         else if (['Err', 'Lin'].includes(inp.slice(0, 3))) {
             alert('\"Err\" and \"Lin\" are not allowed!');
@@ -59,13 +59,27 @@ function statCalc() {
     document.getElementById('statxbar').value = avg.toString();
     const sumSquaredDiff = sanInps.reduce((acc, cur) => acc + Math.pow(avg - cur, 2), 0);
     const variance = sumSquaredDiff / (n - 1);
-    document.getElementById('stats2').value = variance.toString();
-    const sd = Math.sqrt(variance);
-    document.getElementById('stats').value = sd.toString();
-    document.getElementById('statt').value = 'Not implemented yet';
-    document.getElementById('statts').value = 'Not implemented yet';
     const qTextarea = document.getElementById('statq');
-    qTextarea.value = 'Not implemented yet';
+    let sd;
+    if (isNaN(variance)) {
+        document.getElementById('stats2').value = 'N/A';
+        sd = 0;
+        document.getElementById('stats').value = 'N/A';
+        document.getElementById('statt').value = 'N/A';
+        document.getElementById('statts').value = 'N/A';
+        qTextarea.value = 'No more data can be removed. Removing 1 more data point will remove 100% of all data.';
+    }
+    else {
+        document.getElementById('stats2').value = variance.toString();
+        sd = Math.sqrt(variance);
+        document.getElementById('stats').value = sd.toString();
+        const ciInp = statCiDiv.childNodes[0].childNodes[0];
+        const alpha = +ciInp.value.split('/')[2];
+        const t = jStat.studentt.inv(1 - alpha, n - 1);
+        document.getElementById('statt').value = t.toString();
+        document.getElementById('statts').value = (t * sd).toString();
+        qTextarea.value = 'Not implemented yet';
+    }
     M.textareaAutoResize(qTextarea);
     const sigFig = Math.max(...sanValStrs.map((val) => numAccuracy(val)));
     if (!check)

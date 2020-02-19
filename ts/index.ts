@@ -12,6 +12,7 @@
 // Ignore. Typescript nuiances
 declare var MathJax: MathJax;
 declare const M: Materialize;
+declare const jStat: jStat;
 
 interface MathJax {
     typeset?(): void,
@@ -24,6 +25,12 @@ interface Materialize {
     textareaAutoResize(textarea: HTMLTextAreaElement): void,
     FormSelect: {
         init(elems: any[], options?: Record<string, any>): void;
+    }
+}
+
+interface jStat {
+    studentt: {
+        inv(p: number, dof: number): number
     }
 }
 

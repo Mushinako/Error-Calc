@@ -6,6 +6,7 @@
  * - Calculation
  */
 
+
 /**
  * Sanitize statistics input
  * 
@@ -34,7 +35,7 @@ function statSanInp(inpStr: string): [string[], string[]] {
             const formula: string = JSON.parse(ans)[0];
             const nums: string[] = formula.split(';');
             sanVals = sanVals.concat(nums);
-            sanInps.push(ans);
+            sanInps.push(ansKey);
         } else if (['Err', 'Lin'].includes(inp.slice(0, 3))) {
             alert('\"Err\" and \"Lin\" are not allowed!');
             continue;
@@ -50,6 +51,7 @@ function statSanInp(inpStr: string): [string[], string[]] {
     }
     return [sanVals, sanInps];
 }
+
 
 /**
  * Calculate one-variable statistics
@@ -81,17 +83,30 @@ function statCalc(): void {
     // s^2
     const sumSquaredDiff: number = sanInps.reduce((acc: number, cur: number): number => acc + Math.pow(avg - cur, 2), 0);
     const variance: number = sumSquaredDiff / (n - 1);
-    (<HTMLInputElement>document.getElementById('stats2')).value = variance.toString();
-    // s
-    const sd: number = Math.sqrt(variance);
-    (<HTMLInputElement>document.getElementById('stats')).value = sd.toString();
-    // t
-    (<HTMLInputElement>document.getElementById('statt')).value = 'Not implemented yet';
-    // ts
-    (<HTMLInputElement>document.getElementById('statts')).value = 'Not implemented yet';
-    // q
     const qTextarea: HTMLTextAreaElement = <HTMLTextAreaElement>document.getElementById('statq');
-    qTextarea.value = 'Not implemented yet';
+    let sd: number;
+    if (isNaN(variance)) {
+        (<HTMLInputElement>document.getElementById('stats2')).value = 'N/A';
+        sd = 0;
+        (<HTMLInputElement>document.getElementById('stats')).value = 'N/A';
+        (<HTMLInputElement>document.getElementById('statt')).value = 'N/A';
+        (<HTMLInputElement>document.getElementById('statts')).value = 'N/A';
+        qTextarea.value = 'No more data can be removed. Removing 1 more data point will remove 100% of all data.';
+    } else {
+        (<HTMLInputElement>document.getElementById('stats2')).value = variance.toString();
+        // s
+        sd = Math.sqrt(variance);
+        (<HTMLInputElement>document.getElementById('stats')).value = sd.toString();
+        // t
+        const ciInp: HTMLInputElement = <HTMLInputElement>statCiDiv.childNodes[0].childNodes[0];
+        const alpha: number = +ciInp.value.split('/')[2];
+        const t: number = jStat.studentt.inv(1 - alpha, n - 1);
+        (<HTMLInputElement>document.getElementById('statt')).value = t.toString();
+        // ts
+        (<HTMLInputElement>document.getElementById('statts')).value = (t * sd).toString();
+        // q
+        qTextarea.value = 'Not implemented yet';
+    }
     M.textareaAutoResize(qTextarea);
     // SigFig
     const sigFig: number = Math.max(...sanValStrs.map((val: string): number => numAccuracy(val)));

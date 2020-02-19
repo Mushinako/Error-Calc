@@ -18,3 +18,4 @@ As much as I'm confident in my algorithms, I do not guarantee the accuracies of 
 
 * [Materialize](https://materializecss.com/), MIT license
 * [MathJax](https://www.mathjax.org/), Apache 2.0 license
+* [jStat](http://jstat.github.io/), MIT license

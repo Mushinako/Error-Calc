@@ -1,5 +1,5 @@
 "use strict";
-const cacheName = 'commit-76';
+const cacheName = 'commit-77';
 const filesToCache = [
     'index.html',
     'css/index.css',
@@ -18,6 +18,7 @@ const filesToCache = [
     'js/lreg/lreg-main.js',
     'js/MathJax-loader.js',
     'js/pwa.js',
+    'lib/jstat.min.js',
     'lib/materialize.min.css',
     'lib/materialize.min.js',
     'lib/tex-chtml.js',

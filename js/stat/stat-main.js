@@ -147,6 +147,7 @@ function statInit() {
     const notes = [
         'All the results are stored locally, meaning that all data will be lost if the site data for this webpage is cleared',
         'This program will try to parse any unrecognizable data. The parsed output will be shown in the \"Parsed\" area',
+        'To recall data or calculate different t\'s without saving a duplicate, type the Ans key (e.g., \"Var2\") in the input and click calculate',
         'Input one number on each line',
         'If copying a column of data from excel, directly paste into the input'
     ];
@@ -157,8 +158,8 @@ function statInit() {
         'Shift+Tab': 'Previous input/element',
         '↓': 'Next dropdown choice',
         '↑': 'Previous dropdown choice',
-        'h': 'Change to \"Err Prop\" calculations (no use)',
-        'j': 'Change to \"1-Var Stat\" calculation',
+        'h': 'Change to \"Err Prop\" calculations',
+        'j': 'Change to \"1-Var Stat\" calculation (no use)',
         'k': 'Change to \"Lin Reg\" calculation'
     };
     const formats = {
