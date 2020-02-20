@@ -189,12 +189,13 @@ function tOperInputDiv(rows: string[]): HTMLDivElement[] {
  * 
  * @param   {string} lbl     - The label for the switch
  * @param   {string} hint    - Tooltip content
+ * @param   {number} width   - Width of the element
  * @returns {HTMLDivElement} - The div containing the switch
  */
-function createSwitch(lbl: string, hint: string): [HTMLDivElement, HTMLInputElement] {
+function createSwitch(lbl: string, hint: string, width: number): [HTMLDivElement, HTMLInputElement] {
     // Outer div
     const div: HTMLDivElement = document.createElement('div');
-    div.classList.add('switch', 'center', 'tooltipped', 'col', 's6');
+    div.classList.add('switch', 'center', 'tooltipped', 'col', `s${width}`);
     div.setAttribute('data-position', 'bottom');
     div.setAttribute('data-tooltip', hint);
     // Create label
@@ -223,12 +224,12 @@ function createSwitches(): HTMLDivElement {
     div.classList.add('row');
     // SigFig switch
     let sfDiv: HTMLDivElement;
-    [sfDiv, sigFigInp] = createSwitch('Calculate SigFigs', 'Experimental. Turn on to calculate SigFigs');
+    [sfDiv, sigFigInp] = createSwitch('Calculate SigFigs', 'Turn on to calculate SigFigs', 6);
     sigFigInp.checked = false;
     div.appendChild(sfDiv);
     // SigFig+2 switch
     let sf2Div: HTMLDivElement;
-    [sf2Div, sigFig2Inp] = createSwitch('2 more SigFigs', 'Experimental. Turn on to produce 2 more SigFigs');
+    [sf2Div, sigFig2Inp] = createSwitch('2 more SigFigs', 'Turn on to produce 2 more SigFigs', 6);
     sigFig2Inp.checked = false;
     sigFig2Inp.disabled = true;
     div.appendChild(sf2Div);

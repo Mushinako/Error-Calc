@@ -200,7 +200,7 @@ function displayAns() {
         sigFig = sigFigInp.checked;
         sigFig2 = sigFig2Inp.checked;
     }
-    let ids = [];
+    const ids = [];
     clearChildren(outDiv);
     const tbl = document.createElement('table');
     tbl.classList.add('highlight', 'responsive-table', 'centered', 'margin-bottom');

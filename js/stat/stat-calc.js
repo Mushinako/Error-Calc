@@ -109,7 +109,6 @@ function statCalc() {
         const t = jStat.studentt.inv(1 - alpha, n - 1);
         document.getElementById('statt').value = t.toString();
         document.getElementById('statts').value = (t * sd).toString();
-        qTextarea.value = 'Not implemented yet';
     }
     M.textareaAutoResize(qTextarea);
     const sigFig = Math.max(...sanValStrs.map((val) => numAccuracy(val)));

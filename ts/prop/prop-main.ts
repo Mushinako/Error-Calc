@@ -81,7 +81,7 @@ function keyProp(ev: KeyboardEvent): void {
     const funcKeys: string[] = ['h', 'j', 'k'];
     const funcI: number = funcKeys.indexOf(ev.key.toLowerCase());
     if (funcI > -1) {
-        // b-m: Functions
+        // h-k: Functions
         ev.preventDefault();
         const btns: HTMLElement[] = ['prop', 'stat', 'lreg'].map((val: string): HTMLElement => <HTMLElement>document.getElementById(val));
         (<HTMLAnchorElement>btns[funcI]).click();

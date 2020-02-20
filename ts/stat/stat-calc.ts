@@ -149,7 +149,7 @@ function statCalc(): void {
         // ts
         (<HTMLInputElement>document.getElementById('statts')).value = (t * sd).toString();
         // q
-        qTextarea.value = 'Not implemented yet';
+        // qTextarea.value = 'Not implemented yet';
     }
     M.textareaAutoResize(qTextarea);
     // SigFig

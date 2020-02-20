@@ -333,7 +333,7 @@ function displayAns(): void {
         sigFig2 = (<HTMLInputElement>sigFig2Inp!).checked;
     }
     // List of Ans IDs present
-    let ids: number[] = [];
+    const ids: number[] = [];
     // Clear and reassemble table
     clearChildren(outDiv);
     const tbl: HTMLTableElement = document.createElement('table');

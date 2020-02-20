@@ -34,7 +34,7 @@ function keyStat(ev: KeyboardEvent): void {
     const funcKeys: string[] = ['h', 'j', 'k'];
     const funcI: number = funcKeys.indexOf(ev.key.toLowerCase());
     if (funcI > -1) {
-        // b-m: Functions
+        // h-k: Functions
         ev.preventDefault();
         const btns: HTMLElement[] = ['prop', 'stat', 'lreg'].map((val: string): HTMLElement => <HTMLElement>document.getElementById(val));
         (<HTMLAnchorElement>btns[funcI]).click();
@@ -58,29 +58,29 @@ function statInit(): void {
     const ttlElmt: HTMLHeadingElement = createTtl('One-Variable Statistics');
     inDiv.appendChild(ttlElmt);
     // Set input
-    const statInpOutDiv: HTMLDivElement = document.createElement('div');
-    inDiv.appendChild(statInpOutDiv);
-    const statInpForm: HTMLFormElement = document.createElement('form');
-    statInpOutDiv.appendChild(statInpForm);
-    const statInpsDiv: HTMLDivElement = document.createElement('div');
-    statInpsDiv.classList.add('row');
-    statInpForm.appendChild(statInpsDiv);
+    const inpOutDiv: HTMLDivElement = document.createElement('div');
+    inDiv.appendChild(inpOutDiv);
+    const inpForm: HTMLFormElement = document.createElement('form');
+    inpOutDiv.appendChild(inpForm);
+    const inpsDiv: HTMLDivElement = document.createElement('div');
+    inpsDiv.classList.add('row');
+    inpForm.appendChild(inpsDiv);
     // Input div
-    const statInpDiv: HTMLDivElement = document.createElement('div');
-    statInpDiv.classList.add('col', 's12', 'm6');
-    statInpsDiv.appendChild(statInpDiv);
+    const inpDiv: HTMLDivElement = document.createElement('div');
+    inpDiv.classList.add('col', 's12', 'm6');
+    inpsDiv.appendChild(inpDiv);
     // Label
     const lblDiv: HTMLDivElement = document.createElement('div');
     lblDiv.classList.add('center', 'col', 's12');
-    statInpDiv.appendChild(lblDiv);
+    inpDiv.appendChild(lblDiv);
     const lblBtn: HTMLAnchorElement = document.createElement('a');
     lblBtn.classList.add('btn-flat', 'no-click');
     lblBtn.textContent = 'x';
     lblDiv.appendChild(lblBtn);
     // Input textarea
-    const inpDiv: HTMLDivElement = document.createElement('div');
-    inpDiv.classList.add('col', 's12', 'input-field');
-    statInpDiv.appendChild(inpDiv);
+    const inpTextDiv: HTMLDivElement = document.createElement('div');
+    inpTextDiv.classList.add('col', 's12', 'input-field');
+    inpDiv.appendChild(inpTextDiv);
     statInp = document.createElement('textarea');
     statInp.classList.add('materialize-textarea');
     statInp.spellcheck = false;
@@ -91,31 +91,31 @@ function statInit(): void {
     statInp.addEventListener('keydown', (ev: KeyboardEvent): void => {
         if (statInp.value === 'Var' && ev.key === 'Backspace') statInp.value = '';
     });
-    inpDiv.appendChild(statInp);
+    inpTextDiv.appendChild(statInp);
     // Parsed div
-    const statInpDiv2: HTMLDivElement = document.createElement('div');
-    statInpDiv2.classList.add('col', 's12', 'm6');
-    statInpsDiv.appendChild(statInpDiv2);
+    const inpDiv2: HTMLDivElement = document.createElement('div');
+    inpDiv2.classList.add('col', 's12', 'm6');
+    inpsDiv.appendChild(inpDiv2);
     // Label
     const lblDiv2: HTMLDivElement = document.createElement('div');
     lblDiv2.classList.add('center', 'col', 's12');
-    statInpDiv2.appendChild(lblDiv2);
+    inpDiv2.appendChild(lblDiv2);
     const lblBtn2: HTMLAnchorElement = document.createElement('a');
     lblBtn2.classList.add('btn-flat', 'no-click');
     lblBtn2.textContent = 'Parsed';
     lblDiv2.appendChild(lblBtn2);
     // Input textarea
-    const inpDiv2: HTMLDivElement = document.createElement('div');
-    inpDiv2.classList.add('col', 's12', 'input-field');
-    statInpDiv2.appendChild(inpDiv2);
+    const inpTextDiv2: HTMLDivElement = document.createElement('div');
+    inpTextDiv2.classList.add('col', 's12', 'input-field');
+    inpDiv2.appendChild(inpTextDiv2);
     statInp2 = document.createElement('textarea');
     statInp2.classList.add('materialize-textarea');
     statInp2.disabled = true;
-    inpDiv2.appendChild(statInp2);
+    inpTextDiv2.appendChild(statInp2);
     // Choices
     const choicesDiv: HTMLDivElement = document.createElement('div');
     choicesDiv.classList.add('row');
-    statInpForm.appendChild(choicesDiv);
+    inpForm.appendChild(choicesDiv);
     // T-test
     const tDiv: HTMLDivElement = document.createElement('div');
     tDiv.classList.add('col', 's12', 'm6');
@@ -174,12 +174,11 @@ function statInit(): void {
     statQDiv.classList.add('input-field', 'col', 's8');
     qDiv.appendChild(statQDiv);
     const qSel: HTMLSelectElement = document.createElement('select');
+    qSel.disabled = true;
     statQDiv.appendChild(qSel);
     let qFirst: boolean = true;
     const qCis: string[] = [
-        '75.00%/0.2500',
-        '80.00%/0.2000',
-        '85.00%/0.1500',
+        'Not implemented yet',
         '90.00%/0.1000',
         '95.00%/0.0500',
         '97.50%/0.0250',
@@ -201,16 +200,16 @@ function statInit(): void {
     // Calculate button
     const btnDiv: HTMLDivElement = document.createElement('div');
     btnDiv.classList.add('container', 'center');
-    statInpForm.appendChild(btnDiv);
+    inpForm.appendChild(btnDiv);
     btnDiv.appendChild(createCalcBtn(statCalc));
     // Append horizontal line
     appendHr(inDiv);
     // Output
-    const statOutOutDiv: HTMLDivElement = document.createElement('div');
-    outDiv.appendChild(statOutOutDiv);
-    const statOutForm: HTMLFormElement = document.createElement('form');
-    statOutOutDiv.classList.add('row');
-    statOutOutDiv.appendChild(statOutForm);
+    const outOutDiv: HTMLDivElement = document.createElement('div');
+    outDiv.appendChild(outOutDiv);
+    const outForm: HTMLFormElement = document.createElement('form');
+    outOutDiv.classList.add('row');
+    outOutDiv.appendChild(outForm);
     const outputsHalf: Record<string, string> = {
         'n': 'n',
         'xbar': '\\bar{x}',
@@ -219,11 +218,12 @@ function statInit(): void {
         't': 't',
         'ts': 't\\cdot s'
     };
-    for (const [name, formula] of Object.entries(outputsHalf)) statOutForm.appendChild(createStatOutputHalfDiv(name, formula));
+    for (const [name, formula] of Object.entries(outputsHalf)) outForm.appendChild(createStatOutputHalfDiv(name, formula));
     const outputsFull: Record<string, string> = {
         'q': 'Q\\text{-test}'
     };
-    for (const [name, formula] of Object.entries(outputsFull)) statOutForm.appendChild(createStatOutputFullDiv(name, formula));
+    for (const [name, formula] of Object.entries(outputsFull)) outForm.appendChild(createStatOutputFullDiv(name, formula));
+    (<HTMLInputElement>document.getElementById('statq')).value = 'Not implemented yet';
     // Help
     const notes: string[] = [
         'All the results are stored locally, meaning that all data will be lost if the site data for this webpage is cleared',
@@ -245,7 +245,8 @@ function statInit(): void {
     };
     const formats: Record<string, string[]> = {
         'Numbers': ['3.1415926', '-2020', '.57721'],
-        'E-notations': ['8e7', '.9109383e-30', '1.416808e32']
+        'E-notations': ['8e7', '.9109383e-30', '1.416808e32'],
+        'Previous Answers': ['Var1', 'Var3', 'Var15']
     };
     const formatNote: string[] = [
         'All empty lines are ignored',

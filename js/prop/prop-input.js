@@ -115,9 +115,9 @@ function tOperInputDiv(rows) {
     });
     return [baseRow, expRow];
 }
-function createSwitch(lbl, hint) {
+function createSwitch(lbl, hint, width) {
     const div = document.createElement('div');
-    div.classList.add('switch', 'center', 'tooltipped', 'col', 's6');
+    div.classList.add('switch', 'center', 'tooltipped', 'col', `s${width}`);
     div.setAttribute('data-position', 'bottom');
     div.setAttribute('data-tooltip', hint);
     const label = document.createElement('label');
@@ -135,11 +135,11 @@ function createSwitches() {
     const div = document.createElement('div');
     div.classList.add('row');
     let sfDiv;
-    [sfDiv, sigFigInp] = createSwitch('Calculate SigFigs', 'Experimental. Turn on to calculate SigFigs');
+    [sfDiv, sigFigInp] = createSwitch('Calculate SigFigs', 'Turn on to calculate SigFigs', 6);
     sigFigInp.checked = false;
     div.appendChild(sfDiv);
     let sf2Div;
-    [sf2Div, sigFig2Inp] = createSwitch('2 more SigFigs', 'Experimental. Turn on to produce 2 more SigFigs');
+    [sf2Div, sigFig2Inp] = createSwitch('2 more SigFigs', 'Turn on to produce 2 more SigFigs', 6);
     sigFig2Inp.checked = false;
     sigFig2Inp.disabled = true;
     div.appendChild(sf2Div);

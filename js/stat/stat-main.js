@@ -33,26 +33,26 @@ function statInit() {
     clearChildren(helpDiv);
     const ttlElmt = createTtl('One-Variable Statistics');
     inDiv.appendChild(ttlElmt);
-    const statInpOutDiv = document.createElement('div');
-    inDiv.appendChild(statInpOutDiv);
-    const statInpForm = document.createElement('form');
-    statInpOutDiv.appendChild(statInpForm);
-    const statInpsDiv = document.createElement('div');
-    statInpsDiv.classList.add('row');
-    statInpForm.appendChild(statInpsDiv);
-    const statInpDiv = document.createElement('div');
-    statInpDiv.classList.add('col', 's12', 'm6');
-    statInpsDiv.appendChild(statInpDiv);
+    const inpOutDiv = document.createElement('div');
+    inDiv.appendChild(inpOutDiv);
+    const inpForm = document.createElement('form');
+    inpOutDiv.appendChild(inpForm);
+    const inpsDiv = document.createElement('div');
+    inpsDiv.classList.add('row');
+    inpForm.appendChild(inpsDiv);
+    const inpDiv = document.createElement('div');
+    inpDiv.classList.add('col', 's12', 'm6');
+    inpsDiv.appendChild(inpDiv);
     const lblDiv = document.createElement('div');
     lblDiv.classList.add('center', 'col', 's12');
-    statInpDiv.appendChild(lblDiv);
+    inpDiv.appendChild(lblDiv);
     const lblBtn = document.createElement('a');
     lblBtn.classList.add('btn-flat', 'no-click');
     lblBtn.textContent = 'x';
     lblDiv.appendChild(lblBtn);
-    const inpDiv = document.createElement('div');
-    inpDiv.classList.add('col', 's12', 'input-field');
-    statInpDiv.appendChild(inpDiv);
+    const inpTextDiv = document.createElement('div');
+    inpTextDiv.classList.add('col', 's12', 'input-field');
+    inpDiv.appendChild(inpTextDiv);
     statInp = document.createElement('textarea');
     statInp.classList.add('materialize-textarea');
     statInp.spellcheck = false;
@@ -64,27 +64,27 @@ function statInit() {
         if (statInp.value === 'Var' && ev.key === 'Backspace')
             statInp.value = '';
     });
-    inpDiv.appendChild(statInp);
-    const statInpDiv2 = document.createElement('div');
-    statInpDiv2.classList.add('col', 's12', 'm6');
-    statInpsDiv.appendChild(statInpDiv2);
+    inpTextDiv.appendChild(statInp);
+    const inpDiv2 = document.createElement('div');
+    inpDiv2.classList.add('col', 's12', 'm6');
+    inpsDiv.appendChild(inpDiv2);
     const lblDiv2 = document.createElement('div');
     lblDiv2.classList.add('center', 'col', 's12');
-    statInpDiv2.appendChild(lblDiv2);
+    inpDiv2.appendChild(lblDiv2);
     const lblBtn2 = document.createElement('a');
     lblBtn2.classList.add('btn-flat', 'no-click');
     lblBtn2.textContent = 'Parsed';
     lblDiv2.appendChild(lblBtn2);
-    const inpDiv2 = document.createElement('div');
-    inpDiv2.classList.add('col', 's12', 'input-field');
-    statInpDiv2.appendChild(inpDiv2);
+    const inpTextDiv2 = document.createElement('div');
+    inpTextDiv2.classList.add('col', 's12', 'input-field');
+    inpDiv2.appendChild(inpTextDiv2);
     statInp2 = document.createElement('textarea');
     statInp2.classList.add('materialize-textarea');
     statInp2.disabled = true;
-    inpDiv2.appendChild(statInp2);
+    inpTextDiv2.appendChild(statInp2);
     const choicesDiv = document.createElement('div');
     choicesDiv.classList.add('row');
-    statInpForm.appendChild(choicesDiv);
+    inpForm.appendChild(choicesDiv);
     const tDiv = document.createElement('div');
     tDiv.classList.add('col', 's12', 'm6');
     choicesDiv.appendChild(tDiv);
@@ -137,12 +137,11 @@ function statInit() {
     statQDiv.classList.add('input-field', 'col', 's8');
     qDiv.appendChild(statQDiv);
     const qSel = document.createElement('select');
+    qSel.disabled = true;
     statQDiv.appendChild(qSel);
     let qFirst = true;
     const qCis = [
-        '75.00%/0.2500',
-        '80.00%/0.2000',
-        '85.00%/0.1500',
+        'Not implemented yet',
         '90.00%/0.1000',
         '95.00%/0.0500',
         '97.50%/0.0250',
@@ -163,14 +162,14 @@ function statInit() {
     }
     const btnDiv = document.createElement('div');
     btnDiv.classList.add('container', 'center');
-    statInpForm.appendChild(btnDiv);
+    inpForm.appendChild(btnDiv);
     btnDiv.appendChild(createCalcBtn(statCalc));
     appendHr(inDiv);
-    const statOutOutDiv = document.createElement('div');
-    outDiv.appendChild(statOutOutDiv);
-    const statOutForm = document.createElement('form');
-    statOutOutDiv.classList.add('row');
-    statOutOutDiv.appendChild(statOutForm);
+    const outOutDiv = document.createElement('div');
+    outDiv.appendChild(outOutDiv);
+    const outForm = document.createElement('form');
+    outOutDiv.classList.add('row');
+    outOutDiv.appendChild(outForm);
     const outputsHalf = {
         'n': 'n',
         'xbar': '\\bar{x}',
@@ -180,12 +179,13 @@ function statInit() {
         'ts': 't\\cdot s'
     };
     for (const [name, formula] of Object.entries(outputsHalf))
-        statOutForm.appendChild(createStatOutputHalfDiv(name, formula));
+        outForm.appendChild(createStatOutputHalfDiv(name, formula));
     const outputsFull = {
         'q': 'Q\\text{-test}'
     };
     for (const [name, formula] of Object.entries(outputsFull))
-        statOutForm.appendChild(createStatOutputFullDiv(name, formula));
+        outForm.appendChild(createStatOutputFullDiv(name, formula));
+    document.getElementById('statq').value = 'Not implemented yet';
     const notes = [
         'All the results are stored locally, meaning that all data will be lost if the site data for this webpage is cleared',
         'This program will try to parse any unrecognizable data. The parsed output will be shown in the \"Parsed\" area',
@@ -206,7 +206,8 @@ function statInit() {
     };
     const formats = {
         'Numbers': ['3.1415926', '-2020', '.57721'],
-        'E-notations': ['8e7', '.9109383e-30', '1.416808e32']
+        'E-notations': ['8e7', '.9109383e-30', '1.416808e32'],
+        'Previous Answers': ['Var1', 'Var3', 'Var15']
     };
     const formatNote = [
         'All empty lines are ignored',
