@@ -11,6 +11,7 @@
 let lregInp: HTMLTextAreaElement;
 let lregInp2: HTMLTableSectionElement;
 let lregInpIntercept: HTMLInputElement;
+let lregInpSci: HTMLInputElement;
 
 /**
  * Linear regression keyboard shortcuts
@@ -24,7 +25,7 @@ function keyLreg(ev: KeyboardEvent): void {
         if (ev.shiftKey) {
             // Shift+Enter: Run calculation
             ev.preventDefault();
-            statCalc();
+            lregCalc();
         }
         return;
     }
@@ -122,12 +123,24 @@ function lregInit(): void {
     btnDiv.appendChild(createCalcBtn(lregCalc));
     // Append horizontal line
     appendHr(inDiv);
+    // Switches
+    let switches: HTMLDivElement = document.createElement('div');
+    switches.classList.add('row');
+    inDiv.appendChild(switches);
     // Intercept switch
     let intDiv: HTMLDivElement;
-    [intDiv, lregInpIntercept] = createSwitch('0 intercept', 'Turn on to fix y-intercept to 0', 12);
+    [intDiv, lregInpIntercept] = createSwitch('0 intercept', 'Turn on to fix y-intercept to 0', 6);
     lregInpIntercept.checked = false;
-    lregInpIntercept.addEventListener('change', lregCalc);
-    inDiv.appendChild(intDiv);
+    lregInpIntercept.disabled = true;
+    // lregInpIntercept.addEventListener('change', lregCalc);
+    switches.appendChild(intDiv);
+    // Scientific notation switch
+    let sciDiv: HTMLDivElement;
+    [sciDiv, lregInpSci] = createSwitch('Scientific notation', 'Turn on to display scientific notation for numbers not easy to read', 6);
+    lregInpSci.checked = false;
+    lregInpSci.disabled = true;
+    // lregInpSci.addEventListener('change', lregCalc);
+    switches.appendChild(lregInpSci);
     // Output
     const outOutDiv: HTMLDivElement = document.createElement('div');
     outDiv.appendChild(outOutDiv);
@@ -144,14 +157,14 @@ function lregInit(): void {
         'f': ['f', 'F-statistic'],
         'df': ['df', 'Degrees of freedom']
     };
-    for (const [name, data] of Object.entries(outputsHalf)) outForm.appendChild(createOutputHalfDiv(name, ...data));
+    for (const [name, data] of Object.entries(outputsHalf)) outForm.appendChild(createOutputHalfDiv(name, 'lreg', ...data));
     // Help
     const notes: string[] = [
         'All the results are stored locally, meaning that all data will be lost if the site data for this webpage is cleared',
         'This program will try to parse any unrecognizable data. The parsed output will be shown in the table on the right',
         'To recall data without saving a duplicate, type the Ans key (e.g., \"Lin2\") in the input and click \"Calculate\"',
         'Input two numbers (x and y) on each line, space-separated',
-        'If copying two columns of data from excel, directly paste into the input'
+        'If copying columns of data from excel, directly paste into the input. The first column is treated as x, and the last column is treated as y'
     ];
     const shortcuts: Record<string, string> = {
         'Enter': 'New line; Open dropdown; Confirm choice',

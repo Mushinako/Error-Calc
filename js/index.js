@@ -22,7 +22,7 @@ function createCalcBtn(calc) {
     btn.addEventListener('click', calc);
     return btn;
 }
-function createOutputHalfDiv(name, formula, hint) {
+function createOutputHalfDiv(name, func, formula, hint) {
     const div = document.createElement('div');
     div.classList.add('col', 's12', 'm6', 'input-field');
     const lblDiv = document.createElement('div');
@@ -34,7 +34,7 @@ function createOutputHalfDiv(name, formula, hint) {
     const output = document.createElement('input');
     output.classList.add('col', 's10');
     output.type = 'text';
-    output.id = `stat${name}`;
+    output.id = `${func}${name}`;
     output.disabled = true;
     div.appendChild(output);
     return div;

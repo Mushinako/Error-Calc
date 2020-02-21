@@ -2,13 +2,14 @@
 let lregInp;
 let lregInp2;
 let lregInpIntercept;
+let lregInpSci;
 function keyLreg(ev) {
     if (ev.altKey || ev.metaKey || ev.ctrlKey)
         return;
     if (ev.key === 'Enter' || ev.key === '\n') {
         if (ev.shiftKey) {
             ev.preventDefault();
-            statCalc();
+            lregCalc();
         }
         return;
     }
@@ -89,11 +90,19 @@ function lregInit() {
     inpForm.appendChild(btnDiv);
     btnDiv.appendChild(createCalcBtn(lregCalc));
     appendHr(inDiv);
+    let switches = document.createElement('div');
+    switches.classList.add('row');
+    inDiv.appendChild(switches);
     let intDiv;
-    [intDiv, lregInpIntercept] = createSwitch('0 intercept', 'Turn on to fix y-intercept to 0', 12);
+    [intDiv, lregInpIntercept] = createSwitch('0 intercept', 'Turn on to fix y-intercept to 0', 6);
     lregInpIntercept.checked = false;
-    lregInpIntercept.addEventListener('change', lregCalc);
-    inDiv.appendChild(intDiv);
+    lregInpIntercept.disabled = true;
+    switches.appendChild(intDiv);
+    let sciDiv;
+    [sciDiv, lregInpSci] = createSwitch('Scientific notation', 'Turn on to display scientific notation for numbers not easy to read', 6);
+    lregInpSci.checked = false;
+    lregInpSci.disabled = true;
+    switches.appendChild(lregInpSci);
     const outOutDiv = document.createElement('div');
     outDiv.appendChild(outOutDiv);
     const outForm = document.createElement('form');
@@ -110,13 +119,13 @@ function lregInit() {
         'df': ['df', 'Degrees of freedom']
     };
     for (const [name, data] of Object.entries(outputsHalf))
-        outForm.appendChild(createOutputHalfDiv(name, ...data));
+        outForm.appendChild(createOutputHalfDiv(name, 'lreg', ...data));
     const notes = [
         'All the results are stored locally, meaning that all data will be lost if the site data for this webpage is cleared',
         'This program will try to parse any unrecognizable data. The parsed output will be shown in the table on the right',
         'To recall data without saving a duplicate, type the Ans key (e.g., \"Lin2\") in the input and click \"Calculate\"',
         'Input two numbers (x and y) on each line, space-separated',
-        'If copying two columns of data from excel, directly paste into the input'
+        'If copying columns of data from excel, directly paste into the input. The first column is treated as x, and the last column is treated as y'
     ];
     const shortcuts = {
         'Enter': 'New line; Open dropdown; Confirm choice',

@@ -84,11 +84,12 @@ function createCalcBtn(calc: () => void): HTMLAnchorElement {
  * Create single output div, half-width
  * 
  * @param   {string} name    - Name of output
+ * @param   {string} func    - 'stat' or 'lreg'
  * @param   {string} formula - Formula of output
  * @param   {string} hint    - Hint of output
  * @returns {HTMLDivElement} - The div element
  */
-function createOutputHalfDiv(name: string, formula: string, hint: string): HTMLDivElement {
+function createOutputHalfDiv(name: string, func: string, formula: string, hint: string): HTMLDivElement {
     const div: HTMLDivElement = document.createElement('div');
     div.classList.add('col', 's12', 'm6', 'input-field');
     // Label
@@ -102,7 +103,7 @@ function createOutputHalfDiv(name: string, formula: string, hint: string): HTMLD
     const output: HTMLInputElement = document.createElement('input');
     output.classList.add('col', 's10');
     output.type = 'text';
-    output.id = `stat${name}`;
+    output.id = `${func}${name}`;
     output.disabled = true;
     div.appendChild(output);
     // Return

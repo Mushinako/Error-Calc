@@ -218,7 +218,7 @@ function statInit(): void {
         't': ['t', 'T-score'],
         'ts': ['t\\cdot s', 'Product of t-score and sample standard deviation']
     };
-    for (const [name, data] of Object.entries(outputsHalf)) outForm.appendChild(createOutputHalfDiv(name, ...data));
+    for (const [name, data] of Object.entries(outputsHalf)) outForm.appendChild(createOutputHalfDiv(name, 'stat', ...data));
     const outputsFull: Record<string, [string, string]> = {
         'q': ['Q\\text{-test}', 'Q-test']
     };

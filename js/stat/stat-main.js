@@ -179,7 +179,7 @@ function statInit() {
         'ts': ['t\\cdot s', 'Product of t-score and sample standard deviation']
     };
     for (const [name, data] of Object.entries(outputsHalf))
-        outForm.appendChild(createOutputHalfDiv(name, ...data));
+        outForm.appendChild(createOutputHalfDiv(name, 'stat', ...data));
     const outputsFull = {
         'q': ['Q\\text{-test}', 'Q-test']
     };

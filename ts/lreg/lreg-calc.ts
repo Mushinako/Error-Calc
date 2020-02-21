@@ -41,7 +41,10 @@ function lregSanInp(inpStr: string): [string[][], string[]] {
             continue;
         } else {
             // No ans
-            const parsed: RegExpExecArray | null = /^([\+\-]?\d*(?:\.\d*)?(?:[Ee][\+\-]?\d+)?)[ \t]+([\+\-]?\d*(?:\.\d*)?(?:[Ee][\+\-]?\d+)?)(?:\D|$)/.exec(inp);
+            const separated: string[] = inp.split(/[ \t]+/);
+            if (separated.length < 2) continue;
+            const inp2: string = `${separated[0]};${separated[separated.length - 1]}`;
+            const parsed: RegExpExecArray | null = /^([\+\-]?\d*(?:\.\d*)?(?:[Ee][\+\-]?\d+)?);([\+\-]?\d*(?:\.\d*)?(?:[Ee][\+\-]?\d+)?)(?:\D|$)/.exec(inp2);
             if (parsed === null) continue;
             const parsedVals: string[] = [parsed[1], parsed[2]];
             if (parsedVals.includes('')) continue;
@@ -75,10 +78,100 @@ function lregCalc(): void {
             tr.appendChild(td);
         }
     }
+    // Show parsed output
     const name: string = `Var${ansCounter}`;
     if (!check) {
         const p: HTMLParagraphElement = document.createElement('p');
         p.textContent = `(Saved as \"${name}\")`;
         lregInp2.parentElement!.parentElement!.appendChild(p);
     }
+    // Calculations
+    const sanInps: number[][] = sanValStrs.map((val: string[]): number[] => val.map((v: string): number => +v));
+    // n
+    const n: number = sanInps.length;
+    // df
+    const df: number = n - 2;
+    (<HTMLInputElement>document.getElementById('lregdf')).value = df.toString();
+    // Intercept?
+    const zeroInt: boolean = lregInpIntercept.checked;
+    // m, b
+    let m: number;
+    let b: number;
+    let yAvg: number;
+    let x2Avg: number;
+    let xS2N: number = 0;
+    let yS2N: number = 0;
+    if (zeroInt) {
+        // Avgs
+        let xSum: number = 0;
+        let ySum: number = 0;
+        let x2Sum: number = 0;
+        let xySum: number = 0;
+        for (const [x, y] of sanInps) {
+            xSum += x;
+            ySum += y;
+            x2Sum += x * x;
+            xySum += x * y;
+        }
+        const xAvg: number = xSum / n;
+        yAvg = ySum / n;
+        x2Avg = x2Sum / n;
+        const xyAvg: number = xySum / n;
+        // Sum squared diff
+        for (const [x, y] of sanInps) {
+            const xDiff: number = x - xAvg;
+            const yDiff: number = y - yAvg;
+            xS2N += xDiff * xDiff;
+            yS2N += yDiff * yDiff;
+        }
+        m = xyAvg / x2Avg;
+        b = 0;
+    } else {
+        // Avgs
+        let xSum: number = 0;
+        let ySum: number = 0;
+        let x2Sum: number = 0;
+        for (const [x, y] of sanInps) {
+            xSum += x;
+            ySum += y;
+            x2Sum += x * x;
+        }
+        const xAvg: number = xSum / n;
+        yAvg = ySum / n;
+        x2Avg = x2Sum / n;
+        // Sum squared diff
+        let xySN: number = 0;
+        for (const [x, y] of sanInps) {
+            const xDiff: number = x - xAvg;
+            const yDiff: number = y - yAvg;
+            xS2N += xDiff * xDiff;
+            xySN += xDiff * yDiff;
+            yS2N += yDiff * yDiff;
+        }
+        m = xySN / xS2N;
+        b = yAvg - m * xAvg;
+    }
+    (<HTMLInputElement>document.getElementById('lregm')).value = m.toString();
+    (<HTMLInputElement>document.getElementById('lregb')).value = b.toString();
+    // r^2
+    let e2Sum: number = 0;
+    for (const [x, y] of sanInps) {
+        const e: number = y - m * x - b;
+        e2Sum += e * e;
+    }
+    const coeffDet: number = 1 - e2Sum / yS2N;
+    (<HTMLInputElement>document.getElementById('lregr2')).value = coeffDet.toString();
+    // sm, sb, sy
+    const sm: number = Math.sqrt(e2Sum / xS2N / df);
+    (<HTMLInputElement>document.getElementById('lregsm')).value = sm.toString();
+    if (zeroInt) {
+        (<HTMLInputElement>document.getElementById('lregsb')).value = 'N/A';
+    } else {
+        const sb: number = sm * Math.sqrt(x2Avg);
+        (<HTMLInputElement>document.getElementById('lregsb')).value = sb.toString();
+    }
+    const sy: number = Math.sqrt(e2Sum / df);
+    (<HTMLInputElement>document.getElementById('lregsy')).value = sy.toString();
+    // F-statistic
+    (<HTMLInputElement>document.getElementById('lregf')).value = 'Not implemented yet';
 }
