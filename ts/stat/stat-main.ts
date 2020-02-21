@@ -228,7 +228,7 @@ function statInit(): void {
     const notes: string[] = [
         'All the results are stored locally, meaning that all data will be lost if the site data for this webpage is cleared',
         'This program will try to parse any unrecognizable data. The parsed output will be shown in the \"Parsed\" area',
-        'To recall data or calculate different t\'s without saving a duplicate, type the Ans key (e.g., \"Var2\") in the input and click calculate',
+        'To recall data or calculate different t\'s without saving a duplicate, type the Ans key (e.g., \"Var2\") in the input and click \"Calculate\"',
         'Input one number on each line',
         'If copying a column of data from excel, directly paste into the input'
     ];

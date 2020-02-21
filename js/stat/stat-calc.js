@@ -2,7 +2,7 @@
 function statSanInp(inpStr) {
     const inps = inpStr.split('\n').filter((val) => val !== '' && val.charAt(0).toLowerCase() !== 'e');
     let sanVals = [];
-    let sanInps = [];
+    const sanInps = [];
     for (const inp of inps) {
         if (inp.slice(0, 3) === 'Var') {
             const parsedAnsKey = /^(Var\d+)(?:\D|$)/.exec(inp);
@@ -37,37 +37,6 @@ function statSanInp(inpStr) {
         }
     }
     return [sanVals, sanInps];
-}
-function calcNc(n, l, u) {
-    const r = n - l - u;
-    let os = [l, u, r].sort();
-    const m = os.pop();
-    let result = [...Array(n - m + 1).keys()].map((val) => val + m).reduce((acc, cur) => acc * cur, 1);
-    for (const o of os)
-        result /= [...Array(o - 1).keys()].map((val) => val + 1).reduce((acc, cur) => acc * cur, 1);
-    result /= Math.pow(2 * Math.PI, 1.5);
-    return result;
-}
-function calcP(r, n, l, u) {
-    const nc = calcNc(n, l, u);
-    return 0;
-}
-function calcQScore(n, p, l, u) {
-    let rL = 0;
-    let rH = 1;
-    let r = (rL + rH) / 2;
-    let rP = calcP(r, n, l, u);
-    for (let i = 0; i < 200; i++) {
-        if (Math.abs(rP - p) <= Number.EPSILON)
-            break;
-        r = (rL + rH) / 2;
-        rP = calcP(r, n, l, u);
-        if (rP > p)
-            rH = r;
-        else
-            rL = r;
-    }
-    return r;
 }
 function statCalc() {
     const inpStr = statInp.value;
@@ -112,7 +81,8 @@ function statCalc() {
     }
     M.textareaAutoResize(qTextarea);
     const sigFig = Math.max(...sanValStrs.map((val) => numAccuracy(val)));
-    if (!check)
+    if (!check) {
         window.localStorage.setItem(name, JSON.stringify([sanValStrs.join(';'), avg, sd, sigFig]));
-    setAnsCounter();
+        setAnsCounter();
+    }
 }
