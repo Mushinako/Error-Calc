@@ -134,11 +134,17 @@ function lregInit(): void {
     const outForm: HTMLFormElement = document.createElement('form');
     outOutDiv.classList.add('row');
     outOutDiv.appendChild(outForm);
-    const outputsPm: Record<string, string> = {
-        'm': 'm',
-        'b': 'b'
+    const outputsHalf: Record<string, [string, string]> = {
+        'm': ['m', 'Slope'],
+        'sm': ['s_{m}', 'Slope standard error'],
+        'b': ['b', 'Y-intercept'],
+        'sb': ['s_{b}', 'Y-intercept standard error'],
+        'r2': ['r^{2}', 'Coefficient of determination'],
+        'sy': ['s_{y}', 'Y-value standard error'],
+        'f': ['f', 'F-statistic'],
+        'df': ['df', 'Degrees of freedom']
     };
-    for (const [name, formula] of Object.entries(outputsPm)) outForm.appendChild(createLregOutputPmDiv(name, formula));
+    for (const [name, data] of Object.entries(outputsHalf)) outForm.appendChild(createOutputHalfDiv(name, ...data));
     // Help
     const notes: string[] = [
         'All the results are stored locally, meaning that all data will be lost if the site data for this webpage is cleared',

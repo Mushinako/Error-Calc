@@ -171,20 +171,20 @@ function statInit() {
     outOutDiv.classList.add('row');
     outOutDiv.appendChild(outForm);
     const outputsHalf = {
-        'n': 'n',
-        'xbar': '\\bar{x}',
-        's2': 's^{2}',
-        's': 's',
-        't': 't',
-        'ts': 't\\cdot s'
+        'n': ['n', 'Number of inputs'],
+        'xbar': ['\\bar{x}', 'Average'],
+        's2': ['s^{2}', 'Sample variance'],
+        's': ['s', 'Sample standard deviation'],
+        't': ['t', 'T-score'],
+        'ts': ['t\\cdot s', 'Product of t-score and sample standard deviation']
     };
-    for (const [name, formula] of Object.entries(outputsHalf))
-        outForm.appendChild(createStatOutputHalfDiv(name, formula));
+    for (const [name, data] of Object.entries(outputsHalf))
+        outForm.appendChild(createOutputHalfDiv(name, ...data));
     const outputsFull = {
-        'q': 'Q\\text{-test}'
+        'q': ['Q\\text{-test}', 'Q-test']
     };
-    for (const [name, formula] of Object.entries(outputsFull))
-        outForm.appendChild(createStatOutputFullDiv(name, formula));
+    for (const [name, data] of Object.entries(outputsFull))
+        outForm.appendChild(createStatOutputFullDiv(name, ...data));
     document.getElementById('statq').value = 'Not implemented yet';
     const notes = [
         'All the results are stored locally, meaning that all data will be lost if the site data for this webpage is cleared',

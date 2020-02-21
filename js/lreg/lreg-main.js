@@ -99,12 +99,18 @@ function lregInit() {
     const outForm = document.createElement('form');
     outOutDiv.classList.add('row');
     outOutDiv.appendChild(outForm);
-    const outputsPm = {
-        'm': 'm',
-        'b': 'b'
+    const outputsHalf = {
+        'm': ['m', 'Slope'],
+        'sm': ['s_{m}', 'Slope standard error'],
+        'b': ['b', 'Y-intercept'],
+        'sb': ['s_{b}', 'Y-intercept standard error'],
+        'r2': ['r^{2}', 'Coefficient of determination'],
+        'sy': ['s_{y}', 'Y-value standard error'],
+        'f': ['f', 'F-statistic'],
+        'df': ['df', 'Degrees of freedom']
     };
-    for (const [name, formula] of Object.entries(outputsPm))
-        outForm.appendChild(createLregOutputPmDiv(name, formula));
+    for (const [name, data] of Object.entries(outputsHalf))
+        outForm.appendChild(createOutputHalfDiv(name, ...data));
     const notes = [
         'All the results are stored locally, meaning that all data will be lost if the site data for this webpage is cleared',
         'This program will try to parse any unrecognizable data. The parsed output will be shown in the table on the right',

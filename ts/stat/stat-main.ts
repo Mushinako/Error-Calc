@@ -210,19 +210,19 @@ function statInit(): void {
     const outForm: HTMLFormElement = document.createElement('form');
     outOutDiv.classList.add('row');
     outOutDiv.appendChild(outForm);
-    const outputsHalf: Record<string, string> = {
-        'n': 'n',
-        'xbar': '\\bar{x}',
-        's2': 's^{2}',
-        's': 's',
-        't': 't',
-        'ts': 't\\cdot s'
+    const outputsHalf: Record<string, [string, string]> = {
+        'n': ['n', 'Number of inputs'],
+        'xbar': ['\\bar{x}', 'Average'],
+        's2': ['s^{2}', 'Sample variance'],
+        's': ['s', 'Sample standard deviation'],
+        't': ['t', 'T-score'],
+        'ts': ['t\\cdot s', 'Product of t-score and sample standard deviation']
     };
-    for (const [name, formula] of Object.entries(outputsHalf)) outForm.appendChild(createStatOutputHalfDiv(name, formula));
-    const outputsFull: Record<string, string> = {
-        'q': 'Q\\text{-test}'
+    for (const [name, data] of Object.entries(outputsHalf)) outForm.appendChild(createOutputHalfDiv(name, ...data));
+    const outputsFull: Record<string, [string, string]> = {
+        'q': ['Q\\text{-test}', 'Q-test']
     };
-    for (const [name, formula] of Object.entries(outputsFull)) outForm.appendChild(createStatOutputFullDiv(name, formula));
+    for (const [name, data] of Object.entries(outputsFull)) outForm.appendChild(createStatOutputFullDiv(name, ...data));
     (<HTMLInputElement>document.getElementById('statq')).value = 'Not implemented yet';
     // Help
     const notes: string[] = [
