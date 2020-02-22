@@ -57,12 +57,18 @@ function statInit() {
     statInp.classList.add('materialize-textarea');
     statInp.spellcheck = false;
     statInp.addEventListener('input', () => {
-        if (statInp.value.toLowerCase() === 'v')
-            statInp.value = 'Var';
+        const inpRaw = statInp.value;
+        const inps = inpRaw.split('\n');
+        if (inps[inps.length - 1].toLowerCase() === 'v')
+            statInp.value = inpRaw.slice(0, inpRaw.length - 1) + 'Var';
     });
     statInp.addEventListener('keydown', (ev) => {
-        if (statInp.value === 'Var' && ev.key === 'Backspace')
-            statInp.value = '';
+        if (ev.key !== 'Backspace')
+            return;
+        const inpRaw = statInp.value;
+        const inps = inpRaw.split('\n');
+        if (inps[inps.length - 1] === 'Var')
+            statInp.value = inpRaw.slice(0, inpRaw.length - 3);
     });
     inpTextDiv.appendChild(statInp);
     const inpDiv2 = document.createElement('div');

@@ -14,6 +14,11 @@ let lregInpIntercept: HTMLInputElement;
 let lregInpSci: HTMLInputElement;
 
 /**
+ * 0 intercept switch function
+ */
+const zeroIntFunc = (): void => lregCalc(false);
+
+/**
  * Linear regression keyboard shortcuts
  * 
  * @param {KeyboardEvent} ev - Keyboard event
@@ -25,7 +30,7 @@ function keyLreg(ev: KeyboardEvent): void {
         if (ev.shiftKey) {
             // Shift+Enter: Run calculation
             ev.preventDefault();
-            lregCalc();
+            lregCalc(true);
         }
         return;
     }
@@ -85,11 +90,17 @@ function lregInit(): void {
     lregInp.classList.add('materialize-textarea');
     lregInp.spellcheck = false;
     lregInp.addEventListener('input', (): void => {
+        lregInpIntercept.removeEventListener('change', zeroIntFunc);
         // Autofill
-        if (lregInp.value.toLowerCase() === 'l') lregInp.value = 'Lin';
+        const inpRaw: string = lregInp.value;
+        const inps: string[] = inpRaw.split('\n');
+        if (inps[inps.length - 1].toLowerCase() === 'l') lregInp.value = inpRaw.slice(0, inpRaw.length - 1) + 'Lin';
     });
     lregInp.addEventListener('keydown', (ev: KeyboardEvent): void => {
-        if (lregInp.value === 'Lin' && ev.key === 'Backspace') lregInp.value = '';
+        if (ev.key !== 'Backspace') return;
+        const inpRaw: string = lregInp.value;
+        const inps: string[] = inpRaw.split('\n');
+        if (inps[inps.length - 1] === 'Lin') lregInp.value = inpRaw.slice(0, inpRaw.length - 3);
     });
     inpTextDiv.appendChild(lregInp);
     // Parsed div
@@ -120,7 +131,10 @@ function lregInit(): void {
     const btnDiv: HTMLDivElement = document.createElement('div');
     btnDiv.classList.add('container', 'center');
     inpForm.appendChild(btnDiv);
-    btnDiv.appendChild(createCalcBtn(lregCalc));
+    btnDiv.appendChild(createCalcBtn((): void => {
+        lregInpIntercept.addEventListener('change', zeroIntFunc);
+        lregCalc(true);
+    }));
     // Append horizontal line
     appendHr(inDiv);
     // Switches
@@ -129,18 +143,11 @@ function lregInit(): void {
     inDiv.appendChild(switches);
     // Intercept switch
     let intDiv: HTMLDivElement;
-    [intDiv, lregInpIntercept] = createSwitch('0 intercept', 'Turn on to fix y-intercept to 0', 6);
+    [intDiv, lregInpIntercept] = createSwitch('0 intercept', 'Turn on to fix y-intercept to 0', 12);
     lregInpIntercept.checked = false;
     lregInpIntercept.disabled = true;
-    // lregInpIntercept.addEventListener('change', lregCalc);
+    intDiv.setAttribute('data-tooltip', 'Not implemented yet');
     switches.appendChild(intDiv);
-    // Scientific notation switch
-    let sciDiv: HTMLDivElement;
-    [sciDiv, lregInpSci] = createSwitch('Scientific notation', 'Turn on to display scientific notation for numbers not easy to read', 6);
-    lregInpSci.checked = false;
-    lregInpSci.disabled = true;
-    // lregInpSci.addEventListener('change', lregCalc);
-    switches.appendChild(lregInpSci);
     // Output
     const outOutDiv: HTMLDivElement = document.createElement('div');
     outDiv.appendChild(outOutDiv);

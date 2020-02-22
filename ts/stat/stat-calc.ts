@@ -85,7 +85,7 @@ function statCalc(): void {
     // xbar
     const sum: number = sanInps.reduce((acc: number, cur: number): number => acc + cur, 0);
     const avg: number = sum / n;
-    (<HTMLInputElement>document.getElementById('statxbar')).value = avg.toString();
+    (<HTMLInputElement>document.getElementById('statxbar')).value = sciNotation(avg);
     // s^2
     const sumSquaredDiff: number = sanInps.reduce((acc: number, cur: number): number => acc + Math.pow(avg - cur, 2), 0);
     const variance: number = sumSquaredDiff / (n - 1);
@@ -99,17 +99,17 @@ function statCalc(): void {
         (<HTMLInputElement>document.getElementById('statts')).value = 'N/A';
         qTextarea.value = 'No more data can be removed. Removing 1 more data point will remove 100% of all data.';
     } else {
-        (<HTMLInputElement>document.getElementById('stats2')).value = variance.toString();
+        (<HTMLInputElement>document.getElementById('stats2')).value = sciNotation(variance);
         // s
         sd = Math.sqrt(variance);
-        (<HTMLInputElement>document.getElementById('stats')).value = sd.toString();
+        (<HTMLInputElement>document.getElementById('stats')).value = sciNotation(sd);
         // t
         const ciInp: HTMLInputElement = <HTMLInputElement>statTDiv.childNodes[0].childNodes[0];
         const alpha: number = +ciInp.value.split('/')[2];
         const t: number = jStat.studentt.inv(1 - alpha, n - 1);
-        (<HTMLInputElement>document.getElementById('statt')).value = t.toString();
+        (<HTMLInputElement>document.getElementById('statt')).value = sciNotation(t);
         // ts
-        (<HTMLInputElement>document.getElementById('statts')).value = (t * sd).toString();
+        (<HTMLInputElement>document.getElementById('statts')).value = sciNotation(t * sd);
         // q
         // qTextarea.value = 'Not implemented yet';
     }

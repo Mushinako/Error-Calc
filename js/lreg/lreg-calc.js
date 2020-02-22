@@ -43,14 +43,15 @@ function lregSanInp(inpStr) {
     }
     return [sanVals, sanInps];
 }
-function lregCalc() {
+function lregCalc(saveable) {
+    clearChildren(lregInp2);
     const inpStr = lregInp.value;
     const [sanValStrs, sanInpStrs] = lregSanInp(inpStr);
     if (!sanInpStrs.length) {
         alert('No valid input!');
         return;
     }
-    const check = sanInpStrs.length === 1 && sanInpStrs[0].slice(0, 3) === 'Lin';
+    const check = !saveable || (sanInpStrs.length === 1 && sanInpStrs[0].slice(0, 3) === 'Lin');
     for (const vars of sanValStrs) {
         const tr = document.createElement('tr');
         lregInp2.appendChild(tr);
@@ -60,7 +61,7 @@ function lregCalc() {
             tr.appendChild(td);
         }
     }
-    const name = `Var${ansCounter}`;
+    const name = `Lin${ansCounter}`;
     if (!check) {
         const p = document.createElement('p');
         p.textContent = `(Saved as \"${name}\")`;
@@ -71,78 +72,74 @@ function lregCalc() {
     const df = n - 2;
     document.getElementById('lregdf').value = df.toString();
     const zeroInt = lregInpIntercept.checked;
-    let m;
-    let b;
-    let yAvg;
-    let x2Avg;
+    let xSum = 0;
+    let ySum = 0;
+    let x2Sum = 0;
+    let xySum = 0;
+    for (const [x, y] of sanInps) {
+        xSum += x;
+        ySum += y;
+        x2Sum += x * x;
+        xySum += x * y;
+    }
+    const xAvg = xSum / n;
+    const yAvg = ySum / n;
+    const x2Avg = x2Sum / n;
+    const xyAvg = xySum / n;
     let xS2N = 0;
+    let xySN = 0;
     let yS2N = 0;
+    for (const [x, y] of sanInps) {
+        const xDiff = x - xAvg;
+        const yDiff = y - yAvg;
+        xS2N += xDiff * xDiff;
+        xySN += xDiff * yDiff;
+        yS2N += yDiff * yDiff;
+    }
+    const m = xySN / xS2N;
+    const b = yAvg - m * xAvg;
+    const m0 = xyAvg / x2Avg;
     if (zeroInt) {
-        let xSum = 0;
-        let ySum = 0;
-        let x2Sum = 0;
-        let xySum = 0;
-        for (const [x, y] of sanInps) {
-            xSum += x;
-            ySum += y;
-            x2Sum += x * x;
-            xySum += x * y;
-        }
-        const xAvg = xSum / n;
-        yAvg = ySum / n;
-        x2Avg = x2Sum / n;
-        const xyAvg = xySum / n;
-        for (const [x, y] of sanInps) {
-            const xDiff = x - xAvg;
-            const yDiff = y - yAvg;
-            xS2N += xDiff * xDiff;
-            yS2N += yDiff * yDiff;
-        }
-        m = xyAvg / x2Avg;
-        b = 0;
+        document.getElementById('lregm').value = sciNotation(m0);
+        document.getElementById('lregb').value = '0';
     }
     else {
-        let xSum = 0;
-        let ySum = 0;
-        let x2Sum = 0;
-        for (const [x, y] of sanInps) {
-            xSum += x;
-            ySum += y;
-            x2Sum += x * x;
-        }
-        const xAvg = xSum / n;
-        yAvg = ySum / n;
-        x2Avg = x2Sum / n;
-        let xySN = 0;
-        for (const [x, y] of sanInps) {
-            const xDiff = x - xAvg;
-            const yDiff = y - yAvg;
-            xS2N += xDiff * xDiff;
-            xySN += xDiff * yDiff;
-            yS2N += yDiff * yDiff;
-        }
-        m = xySN / xS2N;
-        b = yAvg - m * xAvg;
+        document.getElementById('lregm').value = sciNotation(m);
+        document.getElementById('lregb').value = sciNotation(b);
     }
-    document.getElementById('lregm').value = m.toString();
-    document.getElementById('lregb').value = b.toString();
     let e2Sum = 0;
+    let e02Sum = 0;
     for (const [x, y] of sanInps) {
         const e = y - m * x - b;
+        const e0 = y - m0 * x;
         e2Sum += e * e;
+        e02Sum += e0 * e0;
     }
-    const coeffDet = 1 - e2Sum / yS2N;
-    document.getElementById('lregr2').value = coeffDet.toString();
+    const coeffDet = 1 - (zeroInt ? e02Sum : e2Sum) / yS2N;
+    document.getElementById('lregr2').value = sciNotation(coeffDet);
     const sm = Math.sqrt(e2Sum / xS2N / df);
-    document.getElementById('lregsm').value = sm.toString();
+    const sm0 = Math.sqrt(e02Sum / xS2N / df);
+    const sb = sm * Math.sqrt(x2Avg);
+    const sy = Math.sqrt(e2Sum / df);
+    const sy0 = Math.sqrt(e02Sum / df);
     if (zeroInt) {
+        document.getElementById('lregsm').value = sciNotation(sm0);
         document.getElementById('lregsb').value = 'N/A';
+        document.getElementById('lregsy').value = sciNotation(sy0);
     }
     else {
-        const sb = sm * Math.sqrt(x2Avg);
-        document.getElementById('lregsb').value = sb.toString();
+        document.getElementById('lregsm').value = sciNotation(sm);
+        document.getElementById('lregsb').value = sciNotation(sb);
+        document.getElementById('lregsy').value = sciNotation(sy);
     }
-    const sy = Math.sqrt(e2Sum / df);
-    document.getElementById('lregsy').value = sy.toString();
     document.getElementById('lregf').value = 'Not implemented yet';
+    const sigFig = Math.max(...sanValStrs.map(([x, y]) => numAccuracy(y) - numAccuracy(x)));
+    if (!check) {
+        const formula = sanValStrs.map((val) => `(${val.join(',')})`).join(';');
+        window.localStorage.setItem(name, JSON.stringify([formula, 0, 0, 0]));
+        window.localStorage.setItem(`${name}m`, JSON.stringify(['', m, sm, sigFig]));
+        window.localStorage.setItem(`${name}m0`, JSON.stringify(['', m0, sm0, sigFig]));
+        window.localStorage.setItem(`${name}b`, JSON.stringify(['', b, sb, sigFig]));
+        setAnsCounter();
+    }
 }

@@ -2,6 +2,7 @@
 let inDiv;
 let outDiv;
 let helpDiv;
+const sciNotation = (n) => sciNotationWithSigFig(n, 15);
 function clearChildren(div) { while (div.hasChildNodes())
     div.removeChild(div.lastChild); }
 function appendHr(div) {
@@ -155,14 +156,26 @@ function helpGen(noteLi, shortcutLi, formatLi) {
     }
     return ul;
 }
-function sciNotation(n, sfn) {
+function sciNotationWithSigFig(n, sfn) {
     const absN = Math.abs(n);
     if (sfn <= 0)
         return '0';
-    if (absN < 1e6 && absN > 1e-1 || absN === 0) {
+    if (absN < 1e6 && absN > 1e-1 || absN === 0)
         return n.toPrecision(sfn);
-    }
     return n.toExponential(sfn - 1);
+}
+function resultToStringLin(key) {
+    const mKey = `${key}m`;
+    const m0Key = `${key}m0`;
+    const bKey = `${key}b`;
+    const mData = window.localStorage.getItem(mKey);
+    const m0Data = window.localStorage.getItem(m0Key);
+    const bData = window.localStorage.getItem(bKey);
+    const [m, sm, mSF] = JSON.parse(mData).slice(1);
+    let res = [`m:${resultToString(m, sm, mSF)}`];
+    const [b, sb, bSF] = JSON.parse(bData).slice(1);
+    res.push(`b:${resultToString(b, sb, bSF)}`);
+    return res;
 }
 function resultToString(avg, sd, sf) {
     let sfnAvg;
@@ -175,7 +188,7 @@ function resultToString(avg, sd, sf) {
         sfnAvg = 15;
         sf = sigFigDecimalConversion(avg, sfnAvg);
     }
-    const avgStr = sciNotation(avg, sfnAvg);
+    const avgStr = sciNotationWithSigFig(avg, sfnAvg);
     let resStr;
     if (avgStr.includes('e')) {
         const [avgCo, avgExp] = avgStr.split('e');
@@ -204,7 +217,7 @@ function setAnsCounter() {
     ansCounter = Math.max(...ids) + 1;
 }
 function displayAns() {
-    const keys = Object.keys(window.localStorage).filter((val) => ['Err', 'Var', 'Lin'].includes(val.slice(0, 3)));
+    const keys = Object.keys(window.localStorage).filter((val) => /^(Err|Var|Lin)\d+$/.test(val));
     if (!keys.length) {
         ansCounter = 1;
         return;
@@ -238,7 +251,7 @@ function displayAns() {
     clearBtn.classList.add('waves-effect', 'btn', 'red');
     clearBtn.textContent = 'All';
     clearBtn.addEventListener('click', () => {
-        if (!confirm('Do you want to delete all results?'))
+        if (!confirm('Do you want to delete all saves?'))
             return;
         for (const key of Object.keys(window.localStorage))
             window.localStorage.removeItem(key);
@@ -252,13 +265,14 @@ function displayAns() {
         ids.push(+key.slice(3));
         const [form, avg, sd, sf] = JSON.parse(data);
         let formStr;
-        if (key.slice(0, 3) === 'Err') {
+        const method = key.slice(0, 3);
+        if (method === 'Err') {
             formStr = `\\(${form}\\)`;
         }
         else {
             formStr = '';
             for (const n of form.split(';')) {
-                if (formStr.length < 13) {
+                if (formStr.length < 30) {
                     formStr += `${n};`;
                 }
                 else {
@@ -268,14 +282,26 @@ function displayAns() {
             }
             formStr = `\\(${formStr}\\)`;
         }
-        const resStr = resultToString(avg, sd, sf);
         const tr = document.createElement('tr');
         tbody.appendChild(tr);
-        for (const item of [key, formStr, resStr]) {
+        for (const item of [key, formStr]) {
             const td = document.createElement('td');
             td.textContent = item;
             tr.appendChild(td);
         }
+        const tdRes = document.createElement('td');
+        if (method === 'Lin') {
+            const res = resultToStringLin(key);
+            tdRes.appendChild(document.createTextNode(res.shift()));
+            for (const r of res) {
+                const br = document.createElement('br');
+                tdRes.appendChild(br);
+                tdRes.appendChild(document.createTextNode(r));
+            }
+        }
+        else
+            tdRes.textContent = resultToString(avg, sd, sf);
+        tr.appendChild(tdRes);
         const td = document.createElement('td');
         tr.appendChild(td);
         const btn = document.createElement('a');
@@ -343,6 +369,12 @@ document.addEventListener('DOMContentLoaded', () => {
         propBtn.parentElement.classList.remove('active');
         lregBtn.parentElement.classList.remove('active');
         statInit();
+    });
+    lregBtn.addEventListener('click', () => {
+        lregBtn.parentElement.classList.add('active');
+        propBtn.parentElement.classList.remove('active');
+        statBtn.parentElement.classList.remove('active');
+        lregInit();
     });
     propInit();
 });

@@ -86,10 +86,15 @@ function statInit(): void {
     statInp.spellcheck = false;
     statInp.addEventListener('input', (): void => {
         // Autofill
-        if (statInp.value.toLowerCase() === 'v') statInp.value = 'Var';
+        const inpRaw: string = statInp.value;
+        const inps: string[] = inpRaw.split('\n');
+        if (inps[inps.length - 1].toLowerCase() === 'v') statInp.value = inpRaw.slice(0, inpRaw.length - 1) + 'Var';
     });
     statInp.addEventListener('keydown', (ev: KeyboardEvent): void => {
-        if (statInp.value === 'Var' && ev.key === 'Backspace') statInp.value = '';
+        if (ev.key !== 'Backspace') return;
+        const inpRaw: string = statInp.value;
+        const inps: string[] = inpRaw.split('\n');
+        if (inps[inps.length - 1] === 'Var') statInp.value = inpRaw.slice(0, inpRaw.length - 3);
     });
     inpTextDiv.appendChild(statInp);
     // Parsed div

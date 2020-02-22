@@ -57,8 +57,11 @@ function lregSanInp(inpStr: string): [string[][], string[]] {
 
 /**
  * Calculate linear regression
+ * 
+ * @param {boolean} saveable - Whether to save
  */
-function lregCalc(): void {
+function lregCalc(saveable: boolean): void {
+    clearChildren(lregInp2);
     // Get input
     const inpStr: string = lregInp.value;
     // Sanitize input
@@ -67,7 +70,7 @@ function lregCalc(): void {
         alert('No valid input!');
         return;
     }
-    const check: boolean = sanInpStrs.length === 1 && sanInpStrs[0].slice(0, 3) === 'Lin';
+    const check: boolean = !saveable || (sanInpStrs.length === 1 && sanInpStrs[0].slice(0, 3) === 'Lin');
     // Show parsed output
     for (const vars of sanValStrs) {
         const tr: HTMLTableRowElement = document.createElement('tr');
@@ -78,8 +81,7 @@ function lregCalc(): void {
             tr.appendChild(td);
         }
     }
-    // Show parsed output
-    const name: string = `Var${ansCounter}`;
+    const name: string = `Lin${ansCounter}`;
     if (!check) {
         const p: HTMLParagraphElement = document.createElement('p');
         p.textContent = `(Saved as \"${name}\")`;
@@ -94,84 +96,81 @@ function lregCalc(): void {
     (<HTMLInputElement>document.getElementById('lregdf')).value = df.toString();
     // Intercept?
     const zeroInt: boolean = lregInpIntercept.checked;
-    // m, b
-    let m: number;
-    let b: number;
-    let yAvg: number;
-    let x2Avg: number;
-    let xS2N: number = 0;
-    let yS2N: number = 0;
-    if (zeroInt) {
-        // Avgs
-        let xSum: number = 0;
-        let ySum: number = 0;
-        let x2Sum: number = 0;
-        let xySum: number = 0;
-        for (const [x, y] of sanInps) {
-            xSum += x;
-            ySum += y;
-            x2Sum += x * x;
-            xySum += x * y;
-        }
-        const xAvg: number = xSum / n;
-        yAvg = ySum / n;
-        x2Avg = x2Sum / n;
-        const xyAvg: number = xySum / n;
-        // Sum squared diff
-        for (const [x, y] of sanInps) {
-            const xDiff: number = x - xAvg;
-            const yDiff: number = y - yAvg;
-            xS2N += xDiff * xDiff;
-            yS2N += yDiff * yDiff;
-        }
-        m = xyAvg / x2Avg;
-        b = 0;
-    } else {
-        // Avgs
-        let xSum: number = 0;
-        let ySum: number = 0;
-        let x2Sum: number = 0;
-        for (const [x, y] of sanInps) {
-            xSum += x;
-            ySum += y;
-            x2Sum += x * x;
-        }
-        const xAvg: number = xSum / n;
-        yAvg = ySum / n;
-        x2Avg = x2Sum / n;
-        // Sum squared diff
-        let xySN: number = 0;
-        for (const [x, y] of sanInps) {
-            const xDiff: number = x - xAvg;
-            const yDiff: number = y - yAvg;
-            xS2N += xDiff * xDiff;
-            xySN += xDiff * yDiff;
-            yS2N += yDiff * yDiff;
-        }
-        m = xySN / xS2N;
-        b = yAvg - m * xAvg;
+    // Avgs
+    let xSum: number = 0;
+    let ySum: number = 0;
+    let x2Sum: number = 0;
+    let xySum: number = 0;
+    for (const [x, y] of sanInps) {
+        xSum += x;
+        ySum += y;
+        x2Sum += x * x;
+        xySum += x * y;
     }
-    (<HTMLInputElement>document.getElementById('lregm')).value = m.toString();
-    (<HTMLInputElement>document.getElementById('lregb')).value = b.toString();
+    const xAvg: number = xSum / n;
+    const yAvg: number = ySum / n;
+    const x2Avg: number = x2Sum / n;
+    const xyAvg: number = xySum / n;
+    // Sum squared diff
+    let xS2N: number = 0;
+    let xySN: number = 0;
+    let yS2N: number = 0;
+    for (const [x, y] of sanInps) {
+        const xDiff: number = x - xAvg;
+        const yDiff: number = y - yAvg;
+        xS2N += xDiff * xDiff;
+        xySN += xDiff * yDiff;
+        yS2N += yDiff * yDiff;
+    }
+    // m, b
+    const m: number = xySN / xS2N;
+    const b: number = yAvg - m * xAvg;
+    const m0: number = xyAvg / x2Avg;
+    if (zeroInt) {
+        (<HTMLInputElement>document.getElementById('lregm')).value = sciNotation(m0);
+        (<HTMLInputElement>document.getElementById('lregb')).value = '0';
+    } else {
+        (<HTMLInputElement>document.getElementById('lregm')).value = sciNotation(m);
+        (<HTMLInputElement>document.getElementById('lregb')).value = sciNotation(b);
+    }
     // r^2
     let e2Sum: number = 0;
+    let e02Sum: number = 0;
     for (const [x, y] of sanInps) {
         const e: number = y - m * x - b;
+        const e0: number = y - m0 * x;
         e2Sum += e * e;
+        e02Sum += e0 * e0;
     }
-    const coeffDet: number = 1 - e2Sum / yS2N;
-    (<HTMLInputElement>document.getElementById('lregr2')).value = coeffDet.toString();
+    const coeffDet: number = 1 - (zeroInt ? e02Sum : e2Sum) / yS2N;
+    (<HTMLInputElement>document.getElementById('lregr2')).value = sciNotation(coeffDet);
     // sm, sb, sy
     const sm: number = Math.sqrt(e2Sum / xS2N / df);
-    (<HTMLInputElement>document.getElementById('lregsm')).value = sm.toString();
-    if (zeroInt) {
-        (<HTMLInputElement>document.getElementById('lregsb')).value = 'N/A';
-    } else {
-        const sb: number = sm * Math.sqrt(x2Avg);
-        (<HTMLInputElement>document.getElementById('lregsb')).value = sb.toString();
-    }
+    const sm0: number = Math.sqrt(e02Sum / xS2N / df);
+    const sb: number = sm * Math.sqrt(x2Avg);
     const sy: number = Math.sqrt(e2Sum / df);
-    (<HTMLInputElement>document.getElementById('lregsy')).value = sy.toString();
+    const sy0: number = Math.sqrt(e02Sum / df);
+    if (zeroInt) {
+        (<HTMLInputElement>document.getElementById('lregsm')).value = sciNotation(sm0);
+        (<HTMLInputElement>document.getElementById('lregsb')).value = 'N/A';
+        (<HTMLInputElement>document.getElementById('lregsy')).value = sciNotation(sy0);
+    } else {
+        (<HTMLInputElement>document.getElementById('lregsm')).value = sciNotation(sm);
+        (<HTMLInputElement>document.getElementById('lregsb')).value = sciNotation(sb);
+        (<HTMLInputElement>document.getElementById('lregsy')).value = sciNotation(sy);
+    }
     // F-statistic
     (<HTMLInputElement>document.getElementById('lregf')).value = 'Not implemented yet';
+    // SigFig
+    const sigFig: number = Math.max(...sanValStrs.map(([x, y]: string[]): number => numAccuracy(y) - numAccuracy(x)));
+    // Save
+    if (!check) {
+        const formula: string = sanValStrs.map((val: string[]): string => `(${val.join(',')})`).join(';');
+        window.localStorage.setItem(name, JSON.stringify([formula, 0, 0, 0]));
+        window.localStorage.setItem(`${name}m`, JSON.stringify(['', m, sm, sigFig]));
+        window.localStorage.setItem(`${name}m0`, JSON.stringify(['', m0, sm0, sigFig]));
+        window.localStorage.setItem(`${name}b`, JSON.stringify(['', b, sb, sigFig]));
+        // Set counter
+        setAnsCounter();
+    }
 }

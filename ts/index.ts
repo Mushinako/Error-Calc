@@ -39,6 +39,14 @@ let outDiv: HTMLDivElement;
 let helpDiv: HTMLDivElement;
 
 /**
+ * Scientific notations, without SigFig
+ *
+ * @param   {number} n - Input number
+ * @returns {string}   - Output string
+ */
+const sciNotation = (n: number): string => sciNotationWithSigFig(n, 15);
+
+/**
  * Remove all children from element
  * 
  * @param {HTMLElement} div - The element to be cleared
@@ -279,19 +287,42 @@ function helpGen(noteLi: HTMLLIElement, shortcutLi: HTMLLIElement, formatLi: HTM
 }
 
 /**
- * Scientific notations
+ * Scientific notations, with SigFig
  * 
  * @param   {number} n   - Input number
  * @param   {number} sfn - SigFigs
  * @returns {string}     - Output string
  */
-function sciNotation(n: number, sfn: number): string {
+function sciNotationWithSigFig(n: number, sfn: number): string {
     const absN: number = Math.abs(n);
     if (sfn <= 0) return '0';
-    if (absN < 1e6 && absN > 1e-1 || absN === 0) {
-        return n.toPrecision(sfn);
-    }
+    if (absN < 1e6 && absN > 1e-1 || absN === 0) return n.toPrecision(sfn);
     return n.toExponential(sfn - 1);
+}
+
+/**
+ * Format linear regression result
+ * 
+ * @param   {string} key - Linear regression key
+ * @returns {string[]}   - Result string
+ */
+function resultToStringLin(key: string): string[] {
+    const mKey: string = `${key}m`;
+    const m0Key: string = `${key}m0`;
+    const bKey: string = `${key}b`;
+    const mData: string = window.localStorage.getItem(mKey)!;
+    const m0Data: string = window.localStorage.getItem(m0Key)!;
+    const bData: string = window.localStorage.getItem(bKey)!;
+    // m
+    const [m, sm, mSF]: number[] = JSON.parse(mData).slice(1);
+    let res: string[] = [`m:${resultToString(m, sm, mSF)}`];
+    // m0
+    // const [m0, sm0, m0SF]: number[] = JSON.parse(m0Data).slice(1);
+    // res.push(`m0:${resultToString(m0, sm0, m0SF)}`);
+    // b
+    const [b, sb, bSF]: number[] = JSON.parse(bData).slice(1);
+    res.push(`b:${resultToString(b, sb, bSF)}`);
+    return res;
 }
 
 /**
@@ -311,7 +342,7 @@ function resultToString(avg: number, sd: number, sf: number): string {
         sfnAvg = 15;
         sf = sigFigDecimalConversion(avg, sfnAvg);
     }
-    const avgStr: string = sciNotation(avg, sfnAvg);
+    const avgStr: string = sciNotationWithSigFig(avg, sfnAvg);
     let resStr: string;
     if (avgStr.includes('e')) {
         const [avgCo, avgExp]: string[] = avgStr.split('e');
@@ -348,7 +379,7 @@ function setAnsCounter(): void {
  * Display Ans from localStorage, also set counter
  */
 function displayAns(): void {
-    const keys: string[] = Object.keys(window.localStorage).filter((val: string): boolean => ['Err', 'Var', 'Lin'].includes(val.slice(0, 3)));
+    const keys: string[] = Object.keys(window.localStorage).filter((val: string): boolean => /^(Err|Var|Lin)\d+$/.test(val));
     // Check if localStorage is empty
     if (!keys.length) {
         ansCounter = 1;
@@ -387,7 +418,7 @@ function displayAns(): void {
     clearBtn.classList.add('waves-effect', 'btn', 'red');
     clearBtn.textContent = 'All';
     clearBtn.addEventListener('click', (): void => {
-        if (!confirm('Do you want to delete all results?')) return;
+        if (!confirm('Do you want to delete all saves?')) return;
         for (const key of Object.keys(window.localStorage)) window.localStorage.removeItem(key);
         clearChildren(outDiv);
     });
@@ -402,12 +433,13 @@ function displayAns(): void {
         // Parse from localStorage
         const [form, avg, sd, sf]: [string, number, number, number] = JSON.parse(data);
         let formStr: string;
-        if (key.slice(0, 3) === 'Err') {
+        const method: string = key.slice(0, 3);
+        if (method === 'Err') {
             formStr = `\\(${form}\\)`;
         } else {
             formStr = '';
             for (const n of form.split(';')) {
-                if (formStr.length < 13) {
+                if (formStr.length < 30) {
                     formStr += `${n};`;
                 } else {
                     formStr += '...';
@@ -416,14 +448,24 @@ function displayAns(): void {
             }
             formStr = `\\(${formStr}\\)`;
         }
-        const resStr: string = resultToString(avg, sd, sf);
         const tr: HTMLTableRowElement = document.createElement('tr');
         tbody.appendChild(tr);
-        for (const item of [key, formStr, resStr]) {
+        for (const item of [key, formStr]) {
             const td: HTMLTableCellElement = document.createElement('td');
             td.textContent = item;
             tr.appendChild(td);
         }
+        const tdRes: HTMLTableCellElement = document.createElement('td');
+        if (method === 'Lin') {
+            const res: string[] = resultToStringLin(key);
+            tdRes.appendChild(document.createTextNode(res.shift()!));
+            for (const r of res) {
+                const br: HTMLBRElement = document.createElement('br');
+                tdRes.appendChild(br);
+                tdRes.appendChild(document.createTextNode(r));
+            }
+        } else tdRes.textContent = resultToString(avg, sd, sf);
+        tr.appendChild(tdRes);
         // Remove button
         const td: HTMLTableCellElement = document.createElement('td');
         tr.appendChild(td);
@@ -501,13 +543,13 @@ document.addEventListener('DOMContentLoaded', (): void => {
         // Initialize
         statInit();
     });
-    // lregBtn.addEventListener('click', (): void => {
-    //     lregBtn.parentElement!.classList.add('active');
-    //     propBtn.parentElement!.classList.remove('active');
-    //     statBtn.parentElement!.classList.remove('active');
-    //     // Initialize
-    //     lregInit();
-    // });
+    lregBtn.addEventListener('click', (): void => {
+        lregBtn.parentElement!.classList.add('active');
+        propBtn.parentElement!.classList.remove('active');
+        statBtn.parentElement!.classList.remove('active');
+        // Initialize
+        lregInit();
+    });
     // Initialize error propagation
     propInit();
 });

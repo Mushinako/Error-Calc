@@ -109,7 +109,7 @@ function propInit() {
     const notes = [
         'All the results are stored locally, meaning that all data will be lost if the site data for this webpage is cleared',
         'All variables are assumed to be independent of one another',
-        'Use respective answer (e.g., \"Err1\", \"Var2\", \"Lin3\", etc.) as the average to use previously calculated values for better precision',
+        'Use respective answer (e.g., \"Err1\", \"Var2\", \"Lin3m\", \"Lin4b\", \"Lin5m0\" etc.) as the average to use previously calculated values for better precision',
         'Use \"×/÷\" to calculate reciprocals. Put the number on the first line, choose \"÷\", remove the second line, and hit \"Calculate\"',
         'To calculate SigFigs, use appropriate SigFigs in the input (e.g., \"3.0\" instead of \"3\")'
     ];
@@ -139,7 +139,7 @@ function propInit() {
     const formats = {
         'Numbers': ['3.1415926', '-2020', '.57721'],
         'E-notations': ['8e7', '.9109383e-30', '1.416808e32'],
-        'Previous Answers': ['Err1', 'Var3', 'Lin15']
+        'Previous Answers': ['Err1', 'Var3', 'Lin15m0']
     };
     const formatNote = ['All empty inputs are treated as 0'];
     const noteLi = noteGen(notes);

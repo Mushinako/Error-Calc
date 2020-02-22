@@ -56,7 +56,7 @@ function statCalc() {
     document.getElementById('statn').value = n.toString();
     const sum = sanInps.reduce((acc, cur) => acc + cur, 0);
     const avg = sum / n;
-    document.getElementById('statxbar').value = avg.toString();
+    document.getElementById('statxbar').value = sciNotation(avg);
     const sumSquaredDiff = sanInps.reduce((acc, cur) => acc + Math.pow(avg - cur, 2), 0);
     const variance = sumSquaredDiff / (n - 1);
     const qTextarea = document.getElementById('statq');
@@ -70,14 +70,14 @@ function statCalc() {
         qTextarea.value = 'No more data can be removed. Removing 1 more data point will remove 100% of all data.';
     }
     else {
-        document.getElementById('stats2').value = variance.toString();
+        document.getElementById('stats2').value = sciNotation(variance);
         sd = Math.sqrt(variance);
-        document.getElementById('stats').value = sd.toString();
+        document.getElementById('stats').value = sciNotation(sd);
         const ciInp = statTDiv.childNodes[0].childNodes[0];
         const alpha = +ciInp.value.split('/')[2];
         const t = jStat.studentt.inv(1 - alpha, n - 1);
-        document.getElementById('statt').value = t.toString();
-        document.getElementById('statts').value = (t * sd).toString();
+        document.getElementById('statt').value = sciNotation(t);
+        document.getElementById('statts').value = sciNotation(t * sd);
     }
     M.textareaAutoResize(qTextarea);
     const sigFig = Math.max(...sanValStrs.map((val) => numAccuracy(val)));

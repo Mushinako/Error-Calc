@@ -8,7 +8,7 @@ function createInpDiv(ph) {
     inp.type = 'text';
     inp.pattern = '[\\+\\-]?\\d*(\\.\\d*)?([Ee][\\+\\-]?\\d+)?';
     if (ph === 'Avg')
-        inp.pattern += '|(Err|Var|Lin)\\d+';
+        inp.pattern += '|(Err|Var)\\d+|Lin\\d+(m|b)';
     div.appendChild(inp);
     return [div, inp];
 }
