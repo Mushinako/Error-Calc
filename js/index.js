@@ -2,6 +2,7 @@
 let inDiv;
 let outDiv;
 let helpDiv;
+let func;
 const sciNotation = (n) => sciNotationWithSigFig(n, 15);
 function clearChildren(div) { while (div.hasChildNodes())
     div.removeChild(div.lastChild); }
@@ -329,6 +330,15 @@ function parse() {
         console.log(e);
     }
 }
+function changeBtn(func) {
+    const funcs = ['prop', 'stat', 'lreg'];
+    document.getElementById(func).parentElement.classList.add('active');
+    for (const f of funcs) {
+        if (f === func)
+            continue;
+        document.getElementById(f).parentElement.classList.remove('active');
+    }
+}
 document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('no-script').style.display = 'none';
     inDiv = document.getElementById('indiv');
@@ -339,7 +349,7 @@ document.addEventListener('DOMContentLoaded', () => {
             'Google Chrome 54+',
             'Mozilla Firefox 47+',
             'Apple Safari 11+',
-            'Microsoft Edge 14+',
+            'Microsoft Edge 79+',
             'Opera 41+'
         ];
         const noSupportP = document.createElement('p');
@@ -358,23 +368,44 @@ document.addEventListener('DOMContentLoaded', () => {
     const propBtn = document.getElementById('prop');
     const statBtn = document.getElementById('stat');
     const lregBtn = document.getElementById('lreg');
+    const funcNames = {
+        'prop': 'Error Propagation',
+        'stat': '1-Variable Statistics',
+        'lreg': 'Linear Regression'
+    };
     propBtn.addEventListener('click', () => {
-        propBtn.parentElement.classList.add('active');
-        statBtn.parentElement.classList.remove('active');
-        lregBtn.parentElement.classList.remove('active');
+        if (func !== 'prop') {
+            window.history.pushState({ 'func': func }, funcNames['prop']);
+            changeBtn('prop');
+        }
         propInit();
     });
     statBtn.addEventListener('click', () => {
-        statBtn.parentElement.classList.add('active');
-        propBtn.parentElement.classList.remove('active');
-        lregBtn.parentElement.classList.remove('active');
+        if (func !== 'stat') {
+            window.history.pushState({ 'func': func }, funcNames['stat']);
+            changeBtn('stat');
+        }
         statInit();
     });
     lregBtn.addEventListener('click', () => {
-        lregBtn.parentElement.classList.add('active');
-        propBtn.parentElement.classList.remove('active');
-        statBtn.parentElement.classList.remove('active');
+        if (func !== 'lreg') {
+            window.history.pushState({ 'func': func }, funcNames['lreg']);
+            changeBtn('lreg');
+        }
         lregInit();
+    });
+    window.addEventListener('popstate', (ev) => {
+        if (ev.state === null) {
+            return window.history.back();
+        }
+        const prevFunc = ev.state.func;
+        changeBtn(prevFunc);
+        switch (prevFunc) {
+            case 'prop': return propInit();
+            case 'stat': return statInit();
+            case 'lreg': return lregInit();
+            default: return;
+        }
     });
     propInit();
 });

@@ -51,6 +51,8 @@ function keyLreg(ev: KeyboardEvent): void {
  * Initalization linear regression calculation interface
  */
 function lregInit(): void {
+    func = 'lreg';
+    document.title = 'Linear Regression';
     // Keyboard events
     document.addEventListener('keypress', keyLreg);
     document.removeEventListener('keypress', keyProp);

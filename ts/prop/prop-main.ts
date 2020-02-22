@@ -107,6 +107,8 @@ function keyProp(ev: KeyboardEvent): void {
  * Initialize propagation calculation interface
  */
 function propInit(): void {
+    func = 'prop';
+    document.title = 'Error Propagation';
     // Keyboard events
     document.addEventListener('keypress', keyProp);
     document.removeEventListener('keypress', keyStat);

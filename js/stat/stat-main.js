@@ -25,6 +25,8 @@ function keyStat(ev) {
     }
 }
 function statInit() {
+    func = 'stat';
+    document.title = '1-Variable Statistics';
     document.addEventListener('keypress', keyStat);
     document.removeEventListener('keypress', keyProp);
     document.removeEventListener('keypress', keyLreg);

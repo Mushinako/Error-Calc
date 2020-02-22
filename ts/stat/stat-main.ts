@@ -46,6 +46,8 @@ function keyStat(ev: KeyboardEvent): void {
  * Initialize one-variable statistics calculation interfaces
  */
 function statInit(): void {
+    func = 'stat';
+    document.title = '1-Variable Statistics';
     // Keyboard events
     document.addEventListener('keypress', keyStat);
     document.removeEventListener('keypress', keyProp);

@@ -26,6 +26,8 @@ function keyLreg(ev) {
     }
 }
 function lregInit() {
+    func = 'lreg';
+    document.title = 'Linear Regression';
     document.addEventListener('keypress', keyLreg);
     document.removeEventListener('keypress', keyProp);
     document.removeEventListener('keypress', keyStat);

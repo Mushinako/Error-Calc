@@ -37,6 +37,7 @@ interface jStat {
 let inDiv: HTMLDivElement;
 let outDiv: HTMLDivElement;
 let helpDiv: HTMLDivElement;
+let func: string;
 
 /**
  * Scientific notations, without SigFig
@@ -497,6 +498,20 @@ function parse(): void {
     }
 }
 
+/**
+ * Button change when switching function
+ * 
+ * @param {string} func - The function to be changed to
+ */
+function changeBtn(func: string): void {
+    const funcs: string[] = ['prop', 'stat', 'lreg'];
+    document.getElementById(func)!.parentElement!.classList.add('active');
+    for (const f of funcs) {
+        if (f === func) continue;
+        document.getElementById(f)!.parentElement!.classList.remove('active');
+    }
+}
+
 document.addEventListener('DOMContentLoaded', (): void => {
     document.getElementById('no-script')!.style.display = 'none';
     // Set in/out divs
@@ -509,7 +524,7 @@ document.addEventListener('DOMContentLoaded', (): void => {
             'Google Chrome 54+',
             'Mozilla Firefox 47+',
             'Apple Safari 11+',
-            'Microsoft Edge 14+',
+            'Microsoft Edge 79+',
             'Opera 41+'
         ];
         const noSupportP: HTMLParagraphElement = document.createElement('p');
@@ -529,26 +544,47 @@ document.addEventListener('DOMContentLoaded', (): void => {
     const propBtn: HTMLAnchorElement = <HTMLAnchorElement>document.getElementById('prop');
     const statBtn: HTMLAnchorElement = <HTMLAnchorElement>document.getElementById('stat');
     const lregBtn: HTMLAnchorElement = <HTMLAnchorElement>document.getElementById('lreg');
+    const funcNames: Record<string, string> = {
+        'prop': 'Error Propagation',
+        'stat': '1-Variable Statistics',
+        'lreg': 'Linear Regression'
+    };
     propBtn.addEventListener('click', (): void => {
-        propBtn.parentElement!.classList.add('active');
-        statBtn.parentElement!.classList.remove('active');
-        lregBtn.parentElement!.classList.remove('active');
+        if (func !== 'prop') {
+            window.history.pushState({ 'func': func }, funcNames['prop']);
+            changeBtn('prop');
+        }
         // Initialize
         propInit();
     });
     statBtn.addEventListener('click', (): void => {
-        statBtn.parentElement!.classList.add('active');
-        propBtn.parentElement!.classList.remove('active');
-        lregBtn.parentElement!.classList.remove('active');
+        if (func !== 'stat') {
+            window.history.pushState({ 'func': func }, funcNames['stat']);
+            changeBtn('stat');
+        }
         // Initialize
         statInit();
     });
     lregBtn.addEventListener('click', (): void => {
-        lregBtn.parentElement!.classList.add('active');
-        propBtn.parentElement!.classList.remove('active');
-        statBtn.parentElement!.classList.remove('active');
+        if (func !== 'lreg') {
+            window.history.pushState({ 'func': func }, funcNames['lreg']);
+            changeBtn('lreg');
+        }
         // Initialize
         lregInit();
+    });
+    window.addEventListener('popstate', (ev: PopStateEvent): void => {
+        if (ev.state === null) {
+            return window.history.back();
+        }
+        const prevFunc: string = ev.state.func;
+        changeBtn(prevFunc);
+        switch (prevFunc) {
+            case 'prop': return propInit();
+            case 'stat': return statInit();
+            case 'lreg': return lregInit();
+            default: return;
+        }
     });
     // Initialize error propagation
     propInit();

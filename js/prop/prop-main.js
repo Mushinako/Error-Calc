@@ -86,6 +86,8 @@ function keyProp(ev) {
     }
 }
 function propInit() {
+    func = 'prop';
+    document.title = 'Error Propagation';
     document.addEventListener('keypress', keyProp);
     document.removeEventListener('keypress', keyStat);
     document.removeEventListener('keypress', keyLreg);
